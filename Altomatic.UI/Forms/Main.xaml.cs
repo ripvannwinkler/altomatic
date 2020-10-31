@@ -22,7 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Altomatic.UI
+namespace Altomatic.UI.Forms
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -39,6 +39,7 @@ namespace Altomatic.UI
 
 		public MainWindow()
 		{
+			Style = (Style)FindResource(typeof(Window));
 			InitializeComponent();
 			InitializeAppData();
 			StartMainLoop();
@@ -135,6 +136,13 @@ namespace Altomatic.UI
 					MessageBox.Show("Invalid FFXI process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 			}
+		}
+
+		private void Options1_Click(object sender, RoutedEventArgs e)
+		{
+			var form = new Options();
+			form.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			form.ShowDialog();
 		}
 	}
 }
