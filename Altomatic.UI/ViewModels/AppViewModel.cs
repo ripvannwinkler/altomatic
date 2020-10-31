@@ -124,7 +124,7 @@ namespace Altomatic.UI.ViewModels
     public void RefreshProcessList()
 		{
 			Processes = ProcessUtilities.GetProcesses();
-			InitializePlayers();
+			ResetPlayerVitals();
 		}
 
 		public void SetHealer(Process process)
@@ -139,15 +139,15 @@ namespace Altomatic.UI.ViewModels
 
 		private void InitializePlayers(bool firstRun = false)
 		{
-			if (firstRun)
-      {
 				Players.Clear();
 				for (var i = 0; i < 18; i++)
 				{
 					Players.Add(new PlayerViewModel(this));
 				}
-			}
+		}
 
+		private void ResetPlayerVitals()
+    {
 			for (var i = 0; i < players.Count; i++)
 			{
 				players[i].ResetVitals();
