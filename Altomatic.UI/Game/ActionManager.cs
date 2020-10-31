@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CurePlease2.UI.ViewModels;
+using Altomatic.UI.ViewModels;
 
-namespace CurePlease2.UI.Game
+namespace Altomatic.UI.Game
 {
 	public class ActionManager
 	{

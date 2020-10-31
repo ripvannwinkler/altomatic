@@ -1,38 +1,78 @@
-﻿<Window x:Class="CurePlease2.UI.MainWindow"
+﻿<Window x:Class="Altomatic.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CurePlease2.UI"
-				xmlns:uc="clr-namespace:CurePlease2.UI.Controls"
-				xmlns:converters="clr-namespace:CurePlease2.UI.ValueConverters"
+        xmlns:local="clr-namespace:Altomatic.UI"
+				xmlns:uc="clr-namespace:Altomatic.UI.Controls"
+				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
 				MinWidth="800"
 				MinHeight="450"
 				Height="450"
 				Width="800"
+				Name="MainWindow1"
         Title="{Binding MainWindowTitle}">
 	<Window.Resources>
 		<converters:StatusLabelConverter x:Key="statusLabelConverter"/>
 		<converters:StatusBackgroundConverter x:Key="statusBackgroundConverter"/>
+		<Storyboard x:Key="mainWindowAction">
+			<ColorAnimation 
+				AutoReverse="True"
+				To="LightGoldenrodYellow" 
+				Storyboard.TargetName="MainWindow1"
+        Storyboard.TargetProperty="(Background).(Color)" 
+        FillBehavior="Stop" 
+        Duration="0:0:0.100"/>
+		</Storyboard>
 	</Window.Resources>
 	<DockPanel>
 		<Border Padding="10 15 10 10" DockPanel.Dock="Top">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="1*"/>
-					<ColumnDefinition Width="10"/>
-					<ColumnDefinition Width="1*"/>
-				</Grid.ColumnDefinitions>
-				<DockPanel Grid.Column="0">
-					<Label Padding="3" Margin="0 0 5 0" DockPanel.Dock="Left">Healer</Label>
-					<ComboBox Name="Instance1"></ComboBox>
-				</DockPanel>
-				<DockPanel Grid.Column="2">
-					<Label Padding="3" Margin="0 0 5 0">Monitored</Label>
-					<ComboBox Name="Instance2" Margin="0 0 5 0"></ComboBox>
-				</DockPanel>
-			</Grid>
+			<DockPanel>
+				<StackPanel DockPanel.Dock="Right" Margin="15 0 0 0">
+					<Button Name="RefreshProcessesButton" Padding="5 3 5 3" Click="RefreshProcessesButton_Click">
+						<Button.Content>
+							<TextBlock>Refresh Processes</TextBlock>
+						</Button.Content>
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
+				</StackPanel>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"/>
+						<ColumnDefinition Width="10"/>
+						<ColumnDefinition Width="1*"/>
+					</Grid.ColumnDefinitions>
+					<DockPanel Grid.Column="0">
+						<Label Padding="3" Margin="0 0 5 0" DockPanel.Dock="Left">Healer</Label>
+						<ComboBox Name="HealerInstance" ItemsSource="{Binding Processes}" SelectionChanged="HealerInstance_SelectionChanged">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding MainWindowTitle}" />
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</DockPanel>
+					<DockPanel Grid.Column="2">
+						<Label Padding="3" Margin="0 0 5 0">Monitored</Label>
+						<ComboBox Name="MonitoredInstance" Margin="0 0 5 0" ItemsSource="{Binding Processes}" SelectionChanged="MonitoredInstance_SelectionChanged">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding MainWindowTitle}" />
+									</StackPanel>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</DockPanel>
+				</Grid>
+			</DockPanel>
 		</Border>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem Name="Status">

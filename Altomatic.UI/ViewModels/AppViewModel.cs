@@ -1,16 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using CurePlease2.UI.Game;
+using Altomatic.UI.Game;
+using Altomatic.UI.Utilities;
 using EliteMMO.API;
 
-namespace CurePlease2.UI.ViewModels
+namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
+		IEnumerable<Process> processes;
+		public IEnumerable<Process> Processes
+		{
+			get { return processes; }
+			set
+			{
+				isPaused = true;
+				processes = value;
+				Monitored = null;
+				Healer = null;
+
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsPaused));
+				OnPropertyChanged(nameof(IsReadyToRun));
+			}
+		}
+
 		EliteAPI healer;
 		public EliteAPI Healer
 		{
@@ -19,6 +38,7 @@ namespace CurePlease2.UI.ViewModels
 			{
 				healer = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsReadyToRun));
 			}
 		}
 
@@ -30,6 +50,7 @@ namespace CurePlease2.UI.ViewModels
 			{
 				monitored = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsReadyToRun));
 			}
 		}
 
@@ -63,6 +84,7 @@ namespace CurePlease2.UI.ViewModels
 			{
 				profile = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(MainWindowTitle));
 			}
 		}
 
@@ -80,49 +102,81 @@ namespace CurePlease2.UI.ViewModels
 		public string MainWindowTitle
 		{
 			get { return string.Join(" - ", Constants.MainWindowTitle, Profile ?? "No Profile Loaded"); }
+			set { /* ignore */ }
 		}
 
 		public bool IsReadyToRun
 		{
-			get
-			{
-				return
-					!isPaused &&
-					healer != null &&
-					monitored != null &&
-					healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
-					healer.Player.LoginStatus != (int)LoginStatus.Loading &&
-					monitored.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
-					monitored.Player.LoginStatus != (int)LoginStatus.Loading &&
-					(
-						healer.Player.Status == (int)EntityStatus.Idle ||
-						healer.Player.Status == (int)EntityStatus.Engaged
-					);
-			}
+			get { return healer != null && monitored != null; }
+			set { /* ignore */ }
 		}
 
 		public ActionManager ActionManager { get; }
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 
 		public AppViewModel()
-		{
-			ActionManager = new ActionManager(this);
-			StatusMessage = "Ready";
+    {
+      RefreshProcessList();
+			InitializePlayers(true);
+      ActionManager = new ActionManager(this);
+    }
 
-			for (var i = 0; i < 18; i++)
+    public void RefreshProcessList()
+		{
+			Processes = ProcessUtilities.GetProcesses();
+			InitializePlayers();
+		}
+
+		public void SetHealer(Process process)
+		{
+			Healer = new EliteAPI(process.Id);
+		}
+
+		public void SetMonitored(Process process)
+		{
+			Monitored = new EliteAPI(process.Id);
+		}
+
+		private void InitializePlayers(bool firstRun = false)
+		{
+			if (firstRun)
+      {
+				Players.Clear();
+				for (var i = 0; i < 18; i++)
+				{
+					Players.Add(new PlayerViewModel(this));
+				}
+			}
+
+			for (var i = 0; i < players.Count; i++)
 			{
-				Players.Add(new PlayerViewModel(this));
+				players[i].ResetVitals();
 			}
 		}
 
+		public bool CanPerformActions()
+    {
+			return
+				healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
+				healer.Player.LoginStatus != (int)LoginStatus.Loading &&
+				monitored.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
+				monitored.Player.LoginStatus != (int)LoginStatus.Loading &&
+				(
+					healer.Player.Status == (int)EntityStatus.Idle ||
+					healer.Player.Status == (int)EntityStatus.Engaged
+				);
+    }
+
 		public async Task ExecuteAsync()
 		{
-			if (IsReadyToRun)
+			if (isPaused) return;
+
+			if (IsReadyToRun && CanPerformActions())
 			{
 				foreach (var strategy in Strategies)
 				{
 					StatusMessage = "Executing strategies...";
-					if (await strategy.ExecuteAsync(this))
+					if (!await strategy.ExecuteAsync(this))
 					{
 						return;
 					}

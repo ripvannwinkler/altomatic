@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurePlease2.UI.ViewModels
+namespace Altomatic.UI.ViewModels
 {
 	public class PlayerViewModel : INotifyPropertyChanged
 	{
@@ -40,8 +40,26 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
-		int currentHp;
-		public int CurrentHp
+		double distance;
+		public double Distance
+		{
+			get { return distance; }
+			set
+			{
+				distance = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(Active));
+			}
+		}
+
+		public bool Active
+		{
+			get { return distance < 21 && appData.IsReadyToRun; }
+			set { /* ignore */}
+		}
+
+		uint currentHp;
+		public uint CurrentHp
 		{
 			get { return currentHp; }
 			set
@@ -76,13 +94,16 @@ namespace CurePlease2.UI.ViewModels
 		public PlayerViewModel(AppViewModel appData)
 		{
 			AppData = appData;
-			Name = Guid.NewGuid().ToString("n");
+			Distance = uint.MaxValue;
 			Enabled = true;
-
-			lock (rng)
-			{
-				currentHpp = (int)Math.Ceiling(rng.NextDouble() * 100);
-			}
 		}
-	}
+
+    public void ResetVitals()
+    {
+			Name = "";
+			CurrentHp = 0;
+			CurrentHpp = 0;
+			Distance = uint.MaxValue;
+    }
+  }
 }

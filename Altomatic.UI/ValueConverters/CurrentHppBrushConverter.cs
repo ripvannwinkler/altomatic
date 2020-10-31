@@ -7,15 +7,21 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace CurePlease2.UI.ValueConverters
+namespace Altomatic.UI.ValueConverters
 {
-	[ValueConversion(typeof(bool), typeof(Brush))]
-	public class StatusBackgroundConverter : IValueConverter
+	[ValueConversion(typeof(double), typeof(Brush))]
+	public class CurrentHppBrushConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var isPaused = (bool)value;
-			return isPaused ? Brushes.LightPink : Brushes.PaleGreen;
+			var hpp = (double)value;
+			return hpp switch
+			{
+				var x when x > 75 => Brushes.Green,
+				var x when x > 50 => Brushes.Yellow,
+				var x when x > 25 => Brushes.Orange,
+				_ => Brushes.Red
+			};
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

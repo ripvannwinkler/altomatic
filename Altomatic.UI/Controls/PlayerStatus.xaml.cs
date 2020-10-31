@@ -1,4 +1,4 @@
-﻿using CurePlease2.UI.ViewModels;
+﻿using Altomatic.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CurePlease2.UI.Controls
+namespace Altomatic.UI.Controls
 {
 	/// <summary>
 	/// Interaction logic for PlayerStatus.xaml

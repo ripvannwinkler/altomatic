@@ -5,23 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Media;
 
-namespace CurePlease2.UI.ValueConverters
+namespace Altomatic.UI.ValueConverters
 {
-	[ValueConversion(typeof(double), typeof(Brush))]
-	public class CurrentHppBrushConverter : IValueConverter
+	[ValueConversion(typeof(bool), typeof(string))]
+	public class StatusLabelConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var hpp = (double)value;
-			return hpp switch
-			{
-				var x when x > 75 => Brushes.Green,
-				var x when x > 50 => Brushes.Yellow,
-				var x when x > 25 => Brushes.Orange,
-				_ => Brushes.Red
-			};
+			var isPaused = (bool)value;
+			return isPaused ? "Paused" : "Running";
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

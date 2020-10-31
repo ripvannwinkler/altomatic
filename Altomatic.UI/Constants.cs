@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CurePlease2.UI
+namespace Altomatic.UI
 {
   public static class Constants
   {
