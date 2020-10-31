@@ -7,7 +7,7 @@ using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 using EliteMMO.API;
 
-namespace Altomatic.UI.Game
+namespace Altomatic.UI.Game.Strategies
 {
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
@@ -16,7 +16,7 @@ namespace Altomatic.UI.Game
 		{
 			var members = app.Monitored.Party.GetPartyMembers();
 
-			for (var i = 0; i < 18; i++)
+			for (var i = 0; i < members.Count; i++)
 			{
 				if (members.Count >= i)
 				{

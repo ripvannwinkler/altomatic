@@ -8,6 +8,6 @@ namespace Altomatic.UI
 {
   public static class Constants
   {
-    public const string MainWindowTitle = "CurePlease 2.0";
+    public const string MainWindowTitle = "Altomatic";
   }
 }

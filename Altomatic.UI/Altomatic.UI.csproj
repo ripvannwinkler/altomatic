@@ -113,8 +113,12 @@
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
     <Compile Include="Game\ActionManager.cs" />
-    <Compile Include="Game\IGameStrategy.cs" />
-    <Compile Include="Game\RefreshPlayerInfoStrategy.cs" />
+    <Compile Include="Game\Data\Buffs.cs" />
+    <Compile Include="Game\Data\Jobs.cs" />
+    <Compile Include="Game\Data\Spells.cs" />
+    <Compile Include="Game\Strategies\IGameStrategy.cs" />
+    <Compile Include="Game\Strategies\RefreshPlayerInfoStrategy.cs" />
+    <Compile Include="Game\Strategies\ValidateProcessStrategy.cs" />
     <Compile Include="Utilities\PlayerUtilities.cs" />
     <Compile Include="Utilities\ProcessUtilities.cs" />
     <Compile Include="ValueConverters\CurrentHppBrushConverter.cs" />

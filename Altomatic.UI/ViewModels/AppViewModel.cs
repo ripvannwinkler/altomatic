@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Altomatic.Game.Data;
 using Altomatic.UI.Game;
+using Altomatic.UI.Game.Strategies;
 using Altomatic.UI.Utilities;
 using EliteMMO.API;
 
@@ -111,20 +113,25 @@ namespace Altomatic.UI.ViewModels
 			set { /* ignore */ }
 		}
 
+		public Jobs Jobs = new Jobs();
+		public Spells Spells = new Spells();
 		public ActionManager ActionManager { get; }
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 
 		public AppViewModel()
-    {
-      RefreshProcessList();
-			InitializePlayers(true);
-      ActionManager = new ActionManager(this);
-    }
-
-    public void RefreshProcessList()
 		{
+			RefreshProcessList();
+			InitializePlayers(true);
+			ActionManager = new ActionManager(this);
+		}
+
+		public void RefreshProcessList()
+		{
+			StatusMessage = "Refreshing process list...";
 			Processes = ProcessUtilities.GetProcesses();
 			ResetPlayerVitals();
+
+			StatusMessage = "Ready";
 		}
 
 		public void SetHealer(Process process)
@@ -139,15 +146,15 @@ namespace Altomatic.UI.ViewModels
 
 		private void InitializePlayers(bool firstRun = false)
 		{
-				Players.Clear();
-				for (var i = 0; i < 18; i++)
-				{
-					Players.Add(new PlayerViewModel(this));
-				}
+			Players.Clear();
+			for (var i = 0; i < 18; i++)
+			{
+				Players.Add(new PlayerViewModel(this));
+			}
 		}
 
 		private void ResetPlayerVitals()
-    {
+		{
 			for (var i = 0; i < players.Count; i++)
 			{
 				players[i].ResetVitals();
@@ -155,7 +162,7 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		public bool CanPerformActions()
-    {
+		{
 			return
 				healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
 				healer.Player.LoginStatus != (int)LoginStatus.Loading &&
@@ -165,25 +172,30 @@ namespace Altomatic.UI.ViewModels
 					healer.Player.Status == (int)EntityStatus.Idle ||
 					healer.Player.Status == (int)EntityStatus.Engaged
 				);
-    }
+		}
 
 		public async Task ExecuteAsync()
 		{
 			if (isPaused) return;
 
-			if (IsReadyToRun && CanPerformActions())
+			try
 			{
-				foreach (var strategy in Strategies)
+				if (IsReadyToRun && CanPerformActions())
 				{
-					StatusMessage = "Executing strategies...";
-					if (!await strategy.ExecuteAsync(this))
+					foreach (var strategy in Strategies)
 					{
-						return;
+						StatusMessage = "Executing strategies...";
+						if (!await strategy.ExecuteAsync(this))
+						{
+							return;
+						}
 					}
 				}
 			}
-
-			StatusMessage = "Ready";
+			finally
+			{
+				StatusMessage = "Ready";
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

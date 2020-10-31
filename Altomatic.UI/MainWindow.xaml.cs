@@ -1,4 +1,5 @@
 ﻿using Altomatic.UI.Game;
+using Altomatic.UI.Game.Strategies;
 using Altomatic.UI.ViewModels;
 using EliteMMO.API;
 using System;
@@ -46,6 +47,7 @@ namespace Altomatic.UI
 		private void InitializeAppData()
 		{
 			AppData = new AppViewModel();
+			AppData.Strategies.Add(new ValidateProcessStrategy());
 			AppData.Strategies.Add(new RefreshPlayerInfoStrategy());
 			DataContext = AppData;
 		}

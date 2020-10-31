@@ -23,7 +23,7 @@
 				Storyboard.TargetName="MainWindow1"
         Storyboard.TargetProperty="(Background).(Color)" 
         FillBehavior="Stop" 
-        Duration="0:0:0.100"/>
+        Duration="0:0:0.300"/>
 		</Storyboard>
 	</Window.Resources>
 	<DockPanel>
@@ -125,7 +125,13 @@
 					IsEnabled="{Binding IsReadyToRun}"
 					Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}}"
 					Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
-					Click="PauseButton_Click"/>
+					Click="PauseButton_Click">
+					<Button.Triggers>
+						<EventTrigger RoutedEvent="Button.Click">
+							<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
+						</EventTrigger>
+					</Button.Triggers>
+				</Button>
 			</StackPanel>
 		</Border>
 	</DockPanel>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Altomatic.UI.ViewModels;
 
-namespace Altomatic.UI.Game
+namespace Altomatic.UI.Game.Strategies
 {
   public interface IGameStrategy
   {
