@@ -1,0 +1,58 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.cache
+.vs/
+
+# Packages
+node_modules/
+packages/
+
+# App secrets
+secrets.json
+
+# Resharper prefs
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+_ReSharper*/
+
+# Application insights config
+ApplicationInsights.config
+
+# MSTest results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]eleases/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+build/
+logs/
+dist/
+x64/
+x86/
+
+# Profiler results
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Publishing configs
+*.[Pp]ublish[Ss]ettings
+*.[Pp]ublish.xml
+*.[Aa]zurePubxml
+*.publishproj
+*.pubxml
+*.pubxml.user
+
+
+
+

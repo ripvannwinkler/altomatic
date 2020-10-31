@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="CurePlease2.UI.Controls.PlayerStatus"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CurePlease2.UI.Controls"
+						 xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+						 xmlns:interactive="clr-namespace:CurePlease2.UI.Behaviors"
+						 xmlns:converters="clr-namespace:CurePlease2.UI.ValueConverters"
+             mc:Ignorable="d" 
+						 Name="PlayerStatusControl"
+             d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<converters:CurrentHppBrushConverter x:Key="hppBrushConverter"/>
+	</UserControl.Resources>
+	<Grid DataContext="{Binding ElementName=PlayerStatusControl}">
+		<DockPanel>
+			<Border BorderBrush="{x:Null}" BorderThickness="0 0 0 5" DockPanel.Dock="Bottom"/>
+			<Border Padding="5 5 5 5" Background="Transparent">
+				<DockPanel>
+					<Button Name="Auto" Padding="5 2 5 2" DockPanel.Dock="Right" VerticalAlignment="Center" ContextMenuService.Placement="Bottom">
+						<behaviors:Interaction.Behaviors>
+							<interactive:DropDownButtonBehavior/>
+						</behaviors:Interaction.Behaviors>
+						<Button.Content>
+							<Label Padding="0">Auto</Label>
+						</Button.Content>
+						<Button.ContextMenu>
+							<ContextMenu >
+								<MenuItem IsCheckable="True" Header="Haste" />
+								<MenuItem IsCheckable="True" Header="Flurry" />
+								<MenuItem IsCheckable="True" Header="Refresh" />
+								<MenuItem IsCheckable="True" Header="Phalanx" />
+								<MenuItem IsCheckable="True" Header="Firestorm" />
+								<MenuItem IsCheckable="True" Header="Sandstorm" />
+								<MenuItem IsCheckable="True" Header="Rainstorm" />
+								<MenuItem IsCheckable="True" Header="Windstorm" />
+								<MenuItem IsCheckable="True" Header="Thunderstorm" />
+								<MenuItem IsCheckable="True" Header="Hailstorm" />
+								<MenuItem IsCheckable="True" Header="Aurastorm" />
+								<MenuItem IsCheckable="True" Header="Voidstorm" />
+							</ContextMenu>
+						</Button.ContextMenu>
+					</Button>
+					<CheckBox x:Name="Enabled" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 5 0" Cursor="Hand" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+						<DockPanel>
+							<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
+								<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>
+							</Label>
+							<ProgressBar x:Name="PlayerHpp" Minimum="0" Maximum="100" Height="3" Foreground="{Binding Player.CurrentHpp, Converter={StaticResource hppBrushConverter}}" Value="{Binding Player.CurrentHpp}"/>
+						</DockPanel>
+					</CheckBox>
+				</DockPanel>
+			</Border>
+		</DockPanel>
+	</Grid>
+</UserControl>
