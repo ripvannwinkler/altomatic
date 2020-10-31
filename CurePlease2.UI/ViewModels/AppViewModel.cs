@@ -1,12 +1,9 @@
-﻿using EliteMMO.API;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
+using CurePlease2.UI.Game;
+using EliteMMO.API;
 
 namespace CurePlease2.UI.ViewModels
 {
@@ -45,11 +42,18 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged([CallerMemberName] string name = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-		}
+		private bool isPaused = true;
+		public bool IsPaused
+    {
+      get { return isPaused; }
+			set
+      {
+				isPaused = value;
+				OnPropertyChanged();
+      }
+    }
+
+		public List<IGameStrategy> Strategies { get; set; } = new List<IGameStrategy>();
 
 		public AppViewModel()
 		{
@@ -57,6 +61,21 @@ namespace CurePlease2.UI.ViewModels
 			{
 				Players.Add(new PlayerViewModel(this));
 			}
+		}
+
+		public async Task ExecuteAsync()
+		{
+			await Task.Yield();
+			foreach (var strategy in Strategies)
+			{
+				strategy.Execute(this);
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 	}
 }

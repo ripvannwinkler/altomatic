@@ -5,12 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CurePlease2.UI"
 				xmlns:uc="clr-namespace:CurePlease2.UI.Controls"
+				xmlns:converters="clr-namespace:CurePlease2.UI.ValueConverters"
         mc:Ignorable="d"
 				MinWidth="800"
-				MinHeight="400"
-				Height="400"
+				MinHeight="450"
+				Height="450"
 				Width="800"
         Title="CurePlease 2.x">
+	<Window.Resources>
+		<converters:StatusLabelConverter x:Key="statusLabelConverter"/>
+		<converters:StatusBackgroundConverter x:Key="statusBackgroundConverter"/>
+	</Window.Resources>
 	<DockPanel>
 		<Border Padding="10 15 10 10" DockPanel.Dock="Top">
 			<Grid>
@@ -68,6 +73,16 @@
 				</StackPanel>
 			</Grid>
 		</Border>
-		<StackPanel></StackPanel>
+		<Border Padding="15 15 15 15">
+			<StackPanel>
+				<Button 
+					Padding="8" 
+					FontSize="18"
+					Cursor="Hand"
+					Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}}"
+					Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
+					Click="PauseButton_Click"/>
+			</StackPanel>
+		</Border>
 	</DockPanel>
 </Window>

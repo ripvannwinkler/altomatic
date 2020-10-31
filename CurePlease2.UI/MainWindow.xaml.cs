@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,6 +36,27 @@ namespace CurePlease2.UI
 			InitializeComponent();
 			AppData = new AppViewModel();
 			DataContext = AppData;
+			StartMainLoop();
 		}
-	}
+
+		private void StartMainLoop()
+		{
+			var t = new Thread(async () =>
+			{
+				await Task.Delay(200);
+				await Application.Current.Dispatcher.InvokeAsync(async () =>
+				{
+					await AppData.ExecuteAsync();
+				});
+			});
+
+			t.IsBackground = true;
+			t.Start();
+		}
+
+    private void PauseButton_Click(object sender, RoutedEventArgs e)
+    {
+			AppData.IsPaused = !AppData.IsPaused;
+    }
+  }
 }

@@ -63,7 +63,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Game\DummyGameStrategy.cs" />
+    <Compile Include="Game\IGameStrategy.cs" />
     <Compile Include="ValueConverters\CurrentHppBrushConverter.cs" />
+    <Compile Include="ValueConverters\StatusBackgroundConverter.cs" />
+    <Compile Include="ValueConverters\StatusLabelConverter.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Page Include="Controls\PlayerStatus.xaml">
