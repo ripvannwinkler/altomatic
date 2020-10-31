@@ -113,15 +113,15 @@ namespace Altomatic.UI.ViewModels
 			set { /* ignore */ }
 		}
 
-		public Jobs Jobs = new Jobs();
-		public Spells Spells = new Spells();
+		public Jobs Jobs { get; } = new Jobs();
+		public Spells Spells { get; } = new Spells();
 		public ActionManager ActionManager { get; }
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 
 		public AppViewModel()
 		{
+			InitializePlayers();
 			RefreshProcessList();
-			InitializePlayers(true);
 			ActionManager = new ActionManager(this);
 		}
 
@@ -144,7 +144,7 @@ namespace Altomatic.UI.ViewModels
 			Monitored = new EliteAPI(process.Id);
 		}
 
-		private void InitializePlayers(bool firstRun = false)
+		private void InitializePlayers()
 		{
 			Players.Clear();
 			for (var i = 0; i < 18; i++)

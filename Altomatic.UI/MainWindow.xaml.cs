@@ -29,12 +29,12 @@ namespace Altomatic.UI
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private readonly static DependencyProperty AppDataProperty = DependencyProperty.Register(nameof(AppData), typeof(AppViewModel), typeof(MainWindow));
+		private readonly static DependencyProperty appDataProperty = DependencyProperty.Register(nameof(AppData), typeof(AppViewModel), typeof(MainWindow));
 
 		public AppViewModel AppData
 		{
-			get { return (AppViewModel)GetValue(AppDataProperty); }
-			set { SetValue(AppDataProperty, value); }
+			get { return (AppViewModel)GetValue(appDataProperty); }
+			set { SetValue(appDataProperty, value); }
 		}
 
 		public MainWindow()

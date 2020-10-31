@@ -16,8 +16,6 @@ namespace Altomatic.UI.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
-		private static readonly Random rng = new Random();
-
 		string name;
 		public string Name
 		{
