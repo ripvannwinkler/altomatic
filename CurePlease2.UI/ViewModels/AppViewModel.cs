@@ -82,6 +82,24 @@ namespace CurePlease2.UI.ViewModels
 			get { return string.Join(" - ", Constants.MainWindowTitle, Profile ?? "No Profile Loaded"); }
 		}
 
+		public bool IsReadyToRun
+		{
+			get
+			{
+				return
+					!isPaused &&
+					healer != null &&
+					monitored != null &&
+					healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
+					healer.Player.LoginStatus != (int)LoginStatus.Loading &&
+					monitored.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
+					monitored.Player.LoginStatus != (int)LoginStatus.Loading &&
+					(
+						healer.Player.Status == (int)EntityStatus.Idle ||
+						healer.Player.Status == (int)EntityStatus.Engaged
+					);
+			}
+		}
 
 		public ActionManager ActionManager { get; }
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
@@ -99,7 +117,7 @@ namespace CurePlease2.UI.ViewModels
 
 		public async Task ExecuteAsync()
 		{
-			if (!isPaused)
+			if (IsReadyToRun)
 			{
 				foreach (var strategy in Strategies)
 				{
