@@ -11,7 +11,7 @@
 				MinHeight="450"
 				Height="450"
 				Width="800"
-        Title="CurePlease 2.x">
+        Title="{Binding MainWindowTitle}">
 	<Window.Resources>
 		<converters:StatusLabelConverter x:Key="statusLabelConverter"/>
 		<converters:StatusBackgroundConverter x:Key="statusBackgroundConverter"/>
@@ -35,7 +35,9 @@
 			</Grid>
 		</Border>
 		<StatusBar DockPanel.Dock="Bottom">
-			<StatusBarItem Name="Status">Ready</StatusBarItem>
+			<StatusBarItem Name="Status">
+				<TextBlock Text="{Binding StatusMessage}"/>
+			</StatusBarItem>
 		</StatusBar>
 		<Border Padding="4" DockPanel.Dock="Bottom">
 			<Grid>
@@ -79,6 +81,7 @@
 					Padding="8" 
 					FontSize="18"
 					Cursor="Hand"
+					MaxWidth="300"
 					Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}}"
 					Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
 					Click="PauseButton_Click"/>

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CurePlease2.UI.Game;
@@ -9,7 +11,7 @@ namespace CurePlease2.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
-		private EliteAPI healer;
+		EliteAPI healer;
 		public EliteAPI Healer
 		{
 			get { return healer; }
@@ -20,7 +22,7 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
-		private EliteAPI monitored;
+		EliteAPI monitored;
 		public EliteAPI Monitored
 		{
 			get { return monitored; }
@@ -31,7 +33,7 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
-		private List<PlayerViewModel> players = new List<PlayerViewModel>();
+		List<PlayerViewModel> players = new List<PlayerViewModel>();
 		public List<PlayerViewModel> Players
 		{
 			get { return players; }
@@ -42,21 +44,53 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
-		private bool isPaused = true;
+		bool isPaused = true;
 		public bool IsPaused
-    {
-      get { return isPaused; }
+		{
+			get { return isPaused; }
 			set
-      {
+			{
 				isPaused = value;
 				OnPropertyChanged();
-      }
-    }
+			}
+		}
 
-		public List<IGameStrategy> Strategies { get; set; } = new List<IGameStrategy>();
+		string profile;
+		public string Profile
+		{
+			get { return profile; }
+			set
+			{
+				profile = value;
+				OnPropertyChanged();
+			}
+		}
+
+		string statusMessage;
+		public string StatusMessage
+		{
+			get { return statusMessage; }
+			set
+			{
+				statusMessage = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public string MainWindowTitle
+		{
+			get { return string.Join(" - ", Constants.MainWindowTitle, Profile ?? "No Profile Loaded"); }
+		}
+
+
+		public ActionManager ActionManager { get; }
+		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 
 		public AppViewModel()
 		{
+			ActionManager = new ActionManager(this);
+			StatusMessage = "Ready";
+
 			for (var i = 0; i < 18; i++)
 			{
 				Players.Add(new PlayerViewModel(this));
@@ -65,11 +99,19 @@ namespace CurePlease2.UI.ViewModels
 
 		public async Task ExecuteAsync()
 		{
-			await Task.Yield();
-			foreach (var strategy in Strategies)
+			if (!isPaused)
 			{
-				strategy.Execute(this);
+				foreach (var strategy in Strategies)
+				{
+					StatusMessage = "Executing strategies...";
+					if (await strategy.ExecuteAsync(this))
+					{
+						return;
+					}
+				}
 			}
+
+			StatusMessage = "Ready";
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

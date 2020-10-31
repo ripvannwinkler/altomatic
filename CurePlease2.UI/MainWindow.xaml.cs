@@ -1,4 +1,5 @@
-﻿using CurePlease2.UI.ViewModels;
+﻿using CurePlease2.UI.Game;
+using CurePlease2.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,29 +35,48 @@ namespace CurePlease2.UI
 		public MainWindow()
 		{
 			InitializeComponent();
-			AppData = new AppViewModel();
-			DataContext = AppData;
+			InitializeAppData();
 			StartMainLoop();
+		}
+
+		private void InitializeAppData()
+		{
+			AppData = new AppViewModel();
+			AppData.Strategies.Add(new DummyGameStrategy());
+			DataContext = AppData;
 		}
 
 		private void StartMainLoop()
 		{
 			var t = new Thread(async () =>
 			{
-				await Task.Delay(200);
-				await Application.Current.Dispatcher.InvokeAsync(async () =>
+				while (true)
 				{
-					await AppData.ExecuteAsync();
-				});
+					try
+					{
+						await Task.Delay(200);
+						if (Application.Current?.Dispatcher != null)
+						{
+							await Application.Current.Dispatcher.InvokeAsync(async () =>
+							{
+								await AppData.ExecuteAsync();
+							});
+						}
+					}
+					catch (Exception ex)
+					{
+						AppData.StatusMessage = ex.Message;
+					}
+				}
 			});
 
 			t.IsBackground = true;
 			t.Start();
 		}
 
-    private void PauseButton_Click(object sender, RoutedEventArgs e)
-    {
+		private void PauseButton_Click(object sender, RoutedEventArgs e)
+		{
 			AppData.IsPaused = !AppData.IsPaused;
-    }
-  }
+		}
+	}
 }

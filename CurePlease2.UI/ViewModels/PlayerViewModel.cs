@@ -29,6 +29,17 @@ namespace CurePlease2.UI.ViewModels
 			}
 		}
 
+		bool enabled;
+		public bool Enabled
+		{
+			get { return enabled; }
+			set
+			{
+				enabled = value;
+				OnPropertyChanged();
+			}
+		}
+
 		int currentHp;
 		public int CurrentHp
 		{
@@ -66,6 +77,7 @@ namespace CurePlease2.UI.ViewModels
 		{
 			AppData = appData;
 			Name = Guid.NewGuid().ToString("n");
+			Enabled = true;
 
 			lock (rng)
 			{

@@ -33,5 +33,5 @@ namespace CurePlease2.UI.Controls
 		{
 			InitializeComponent();
 		}
-	}
+  }
 }

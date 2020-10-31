@@ -9,6 +9,6 @@ namespace CurePlease2.UI.Game
 {
   public interface IGameStrategy
   {
-    void Execute(AppViewModel appData);
+    Task<bool> ExecuteAsync(AppViewModel app);
   }
 }

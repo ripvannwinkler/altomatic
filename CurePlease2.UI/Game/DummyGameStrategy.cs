@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,10 @@ namespace CurePlease2.UI.Game
 {
   public class DummyGameStrategy : IGameStrategy
   {
-    public void Execute(AppViewModel appData)
+    public Task<bool> ExecuteAsync(AppViewModel app)
     {
-      // Do nothing
+      Debug.WriteLine("Dummy strategy executing...");
+      return Task.FromResult(false);
     }
   }
 }

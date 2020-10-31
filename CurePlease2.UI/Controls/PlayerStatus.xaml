@@ -42,7 +42,16 @@
 							</ContextMenu>
 						</Button.ContextMenu>
 					</Button>
-					<CheckBox x:Name="Enabled" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0 0 5 0" Cursor="Hand" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+					<CheckBox 
+						x:Name="Enabled" 
+						Cursor="Hand" 
+						Margin="0 0 5 0" 
+						DockPanel.Dock="Left" 
+						VerticalAlignment="Center" 
+						ToolTip="Enable actions on this player" 
+						HorizontalContentAlignment="Stretch" 
+						VerticalContentAlignment="Center"
+						IsChecked="{Binding Player.Enabled}">
 						<DockPanel>
 							<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
 								<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>
