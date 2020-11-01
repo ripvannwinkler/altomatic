@@ -16,11 +16,11 @@ namespace Altomatic.UI.Game.Strategies
         if (process.HasExited)
         {
           app.RefreshProcessList();
-          return Task.FromResult(false);
+          return Task.FromResult(true);
         }
       }
 
-      return Task.FromResult(true);
+      return Task.FromResult(false);
     }
   }
 }

@@ -13,34 +13,54 @@
 			<StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right">
 				<Border Padding="0 8 0 0">
 					<StackPanel Orientation="Horizontal">
-						<Button Name="Cancel1" Click="Cancel1_Click" IsCancel="True">
+						<Button Name="Cancel1" Margin="8 0 0 0" IsCancel="True">
 							<Button.Content>
 								<TextBlock>Cancel</TextBlock>
 							</Button.Content>
 						</Button>
-						<Button Name="Save1" Margin="8 0 0 0" Click="Save1_Click" IsDefault="True">
+						<Button Name="Load1" Margin="8 0 0 0" Click="Load1_Click">
+							<Button.Content>
+								<TextBlock>Load</TextBlock>
+							</Button.Content>
+						</Button>
+						<Button Name="Save1" Margin="8 0 0 0" IsDefault="True" Click="Save1_Click">
 							<Button.Content>
 								<TextBlock>Save</TextBlock>
+							</Button.Content>
+						</Button>
+						<Button Name="Save2" Margin="8 0 0 0" IsDefault="True" Click="Save2_Click">
+							<Button.Content>
+								<TextBlock>Save As...</TextBlock>
 							</Button.Content>
 						</Button>
 					</StackPanel>
 				</Border>
 			</StackPanel>
 			<TabControl>
-				<TabItem Header="Healing" Height="20" VerticalAlignment="Top">
-					<TextBlock>Healing stuff</TextBlock>
+				<TabItem Header="Healing">
+					<Border Padding="10">
+						<TextBlock>Healing stuff</TextBlock>
+					</Border>
 				</TabItem>
 				<TabItem Header="Debuff Removal">
-					<TextBlock>Debuff stuff</TextBlock>
+					<Border Padding="10">
+						<TextBlock>Debuff stuff</TextBlock>
+					</Border>
 				</TabItem>
 				<TabItem Header="Geomancy">
-					<TextBlock>Geomancy stuff</TextBlock>
+					<Border Padding="10">
+						<TextBlock>Geomancy stuff</TextBlock>
+					</Border>
 				</TabItem>
 				<TabItem Header="Job Abilities">
-					<TextBlock>Job ability stuff</TextBlock>
+					<Border Padding="10">
+						<TextBlock>Job ability stuff</TextBlock>
+					</Border>
 				</TabItem>
 				<TabItem Header="Other">
-					<TextBlock>Other stuff</TextBlock>
+					<Border Padding="10">
+						<TextBlock>Other stuff</TextBlock>
+					</Border>
 				</TabItem>
 			</TabControl>
 		</DockPanel>

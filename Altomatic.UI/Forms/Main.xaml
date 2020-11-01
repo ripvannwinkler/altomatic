@@ -32,7 +32,7 @@
 				<StackPanel Orientation="Vertical" VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="10 0 0 0">
 					<Button Name="Options1" Click="Options1_Click">
 						<Button.Content>
-							<TextBlock>Options</TextBlock>
+							<TextBlock>Options...</TextBlock>
 						</Button.Content>
 					</Button>
 					<Button Name="RefreshProcessesButton"  Margin="0 8 0 0" Click="RefreshProcessesButton_Click">

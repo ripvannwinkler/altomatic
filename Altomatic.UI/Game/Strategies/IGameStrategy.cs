@@ -13,7 +13,7 @@ namespace Altomatic.UI.Game.Strategies
     /// Execute this strategy
     /// </summary>
     /// <param name="app"></param>
-    /// <returns>True if execution should continue, false otherwise.</returns>
+    /// <returns>True if execution should break, false otherwise.</returns>
     Task<bool> ExecuteAsync(AppViewModel app);
   }
 }

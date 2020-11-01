@@ -1,26 +1,12 @@
-﻿using Altomatic.UI.Game;
-using Altomatic.UI.Game.Strategies;
-using Altomatic.UI.ViewModels;
-using EliteMMO.API;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Altomatic.UI.Game.Strategies;
+using Altomatic.UI.Utilities;
+using Altomatic.UI.ViewModels;
 
 namespace Altomatic.UI.Forms
 {
@@ -29,9 +15,11 @@ namespace Altomatic.UI.Forms
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private readonly static DependencyProperty appDataProperty = DependencyProperty.Register(nameof(AppData), typeof(AppViewModel), typeof(MainWindow));
+		private readonly static DependencyProperty appDataProperty = DependencyProperty.Register(nameof(Model), typeof(AppViewModel), typeof(MainWindow));
 
-		public AppViewModel AppData
+		private bool started = false;
+
+		public AppViewModel Model
 		{
 			get { return (AppViewModel)GetValue(appDataProperty); }
 			set { SetValue(appDataProperty, value); }
@@ -47,15 +35,21 @@ namespace Altomatic.UI.Forms
 
 		private void InitializeAppData()
 		{
-			AppData = new AppViewModel();
-			AppData.Strategies.Add(new ValidateProcessStrategy());
-			AppData.Strategies.Add(new RefreshPlayerInfoStrategy());
-			DataContext = AppData;
+			Model = new AppViewModel();
+			Model.Strategies.Add(new ValidateProcessStrategy());
+			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
+			DataContext = Model;
 		}
 
 		private void StartMainLoop()
 		{
-			var t = new Thread(async () =>
+			if (started)
+			{
+				throw new InvalidOperationException("Main loop already started.");
+			}
+
+			started = true;
+			new Thread(async () =>
 			{
 				while (true)
 				{
@@ -66,83 +60,52 @@ namespace Altomatic.UI.Forms
 						{
 							await Application.Current.Dispatcher.InvokeAsync(async () =>
 							{
-								await AppData.ExecuteAsync();
+								await Model.ExecuteAsync();
 							});
 						}
 					}
 					catch (Exception ex)
 					{
-						AppData.StatusMessage = ex.Message;
+						Model.StatusMessage = ex.Message;
 					}
 				}
-			});
-
-			t.IsBackground = true;
-			t.Start();
-		}
-
-		private void EnsureDlls()
-		{
-			if (!File.Exists("EliteMMO.Api.dll"))
+			})
 			{
-				new WebClient().DownloadFile("http://ext.elitemmonetwork.com/downloads/elitemmo_api/EliteMMO.API.dll", "EliteMMO.API.dll");
-			}
-
-			if (!File.Exists("EliteApi.dll"))
-			{
-				new WebClient().DownloadFile("http://ext.elitemmonetwork.com/downloads/eliteapi/EliteAPI.dll", "EliteAPI.dll");
-			}
+				IsBackground = true
+			}.Start();
 		}
 
 		private void PauseButton_Click(object sender, RoutedEventArgs e)
 		{
-			AppData.IsPaused = !AppData.IsPaused;
+			Model.TogglePaused();
 		}
 
 		private void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
 		{
-			AppData.RefreshProcessList();
+			Model.RefreshProcessList();
 		}
 
 		private void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			EnsureDlls();
-
 			if (e.AddedItems.Count > 0)
 			{
-				if (e.AddedItems[0] is Process process)
-				{
-					AppData.SetHealer(process);
-				}
-				else
-				{
-					MessageBox.Show("Invalid FFXI process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
+				ProcessUtilities.EnsureDlls();
+				Model.SetHealer(e.AddedItems[0] as Process);
 			}
 		}
 
 		private void MonitoredInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			EnsureDlls();
-
 			if (e.AddedItems.Count > 0)
 			{
-				if (e.AddedItems[0] is Process process)
-				{
-					AppData.SetMonitored(process);
-				}
-				else
-				{
-					MessageBox.Show("Invalid FFXI process.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
+				ProcessUtilities.EnsureDlls();
+				Model.SetMonitored(e.AddedItems[0] as Process);
 			}
 		}
 
 		private void Options1_Click(object sender, RoutedEventArgs e)
 		{
-			var form = new Options();
-			form.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-			form.ShowDialog();
+			new Options(Model.Options).ShowDialog();
 		}
 	}
 }

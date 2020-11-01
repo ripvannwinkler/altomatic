@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 using Altomatic.Game.Data;
 using Altomatic.UI.Game;
 using Altomatic.UI.Game.Strategies;
@@ -15,7 +18,32 @@ namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
+		EliteAPI healer;
+		EliteAPI monitored;
 		IEnumerable<Process> processes;
+		OptionsViewModel options = new OptionsViewModel();
+		List<PlayerViewModel> players = new List<PlayerViewModel>();
+
+		string statusMessage;
+		bool isPaused = true;
+
+		public Jobs Jobs { get; } = new Jobs();
+		public Spells Spells { get; } = new Spells();
+		public ActionManager ActionManager { get; }
+		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Notify UI of property changes
+		/// </summary>
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+
+		/// <summary>
+		/// FFXI process list
+		/// </summary>
 		public IEnumerable<Process> Processes
 		{
 			get { return processes; }
@@ -28,11 +56,13 @@ namespace Altomatic.UI.ViewModels
 
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(IsPaused));
-				OnPropertyChanged(nameof(IsReadyToRun));
+				OnPropertyChanged(nameof(GameIsReady));
 			}
 		}
 
-		EliteAPI healer;
+		/// <summary>
+		/// The healing player instance
+		/// </summary>
 		public EliteAPI Healer
 		{
 			get { return healer; }
@@ -40,11 +70,13 @@ namespace Altomatic.UI.ViewModels
 			{
 				healer = value;
 				OnPropertyChanged();
-				OnPropertyChanged(nameof(IsReadyToRun));
+				OnPropertyChanged(nameof(GameIsReady));
 			}
 		}
 
-		EliteAPI monitored;
+		/// <summary>
+		/// The monitored player instance
+		/// </summary>
 		public EliteAPI Monitored
 		{
 			get { return monitored; }
@@ -52,11 +84,13 @@ namespace Altomatic.UI.ViewModels
 			{
 				monitored = value;
 				OnPropertyChanged();
-				OnPropertyChanged(nameof(IsReadyToRun));
+				OnPropertyChanged(nameof(GameIsReady));
 			}
 		}
 
-		List<PlayerViewModel> players = new List<PlayerViewModel>();
+		/// <summary>
+		/// List of players to be cared after
+		/// </summary>
 		public List<PlayerViewModel> Players
 		{
 			get { return players; }
@@ -67,7 +101,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		bool isPaused = true;
+		/// <summary>
+		/// Is the bot paused?
+		/// </summary>
 		public bool IsPaused
 		{
 			get { return isPaused; }
@@ -78,19 +114,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		string profile;
-		public string Profile
-		{
-			get { return profile; }
-			set
-			{
-				profile = value;
-				OnPropertyChanged();
-				OnPropertyChanged(nameof(MainWindowTitle));
-			}
-		}
-
-		string statusMessage;
+		/// <summary>
+		/// The status message to display
+		/// </summary>
 		public string StatusMessage
 		{
 			get { return statusMessage; }
@@ -101,23 +127,45 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the options to use
+		/// </summary>
+		public OptionsViewModel Options
+		{
+			get { return options; }
+			set
+			{
+				options = value;
+				OnPropertyChanged();
+			}
+		}
+
+		/// <summary>
+		/// The title to use for the main window
+		/// </summary>
 		public string MainWindowTitle
 		{
-			get { return string.Join(" - ", Constants.MainWindowTitle, Profile ?? "No Profile Loaded"); }
+			get
+			{
+				return string.Join(" - ",
+					Constants.MainWindowTitle,
+					Options.SettingsFile ?? "No Profile Loaded");
+			}
 			set { /* ignore */ }
 		}
 
-		public bool IsReadyToRun
+		/// <summary>
+		/// Has the user selected both instances?
+		/// </summary>
+		public bool GameIsReady
 		{
 			get { return healer != null && monitored != null; }
 			set { /* ignore */ }
 		}
 
-		public Jobs Jobs { get; } = new Jobs();
-		public Spells Spells { get; } = new Spells();
-		public ActionManager ActionManager { get; }
-		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
-
+		/// <summary>
+		/// Creates a new instance of <see cref="AppViewModel"/>
+		/// </summary>
 		public AppViewModel()
 		{
 			InitializePlayers();
@@ -125,43 +173,55 @@ namespace Altomatic.UI.ViewModels
 			ActionManager = new ActionManager(this);
 		}
 
+		/// <summary>
+		/// Get an updated list of FFXI processes
+		/// </summary>
 		public void RefreshProcessList()
 		{
 			StatusMessage = "Refreshing process list...";
 			Processes = ProcessUtilities.GetProcesses();
-			ResetPlayerVitals();
-
+			ResetAllPlayerVitals();
 			StatusMessage = "Ready";
 		}
 
+		/// <summary>
+		/// Set the healer instance
+		/// </summary>
 		public void SetHealer(Process process)
 		{
 			Healer = new EliteAPI(process.Id);
 		}
 
+		/// <summary>
+		/// Set the monitored instance
+		/// </summary>
 		public void SetMonitored(Process process)
 		{
 			Monitored = new EliteAPI(process.Id);
 		}
 
-		private void InitializePlayers()
+		/// <summary>
+		/// Pauses or unpauses the bot
+		/// </summary>
+		public void TogglePaused()
 		{
-			Players.Clear();
-			for (var i = 0; i < 18; i++)
+			if (IsPaused)
 			{
-				Players.Add(new PlayerViewModel(this));
+				// handle stuff
+				IsPaused = false;
+			}
+			else
+			{
+				// handle stuff
+				IsPaused = true;
 			}
 		}
 
-		private void ResetPlayerVitals()
-		{
-			for (var i = 0; i < players.Count; i++)
-			{
-				players[i].ResetVitals();
-			}
-		}
-
-		public bool CanPerformActions()
+		/// <summary>
+		/// Is the healer instance ready to act?
+		/// </summary>
+		/// <returns></returns>
+		public bool CanExecuteStrategies()
 		{
 			return
 				healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
@@ -174,21 +234,44 @@ namespace Altomatic.UI.ViewModels
 				);
 		}
 
+		/// <summary>
+		/// Populate the initial player list
+		/// </summary>
+		private void InitializePlayers()
+		{
+			Players.Clear();
+			for (var i = 0; i < 18; i++)
+			{
+				Players.Add(new PlayerViewModel(this));
+			}
+		}
+
+		/// <summary>
+		/// Reset all player vital info
+		/// </summary>
+		private void ResetAllPlayerVitals()
+		{
+			for (var i = 0; i < players.Count; i++)
+			{
+				players[i].ResetVitals();
+			}
+		}
+
+		/// <summary>
+		/// Execute the main action loop
+		/// </summary>
 		public async Task ExecuteAsync()
 		{
 			if (isPaused) return;
 
 			try
 			{
-				if (IsReadyToRun && CanPerformActions())
+				if (GameIsReady && CanExecuteStrategies())
 				{
 					foreach (var strategy in Strategies)
 					{
-						StatusMessage = "Executing strategies...";
-						if (!await strategy.ExecuteAsync(this))
-						{
-							return;
-						}
+						StatusMessage = $"Executing {strategy.GetType().Name}";
+						if (await strategy.ExecuteAsync(this)) return;
 					}
 				}
 			}
@@ -198,10 +281,5 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged([CallerMemberName] string name = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-		}
 	}
 }

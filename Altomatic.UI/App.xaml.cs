@@ -13,5 +13,14 @@ namespace Altomatic.UI
 	/// </summary>
 	public partial class App : Application
 	{
-	}
+		public App()
+		{
+			DispatcherUnhandledException += HandleExceptions;
+		}
+
+		private void HandleExceptions(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		{
+			MessageBox.Show(e.Exception.Message, "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+		}
+  }
 }

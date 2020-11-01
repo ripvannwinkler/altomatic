@@ -28,7 +28,7 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		bool enabled;
-		public bool Enabled
+		public bool IsEnabled
 		{
 			get { return enabled; }
 			set
@@ -38,21 +38,21 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		double distance;
-		public double Distance
+		double distanceFromHealer;
+		public double DistanceFromHealer
 		{
-			get { return distance; }
+			get { return distanceFromHealer; }
 			set
 			{
-				distance = value;
+				distanceFromHealer = value;
 				OnPropertyChanged();
-				OnPropertyChanged(nameof(Active));
+				OnPropertyChanged(nameof(IsActive));
 			}
 		}
 
-		public bool Active
+		public bool IsActive
 		{
-			get { return distance < 21 && appData.IsReadyToRun; }
+			get { return distanceFromHealer < 21 && appData.GameIsReady; }
 			set { /* ignore */}
 		}
 
@@ -92,16 +92,16 @@ namespace Altomatic.UI.ViewModels
 		public PlayerViewModel(AppViewModel appData)
 		{
 			AppData = appData;
-			Distance = uint.MaxValue;
-			Enabled = true;
+			DistanceFromHealer = uint.MaxValue;
+			IsEnabled = true;
 		}
 
-    public void ResetVitals()
-    {
+		public void ResetVitals()
+		{
 			Name = "";
 			CurrentHp = 0;
 			CurrentHpp = 0;
-			Distance = uint.MaxValue;
-    }
-  }
+			DistanceFromHealer = uint.MaxValue;
+		}
+	}
 }

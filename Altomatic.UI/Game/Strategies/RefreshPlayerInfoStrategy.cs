@@ -24,7 +24,7 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
-			return Task.FromResult(true);
+			return Task.FromResult(false);
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace Altomatic.UI.Game.Strategies
 			player.Name = member.Name;
 			player.CurrentHp = member.CurrentHP;
 			player.CurrentHpp = member.CurrentHPP;
-			player.Distance = PlayerUtilities.GetDistance(entity1, entity2);
+			player.DistanceFromHealer = PlayerUtilities.GetDistance(entity1, entity2);
 		}
 	}
 }
