@@ -52,7 +52,7 @@ namespace Altomatic.UI.ViewModels
 
 		public bool IsActive
 		{
-			get { return distanceFromHealer < 21 && appData.GameIsReady; }
+			get { return distanceFromHealer < 21 && appData.IsGameReady; }
 			set { /* ignore */}
 		}
 

@@ -56,7 +56,7 @@ namespace Altomatic.UI.ViewModels
 
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(IsPaused));
-				OnPropertyChanged(nameof(GameIsReady));
+				OnPropertyChanged(nameof(IsGameReady));
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace Altomatic.UI.ViewModels
 			{
 				healer = value;
 				OnPropertyChanged();
-				OnPropertyChanged(nameof(GameIsReady));
+				OnPropertyChanged(nameof(IsGameReady));
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace Altomatic.UI.ViewModels
 			{
 				monitored = value;
 				OnPropertyChanged();
-				OnPropertyChanged(nameof(GameIsReady));
+				OnPropertyChanged(nameof(IsGameReady));
 			}
 		}
 
@@ -157,7 +157,7 @@ namespace Altomatic.UI.ViewModels
 		/// <summary>
 		/// Has the user selected both instances?
 		/// </summary>
-		public bool GameIsReady
+		public bool IsGameReady
 		{
 			get { return healer != null && monitored != null; }
 			set { /* ignore */ }
@@ -266,7 +266,7 @@ namespace Altomatic.UI.ViewModels
 
 			try
 			{
-				if (GameIsReady && CanExecuteStrategies())
+				if (IsGameReady && CanExecuteStrategies())
 				{
 					foreach (var strategy in Strategies)
 					{

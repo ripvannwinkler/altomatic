@@ -49,7 +49,7 @@
 						Cursor="Hand"
 						MaxWidth="300"
 						Margin="0 8 0 0"
-						IsEnabled="{Binding IsReadyToRun}"
+						IsEnabled="{Binding IsGameReady}"
 						Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
 						Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
 						Click="PauseButton_Click">
