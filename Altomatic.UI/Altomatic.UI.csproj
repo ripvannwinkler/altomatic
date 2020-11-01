@@ -116,12 +116,15 @@
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game\ActionManager.cs" />
+    <Compile Include="Game\AddonInterface.cs" />
     <Compile Include="Game\Data\Buffs.cs" />
-    <Compile Include="Game\Data\Jobs.cs" />
+    <Compile Include="Game\Data\JobNames.cs" />
+    <Compile Include="Game\Strategies\CuragaPartyStrategy.cs" />
     <Compile Include="Game\Strategies\IGameStrategy.cs" />
     <Compile Include="Game\Strategies\RefreshPlayerInfoStrategy.cs" />
     <Compile Include="Game\Strategies\ValidateProcessStrategy.cs" />
     <Compile Include="Game\Data\CurePotency.cs" />
+    <Compile Include="Utilities\EliteApiExtensions.cs" />
     <Compile Include="Utilities\HealingUtilities.cs" />
     <Compile Include="Utilities\PlayerUtilities.cs" />
     <Compile Include="Utilities\ProcessUtilities.cs" />
@@ -199,5 +202,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

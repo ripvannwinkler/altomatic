@@ -5,11 +5,11 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
 {
-	public class Jobs : Dictionary<ushort, string>
+	public class JobNames : Dictionary<ushort, string>
 	{
 		public AppViewModel App { get; }
 
-		public Jobs(AppViewModel app)
+		public JobNames(AppViewModel app)
 		{
 			Add(1, "WAR");
 			Add(2, "MNK");

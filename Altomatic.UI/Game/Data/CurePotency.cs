@@ -1,4 +1,5 @@
 ﻿using System;
+using Altomatic.UI.ViewModels;
 using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
@@ -187,6 +188,9 @@ namespace Altomatic.UI.Game.Data
 			get { return Cure6; }
 			set { /* ignore */}
 		}
+
+		public CurePotency(AppViewModel model) : 
+			this(model.Healer.Player, model.Options.Config.CurePotency) { }
 
 		public CurePotency(PlayerTools player, double potency)
 		{

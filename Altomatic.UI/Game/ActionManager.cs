@@ -19,11 +19,16 @@ namespace Altomatic.UI.Game
 			this.App = App;
 		}
 
+		public void ProcessAddonEvent(AddonEvent @event)
+    {
+
+    }
+
 		public async Task<bool> UseItem(string itemName, string targetName = "<me>")
 		{
 			return await DoAction(() =>
 			{
-				App.StatusMessage = $"Using item {itemName} on {targetName}";
+				App.SetStatus($"Using item {itemName} on {targetName}");
 				return true;
 			});
 		}
@@ -32,7 +37,7 @@ namespace Altomatic.UI.Game
 		{
 			return await DoAction(() =>
 			{
-				App.StatusMessage = $"Using ability {abilityName} on {targetName}";
+				App.SetStatus($"Using ability {abilityName} on {targetName}");
 				return true;
 			});
 		}
@@ -41,7 +46,7 @@ namespace Altomatic.UI.Game
 		{
 			return await DoAction(() =>
 			{
-				App.StatusMessage = $"Casting {spellName} on {targetName}";
+				App.SetStatus($"Casting {spellName} on {targetName}");
 				return true;
 			});
 		}

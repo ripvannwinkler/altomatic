@@ -8,7 +8,7 @@
 				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
 				MinWidth="800"
-				MinHeight="480"
+				MinHeight="530"
 				Height="450"
 				Width="800"
 				Name="MainWindow1"
@@ -26,46 +26,15 @@
         Duration="0:0:0.300"/>
 		</Storyboard>
 	</Window.Resources>
-	<DockPanel>
-		<Border Padding="10 15 10 10" DockPanel.Dock="Top">
+	<DockPanel LastChildFill="False">
+		<Border Padding="10 15 10 5" DockPanel.Dock="Top">
 			<DockPanel>
-				<StackPanel Orientation="Vertical" VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="10 0 0 0">
-					<Button Name="Options1" Click="Options1_Click">
-						<Button.Content>
-							<TextBlock>Options...</TextBlock>
-						</Button.Content>
-					</Button>
-					<Button Name="RefreshProcessesButton"  Margin="0 8 0 0" Click="RefreshProcessesButton_Click">
-						<Button.Content>
-							<TextBlock>Refresh Processes</TextBlock>
-						</Button.Content>
-						<Button.Triggers>
-							<EventTrigger RoutedEvent="Button.Click">
-								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
-							</EventTrigger>
-						</Button.Triggers>
-					</Button>
-					<Button 
-						Cursor="Hand"
-						MaxWidth="300"
-						Margin="0 8 0 0"
-						IsEnabled="{Binding IsGameReady}"
-						Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
-						Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
-						Click="PauseButton_Click">
-						<Button.Triggers>
-							<EventTrigger RoutedEvent="Button.Click">
-								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
-							</EventTrigger>
-						</Button.Triggers>
-					</Button>
-				</StackPanel>
-				<GroupBox Header="Select your game instances:" VerticalAlignment="Bottom" Padding="8 12 8 12">
+				<GroupBox Header="Select your game instances:" VerticalAlignment="Center" Padding="8 12 8 12">
 					<StackPanel VerticalAlignment="Center">
 						<DockPanel Margin="0 0 0 8">
 							<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Healer</Label>
 							<ComboBox Name="HealerInstance" ItemsSource="{Binding Processes}" HorizontalContentAlignment="Stretch" SelectionChanged="HealerInstance_SelectionChanged">
-								<ComboBox.ItemTemplate>									
+								<ComboBox.ItemTemplate>
 									<DataTemplate>
 										<StackPanel Orientation="Horizontal">
 											<TextBlock Text="{Binding MainWindowTitle}" />
@@ -130,8 +99,67 @@
 				</Grid>
 			</GroupBox>
 		</Border>
-		<Border Padding="15 15 15 15">
-			<StackPanel>
+		<Border Padding="15 5 15 15" DockPanel.Dock="Top">
+			<StackPanel HorizontalAlignment="Center">
+				<Label 
+					Margin="0 0 0 8"
+					HorizontalContentAlignment="Stretch" 
+					HorizontalAlignment="Center">
+					<TextBlock>
+						<TextBlock.Style>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="Text" Value="Addon is NOT loaded."/>
+								<Setter Property="Foreground" Value="Red"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="True">
+										<Setter Property="Text" Value="Addon is loaded and ready."/>
+										<Setter Property="Foreground" Value="Green"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+				</Label>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<Button 
+					Name="PauseButton"
+					Cursor="Hand"
+					MaxWidth="300"
+					Margin="8 0 8 0"
+					IsEnabled="{Binding IsGameReady}"
+					Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
+					Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
+					Click="PauseButton_Click">
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
+					<Button 
+					Name="OptionsButton" 
+					Margin="8 0 8 0"
+					Click="OptionsButton_Click">
+						<Button.Content>
+							<TextBlock>Options...</TextBlock>
+						</Button.Content>
+					</Button>
+					<Button Name="RefreshProcessesButton" Margin="8 0 8 0" Click="RefreshProcessesButton_Click">
+						<Button.Content>
+							<TextBlock>Refresh Processes</TextBlock>
+						</Button.Content>
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
+					<Button Name="ReloadAddonButton" Margin="8 0 8 0" Click="ReloadAddonButton_Click">
+						<Button.Content>
+							<TextBlock>Reload Addon</TextBlock>
+						</Button.Content>
+					</Button>
+				</StackPanel>
 			</StackPanel>
 		</Border>
 	</DockPanel>

@@ -32,14 +32,14 @@ namespace Altomatic.UI.Game.Strategies
 		/// </summary>
 		private void UpdatePlayerInfo(AppViewModel app, EliteAPI.PartyMember member)
 		{
-			var player = app.Players[member.MemberNumber];
-			var entity1 = app.Healer.Entity.GetLocalPlayer();
-			var entity2 = app.Healer.Entity.GetEntity((int)member.TargetIndex);
+			var healer = app.Healer.Entity.GetLocalPlayer();
+			var player = app.Players.ElementAt(member.MemberNumber);
+			var playerEntity = app.Healer.Entity.GetEntity((int)member.TargetIndex);
 
 			player.Name = member.Name;
 			player.CurrentHp = member.CurrentHP;
 			player.CurrentHpp = member.CurrentHPP;
-			player.DistanceFromHealer = PlayerUtilities.GetDistance(entity1, entity2);
+			player.DistanceFromHealer = PlayerUtilities.GetDistance(healer, playerEntity);
 		}
 	}
 }

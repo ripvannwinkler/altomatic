@@ -38,6 +38,7 @@ namespace Altomatic.UI.Forms
 			Model = new AppViewModel();
 			Model.Strategies.Add(new ValidateProcessStrategy());
 			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
+			Model.Strategies.Add(new CuragaPartyStrategy());
 			DataContext = Model;
 		}
 
@@ -60,13 +61,13 @@ namespace Altomatic.UI.Forms
 						{
 							await Application.Current.Dispatcher.InvokeAsync(async () =>
 							{
-								await Model.ExecuteAsync();
+								await Model.ExecuteActionsAsync();
 							});
 						}
 					}
 					catch (Exception ex)
 					{
-						Model.StatusMessage = ex.Message;
+						MessageBox.Show(ex.ToString());
 					}
 				}
 			})
@@ -85,6 +86,16 @@ namespace Altomatic.UI.Forms
 			Model.RefreshProcessList();
 		}
 
+		private void OptionsButton_Click(object sender, RoutedEventArgs e)
+		{
+			new Options(Model.Options).ShowDialog();
+		}
+
+		private async void ReloadAddonButton_Click(object sender, RoutedEventArgs e)
+		{
+			await Model.ReloadAddon();
+		}
+
 		private void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (e.AddedItems.Count > 0)
@@ -101,11 +112,6 @@ namespace Altomatic.UI.Forms
 				ProcessUtilities.EnsureDlls();
 				Model.SetMonitored(e.AddedItems[0] as Process);
 			}
-		}
-
-		private void Options1_Click(object sender, RoutedEventArgs e)
-		{
-			new Options(Model.Options).ShowDialog();
-		}
-	}
+		}		
+  }
 }
