@@ -323,6 +323,7 @@ namespace Altomatic.UI.ViewModels
 		private bool CanExecuteActions()
 		{
 			return
+				isAddonLoaded &&
 				healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
 				healer.Player.LoginStatus != (int)LoginStatus.Loading &&
 				monitored.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
