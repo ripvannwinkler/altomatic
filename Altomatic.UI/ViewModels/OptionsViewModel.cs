@@ -13,7 +13,9 @@ namespace Altomatic.UI.ViewModels
 {
 	public class OptionsViewModel : INotifyPropertyChanged
 	{
+		AppViewModel App;
 		Config config = new Config();
+		string settingsDir = Path.Combine(Environment.CurrentDirectory, "settings");
 		string settingsFile;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -42,6 +44,12 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public OptionsViewModel(AppViewModel app)
+		{
+			App = app ?? throw new ArgumentNullException(nameof(app));
+			Directory.CreateDirectory(settingsDir);
+		}
+
 		public void Save()
 		{
 			if (!string.IsNullOrEmpty(SettingsFile))
@@ -55,6 +63,7 @@ namespace Altomatic.UI.ViewModels
 		public void SaveAs()
 		{
 			var fd = new SaveFileDialog();
+			fd.InitialDirectory = settingsDir;
 			fd.Filter = "Settings Files | *.xml";
 			if (fd.ShowDialog() == DialogResult.OK)
 			{
@@ -65,14 +74,40 @@ namespace Altomatic.UI.ViewModels
 
 		public void Load()
 		{
+			if (!string.IsNullOrWhiteSpace(SettingsFile))
+			{
+				using var reader = File.OpenText(SettingsFile);
+				var xml = new XmlSerializer(typeof(Config));
+				Config = (Config)xml.Deserialize(reader);
+			}
+		}
+
+		public void LoadFrom()
+		{
 			var fd = new OpenFileDialog();
+			fd.InitialDirectory = settingsDir;
 			fd.Filter = "Settings Files | *.xml";
 			if (fd.ShowDialog() == DialogResult.OK)
 			{
-				using var reader = File.OpenText(fd.FileName);
-				var xml = new XmlSerializer(typeof(Config));
-				Config = (Config)xml.Deserialize(reader);
 				SettingsFile = fd.FileName;
+				Load();
+			}
+		}
+
+		public void Autoload(string playerName, string jobName)
+		{
+			if (!string.IsNullOrWhiteSpace(playerName))
+			{
+				if (File.Exists($@"settings\{playerName}_{jobName}.xml"))
+				{
+					SettingsFile = $@"settings\{playerName}_{jobName}.xml";
+					Load();
+				}
+				else if (File.Exists($@"settings\{jobName}.xml"))
+				{
+					SettingsFile = $@"settings\{jobName}.xml";
+					Load();
+				}
 			}
 		}
 	}
@@ -88,6 +123,7 @@ namespace Altomatic.UI.ViewModels
 		int curePotency = 50;
 		int cureThreshold = 80;
 		int curagaThreshold = 80;
+		int curagaRequiredTargets = 3;
 
 		public int CurePotency
 		{
@@ -115,6 +151,16 @@ namespace Altomatic.UI.ViewModels
 			set
 			{
 				curagaThreshold = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int CuragaRequiredTargets
+		{
+			get { return curagaRequiredTargets; }
+			set
+			{
+				curagaRequiredTargets = value;
 				OnPropertyChanged();
 			}
 		}

@@ -49,7 +49,7 @@ namespace Altomatic.UI.Forms
 
 		private void Load1_Click(object sender, RoutedEventArgs e)
     {
-			Model.Load();
+			Model.LoadFrom();
     }
 
   }

@@ -11,12 +11,12 @@ using EliteMMO.API;
 
 namespace Altomatic.UI.ViewModels
 {
-  public class AppViewModel : INotifyPropertyChanged
+	public class AppViewModel : INotifyPropertyChanged
 	{
 		EliteAPI healer;
 		EliteAPI monitored;
+		OptionsViewModel options;
 		IEnumerable<Process> processes;
-		OptionsViewModel options = new OptionsViewModel();
 		List<PlayerViewModel> players = new List<PlayerViewModel>();
 
 		string statusMessage;
@@ -165,6 +165,7 @@ namespace Altomatic.UI.ViewModels
 		{
 			InitializePlayers();
 			RefreshProcessList();
+			Options = new OptionsViewModel(this);
 			ActionManager = new ActionManager(this);
 		}
 
@@ -185,6 +186,13 @@ namespace Altomatic.UI.ViewModels
 		public void SetHealer(Process process)
 		{
 			Healer = new EliteAPI(process.Id);
+
+			var playerName = Healer?.Player?.Name ?? "";
+			var jobNumber = (ushort)(Healer?.Player?.Main ?? -1);
+			if (Jobs.TryGetValue(jobNumber, out var jobName))
+			{
+				Options.Autoload(playerName, jobName);
+			}
 		}
 
 		/// <summary>
