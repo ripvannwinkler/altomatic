@@ -22,8 +22,7 @@ namespace Altomatic.UI.ViewModels
 		string statusMessage;
 		bool isPaused = true;
 
-		public Jobs Jobs { get; } = new Jobs();
-		public Spells Spells { get; } = new Spells();
+		public Jobs Jobs { get; }
 		public ActionManager ActionManager { get; }
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -165,6 +164,8 @@ namespace Altomatic.UI.ViewModels
 		{
 			InitializePlayers();
 			RefreshProcessList();
+
+			Jobs = new Jobs(this);
 			Options = new OptionsViewModel(this);
 			ActionManager = new ActionManager(this);
 		}

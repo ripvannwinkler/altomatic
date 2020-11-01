@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Altomatic.UI.ViewModels;
+using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
 {
-  public class Jobs : Dictionary<ushort, string>
+	public class Jobs : Dictionary<ushort, string>
 	{
-		public Jobs()
+		public AppViewModel App { get; }
+
+		public Jobs(AppViewModel app)
 		{
 			Add(1, "WAR");
 			Add(2, "MNK");
@@ -28,6 +33,28 @@ namespace Altomatic.UI.Game.Data
 			Add(20, "SCH");
 			Add(21, "GEO");
 			Add(22, "RUN");
+
+			App = app ?? throw new ArgumentNullException(nameof(app));
+		}
+
+		public string GetMainJob(XiEntity entity)
+		{
+			if (TryGetValue(entity.Main, out var name))
+			{
+				return name;
+			}
+
+			return null;
+		}
+
+		public string GetSubJob(XiEntity entity)
+		{
+			if (TryGetValue(entity.Sub, out var name))
+			{
+				return name;
+			}
+
+			return null;
 		}
 	}
 }
