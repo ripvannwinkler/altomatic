@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using Altomatic.Game.Data;
 using Altomatic.UI.Game;
+using Altomatic.UI.Game.Data;
 using Altomatic.UI.Game.Strategies;
 using Altomatic.UI.Utilities;
 using EliteMMO.API;
 
 namespace Altomatic.UI.ViewModels
 {
-	public class AppViewModel : INotifyPropertyChanged
+  public class AppViewModel : INotifyPropertyChanged
 	{
 		EliteAPI healer;
 		EliteAPI monitored;

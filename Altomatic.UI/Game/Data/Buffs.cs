@@ -1,4 +1,4 @@
-﻿namespace Altomatic.Game.Data
+﻿namespace Altomatic.UI.Game.Data
 {
   public static class Buffs
   {

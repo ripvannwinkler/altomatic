@@ -37,13 +37,13 @@ namespace Altomatic.UI.Forms
 
 		private void Save1_Click(object sender, RoutedEventArgs e)
 		{
-			Model.Save(Model.SettingsFile);
+			Model.Save();
 			DialogResult = true;
 		}
 
     private void Save2_Click(object sender, RoutedEventArgs e)
     {
-			Model.Save();
+			Model.SaveAs();
 			DialogResult = true;
 		}
 

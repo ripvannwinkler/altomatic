@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Altomatic.Game.Data
+namespace Altomatic.UI.Game.Data
 {
-	public class Spells : List<SpellInfo>
+  public class Spells : List<SpellInfo>
 	{
 		public Spells()
 		{

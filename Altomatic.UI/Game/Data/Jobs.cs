@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static EliteMMO.API.EliteAPI;
+﻿using System.Collections.Generic;
 
-namespace Altomatic.Game.Data
+namespace Altomatic.UI.Game.Data
 {
-	public class Jobs : Dictionary<ushort, string>
+  public class Jobs : Dictionary<ushort, string>
 	{
 		public Jobs()
 		{

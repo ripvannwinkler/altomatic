@@ -7,8 +7,9 @@
         mc:Ignorable="d"
 				MinHeight="450"
 				MinWidth="800"
+				Name="OptionsWindow"
         Title="Options" Height="450" Width="800">
-	<Border Padding="8">
+	<Border Padding="8" DataContext="{Binding ElementName=OptionsWindow}">
 		<DockPanel>
 			<StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right">
 				<Border Padding="0 8 0 0">
@@ -28,7 +29,7 @@
 								<TextBlock>Save</TextBlock>
 							</Button.Content>
 						</Button>
-						<Button Name="Save2" Margin="8 0 0 0" IsDefault="True" Click="Save2_Click">
+						<Button Name="Save2" Margin="8 0 0 0" Click="Save2_Click">
 							<Button.Content>
 								<TextBlock>Save As...</TextBlock>
 							</Button.Content>
@@ -39,7 +40,72 @@
 			<TabControl>
 				<TabItem Header="Healing">
 					<Border Padding="10">
-						<TextBlock>Healing stuff</TextBlock>
+						<StackPanel>
+							<DockPanel Margin="0 0 0 8">
+								<Label 
+									Width="200"
+									DockPanel.Dock="Left"
+									VerticalAlignment="Center" 
+									ToolTip="The total amount of cure potency your character has from gear">
+									Cure Potency From Gear
+								</Label>
+								<Label VerticalAlignment="Center" Width="50" HorizontalAlignment="Right" DockPanel.Dock="Right">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Model.Config.CurePotency, FallbackValue=0}"/>
+										<TextBlock>%</TextBlock>
+									</StackPanel>
+								</Label>
+								<Slider 
+									Margin="5 0 5 0"
+									Minimum="0" Maximum="100" 
+									Value="{Binding Model.Config.CurePotency, FallbackValue=0}"
+									VerticalAlignment="Center" 
+									VerticalContentAlignment="Stretch" />
+							</DockPanel>
+							<DockPanel Margin="0 0 0 8">
+								<Label 
+									Width="200" 
+									DockPanel.Dock="Left"
+									VerticalAlignment="Center" 
+									ToolTip="Only cure players with HP % less than this amount.">
+									Cure HP % Threshold
+								</Label>
+								<Label VerticalAlignment="Center" Width="50" HorizontalAlignment="Right" DockPanel.Dock="Right">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Model.Config.CureThreshold, FallbackValue=0}"/>
+										<TextBlock>%</TextBlock>
+									</StackPanel>
+								</Label>
+								<Slider 
+									Margin="5 0 5 0"
+									Minimum="0" Maximum="100" 
+									Value="{Binding Model.Config.CureThreshold, FallbackValue=0}"
+									VerticalAlignment="Center" 
+									VerticalContentAlignment="Stretch" />
+							</DockPanel>
+							<DockPanel Margin="0 0 0 8">
+								<Label 
+									Width="200" 
+									DockPanel.Dock="Left"
+									VerticalAlignment="Center" 
+									ToolTip="Only curaga players with HP % less than this amount."
+									>
+									Curaga HP % Threshold
+								</Label>
+								<Label VerticalAlignment="Center" Width="50" HorizontalAlignment="Right" DockPanel.Dock="Right">
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Model.Config.CuragaThreshold, FallbackValue=0}"/>
+										<TextBlock>%</TextBlock>
+									</StackPanel>
+								</Label>
+								<Slider 
+									Margin="5 0 5 0"
+									Minimum="0" Maximum="100" 
+									Value="{Binding Model.Config.CuragaThreshold, FallbackValue=0}"
+									VerticalAlignment="Center" 
+									VerticalContentAlignment="Stretch" />
+							</DockPanel>
+						</StackPanel>
 					</Border>
 				</TabItem>
 				<TabItem Header="Debuff Removal">

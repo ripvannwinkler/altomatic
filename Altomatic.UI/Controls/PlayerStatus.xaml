@@ -13,7 +13,7 @@
 	<UserControl.Resources>
 		<converters:CurrentHppBrushConverter x:Key="hppBrushConverter"/>
 	</UserControl.Resources>
-	<Grid DataContext="{Binding ElementName=PlayerStatusControl}" IsEnabled="{Binding Player.Active}">
+	<Grid DataContext="{Binding ElementName=PlayerStatusControl}" IsEnabled="{Binding Player.IsActive}">
 		<DockPanel>
 			<Border BorderBrush="{x:Null}" BorderThickness="0 0 0 5" DockPanel.Dock="Bottom"/>
 			<Border Padding="5 5 5 5" Background="Transparent">
@@ -51,7 +51,7 @@
 						ToolTip="Enable actions on this player" 
 						HorizontalContentAlignment="Stretch" 
 						VerticalContentAlignment="Center"
-						IsChecked="{Binding Player.Enabled}">
+						IsChecked="{Binding Player.IsEnabled}">
 						<DockPanel>
 							<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
 								<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>

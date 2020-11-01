@@ -13,7 +13,7 @@ namespace Altomatic.UI.ViewModels
 {
 	public class OptionsViewModel : INotifyPropertyChanged
 	{
-		Config config;
+		Config config = new Config();
 		string settingsFile;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -42,21 +42,25 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		public void Save(string file = null)
+		public void Save()
 		{
-			if (string.IsNullOrWhiteSpace(file))
+			if (!string.IsNullOrEmpty(SettingsFile))
 			{
-				var fd = new SaveFileDialog();
-				fd.Filter = "Settings Files | *.xml";
-				if (fd.ShowDialog() == DialogResult.OK)
-				{
-					file = SettingsFile = fd.FileName;
-				}
+				using var writer = File.CreateText(SettingsFile);
+				var xml = new XmlSerializer(typeof(Config));
+				xml.Serialize(writer, Config);
 			}
+		}
 
-			using var writer = File.CreateText(file);
-			var xml = new XmlSerializer(typeof(Config));
-			xml.Serialize(writer, Config);
+		public void SaveAs()
+		{
+			var fd = new SaveFileDialog();
+			fd.Filter = "Settings Files | *.xml";
+			if (fd.ShowDialog() == DialogResult.OK)
+			{
+				SettingsFile = fd.FileName;
+				Save();
+			}
 		}
 
 		public void Load()
@@ -73,8 +77,46 @@ namespace Altomatic.UI.ViewModels
 		}
 	}
 
-	public class Config
+	public class Config : INotifyPropertyChanged
 	{
-		// game options go here
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+
+		int curePotency = 50;
+		int cureThreshold = 80;
+		int curagaThreshold = 80;
+
+		public int CurePotency
+		{
+			get { return curePotency; }
+			set
+			{
+				curePotency = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int CureThreshold
+		{
+			get { return cureThreshold; }
+			set
+			{
+				cureThreshold = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int CuragaThreshold
+		{
+			get { return curagaThreshold; }
+			set
+			{
+				curagaThreshold = value;
+				OnPropertyChanged();
+			}
+		}
 	}
 }
