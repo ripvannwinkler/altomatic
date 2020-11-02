@@ -6,7 +6,7 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
 {
-	public class Jobs : Dictionary<ushort, string>
+  public class Jobs : Dictionary<ushort, string>
 	{
 		public AppViewModel App { get; }
 
@@ -116,12 +116,5 @@ namespace Altomatic.UI.Game.Data
 
 			return null;
 		}
-	}
-
-	public enum JobSort
-	{
-		None,
-		TanksFirst,
-		HealersFirst
 	}
 }

@@ -135,20 +135,6 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-		/// The title to use for the main window
-		/// </summary>
-		public string MainWindowTitle
-		{
-			get
-			{
-				return string.Join(" - ",
-					Constants.MainWindowTitle,
-					Options.SettingsFile ?? "No Profile Loaded");
-			}
-			set { /* ignore */ }
-		}
-
-		/// <summary>
 		/// Is the bot paused?
 		/// </summary>
 		public bool IsPaused

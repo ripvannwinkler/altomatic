@@ -128,6 +128,7 @@ namespace Altomatic.UI.ViewModels
 
 		bool selfHaste = true;
 		bool selfRefresh = true;
+		bool selfPhalanx = true;
 
 		public int CurePotency
 		{
@@ -199,5 +200,15 @@ namespace Altomatic.UI.ViewModels
 				OnPropertyChanged();
       }
     }
+
+		public bool SelfPhalanx
+		{
+			get { return selfPhalanx; }
+			set
+			{
+				selfPhalanx = value;
+				OnPropertyChanged();
+			}
+		}
 	}
 }

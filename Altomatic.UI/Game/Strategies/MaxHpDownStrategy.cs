@@ -19,19 +19,25 @@ namespace Altomatic.UI.Game.Strategies
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
-			for (var i = 0; i < 6; i++)
+			if (members.Min(m => m.CurrentHPP) < Constants.LowHpThreshold)
+			{
+				return false;
+			}
+
+			for (var i = 0; i < 18; i++)
 			{
 				var member = members[i];
 				if (member.Active < 1) continue;
-
-				var memberIndex = (int)member.TargetIndex;
-				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
-				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
-
-				if (distance < 21 && app.Buffs.HasAny(member.Name, Buffs.MaxHPDown))
+				if (app.Buffs.HasAny(member.Name, Buffs.MaxHPDown))
 				{
 					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
-					if (player?.IsEnabled ?? false) candidates.Add(member);
+					if (player != null && player.IsActive && player.IsEnabled)
+					{
+						if (player.DistanceFromHealer < Constants.DefaultCastRange)
+						{
+							candidates.Add(member);
+						}
+					}
 				}
 			}
 

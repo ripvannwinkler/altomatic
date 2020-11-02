@@ -14,61 +14,69 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!app.Spells.CanCast("Refresh")) return false;
+			var spells = new[] { "Refresh III", "Refresh II", "Refresh" };
+			var spell = spells.FirstOrDefault(s => app.Spells.HasAccessTo(s));
+			if (string.IsNullOrWhiteSpace(spell)) return false;
+			if (!app.Spells.CanCast(spell)) return false;
+
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
+			// Skip if party members have low HP.
+			if (members.Min(m => m.CurrentHPP) < Constants.LowHpThreshold)
+			{
+				return false;
+			}
+
+			// Try casting on self if needed.
+			if (app.Options.Config.SelfRefresh)
+			{
+				var hasRefresh = app.Buffs.HasAny(
+					healerEntity.Name,
+					Buffs.Refresh,
+					Buffs.Refresh2,
+					Buffs.SublimationActivated,
+					Buffs.SublimationComplete);
+
+				if (!hasRefresh)
+				{
+					if (await app.Actions.CastSpell(spell))
+					{
+						return true;
+					}
+				}
+			}
+
+			// Find other candidates.
 			for (var i = 0; i < 6; i++)
 			{
 				var member = members[i];
 				if (member.Active < 1) continue;
+				if (member.Name == app.Healer.Player.Name) continue;
 
-				var memberIndex = (int)member.TargetIndex;
-				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
-				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
+				var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
+				if (player == null) continue;
 
-				if (distance < 21)
+				if (player.DistanceFromHealer < Constants.DefaultCastRange)
 				{
-					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
 					if (player == null) continue;
 
 					var enabled = player.IsEnabled;
 					var autoRefresh = player.AutoBuffs.Refresh;
 					var ageSeconds = app.Buffs.GetBuffAgeInSeconds(player.Name, Buffs.Refresh);
 					var needsRecast = ageSeconds > app.Options.Config.AutoHasteSeconds;
-
-					if (member.Name == app.Healer.Player.Name)
-					{
-						if (app.Options.Config.SelfRefresh)
-						{
-							enabled = true;
-							autoRefresh = true;
-						}
-					}
-
-					if (enabled && autoRefresh && needsRecast)
-					{
-						candidates.Add(member);
-					}
+					if (enabled && autoRefresh && needsRecast) candidates.Add(member);
 				}
 			}
 
-			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
+			// Try casting on others.
+			// Return true on first success.
+			foreach (var target in candidates)
 			{
-				var spell = new[] { "Refresh III", "Refresh II", "Refresh" }
-					.Where(s => app.Spells.HasAccessTo(s))
-					.FirstOrDefault();
-
-				if (!string.IsNullOrWhiteSpace(spell))
+				if (await app.Actions.CastSpell(spell, target.Name))
 				{
-					foreach (var target in candidates)
-					{
-						if (await app.Actions.CastSpell(spell, target.Name))
-						{
-							return true;
-						}
-					}
+					return true;
 				}
 			}
 

@@ -121,8 +121,10 @@
     <Compile Include="Game\Data\BuffStatus.cs" />
     <Compile Include="Game\Data\Items.cs" />
     <Compile Include="Game\Data\Jobs.cs" />
+    <Compile Include="Game\Data\JobSort.cs" />
     <Compile Include="Game\Data\Spells.cs" />
     <Compile Include="Game\Strategies\AutoHasteStrategy.cs" />
+    <Compile Include="Game\Strategies\AutoPhalanxStrategy.cs" />
     <Compile Include="Game\Strategies\AutoRefreshStrategy.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />
     <Compile Include="Game\Strategies\CureStrategy.cs" />

@@ -19,27 +19,31 @@ namespace Altomatic.UI.Game.Strategies
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
-			// use item if healer is doomed
 			if (app.Buffs.HasAny(app.Healer.Player.Name, Buffs.Doom, Buffs.Curse))
 			{
 				if (await app.Actions.UseItem("Hallowed Water")) return true;
 				if (await app.Actions.UseItem("Holy Water")) return true;
 			}
 
-			// cursna doomed members
+			if (members.Min(m => m.CurrentHPP) < Constants.LowHpThreshold)
+			{
+				return false;
+			}
+
 			for (var i = 0; i < 18; i++)
 			{
 				var member = members[i];
 				if (member.Active < 1) continue;
-
-				var memberIndex = (int)member.TargetIndex;
-				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
-				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
-
-				if (distance < 21 && app.Buffs.HasAny(member.Name, Buffs.Doom, Buffs.Curse))
+				if (app.Buffs.HasAny(member.Name, Buffs.Doom, Buffs.Curse))
 				{
 					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
-					if (player?.IsEnabled ?? false) candidates.Add(member);
+					if (player != null && player.IsActive && player.IsEnabled)
+					{
+						if (player.DistanceFromHealer < Constants.DefaultCastRange)
+						{
+							candidates.Add(member);
+						}
+					}
 				}
 			}
 
