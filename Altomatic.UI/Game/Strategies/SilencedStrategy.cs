@@ -43,10 +43,12 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
-			candidates.Sort((a, b) =>
-			{
-				return MapJob(a, app).CompareTo(MapJob(b, app));
-			});
+			// silena tanks/white mage first, then other mages,
+			// then players with NIN sub, then the rest if needed
+			candidates.Sort((a, b) => MapJob(a, app).CompareTo(MapJob(b, app)));
+
+			// Do not silena non-mage DDs without /NIN
+			candidates.RemoveAll(c => MapJob(c, app) > 3);
 
 			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
 			{
@@ -68,7 +70,7 @@ namespace Altomatic.UI.Game.Strategies
 
 			return
 				new[] { "PLD", "RUN", "WHM" }.Contains(main) ? 1 :
-				new[] { "SCH", "RDM", "BRD" }.Contains(main) ? 2 :
+				new[] { "SCH", "RDM", "BRD", "BLM" }.Contains(main) ? 2 :
 				new[] { "NIN" }.Contains(sub) ? 3 : 4;
 		}
 	}
