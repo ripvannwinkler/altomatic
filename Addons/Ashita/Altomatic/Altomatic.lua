@@ -41,7 +41,6 @@ function ParseBuffsData(id, data)
     charName = uid == nil and nil or GetCharacterName(uid)
     -- build buffs status
     if charName ~= nil then
-      -- store buffs in a table
       buffs = {}
       buffCount = 0
       for i = 1, 32 do
