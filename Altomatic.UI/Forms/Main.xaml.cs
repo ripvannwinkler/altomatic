@@ -40,6 +40,7 @@ namespace Altomatic.UI.Forms
 			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
 			Model.Strategies.Add(new DoomedStrategy());
 			Model.Strategies.Add(new PetrifiedStrategy());
+			Model.Strategies.Add(new SilencedStrategy());
 			Model.Strategies.Add(new ParalyzedStrategy());
 			Model.Strategies.Add(new CuragaStrategy());
 			Model.Strategies.Add(new CureStrategy());
