@@ -125,6 +125,7 @@
     <Compile Include="Game\Strategies\CureStrategy.cs" />
     <Compile Include="Game\Strategies\DoomedStrategy.cs" />
     <Compile Include="Game\Strategies\IGameStrategy.cs" />
+    <Compile Include="Game\Strategies\ParalyzedStrategy.cs" />
     <Compile Include="Game\Strategies\PetrifiedStrategy.cs" />
     <Compile Include="Game\Strategies\RefreshPlayerInfoStrategy.cs" />
     <Compile Include="Game\Strategies\ValidateProcessStrategy.cs" />

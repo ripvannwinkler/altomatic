@@ -10,11 +10,11 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Strategies
 {
-	public class PetrifiedStrategy : IGameStrategy
+	public class ParalyzedStrategy : IGameStrategy
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!app.Spells.CanCast("Stona")) return false;
+			if (!app.Spells.CanCast("Paralyna")) return false;
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
@@ -28,7 +28,7 @@ namespace Altomatic.UI.Game.Strategies
 				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
 				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
 
-				if (distance < 21 && app.Buffs.HasAny(member.Name, Buffs.Petrification))
+				if (distance < 21 && app.Buffs.HasAny(member.Name, Buffs.Paralysis))
 				{
 					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
 					if (player?.IsEnabled ?? false) candidates.Add(member);
@@ -38,7 +38,7 @@ namespace Altomatic.UI.Game.Strategies
 			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
 			{
 				var target = candidates.First();
-				if (await app.Actions.CastSpell("Stona", target.Name))
+				if (await app.Actions.CastSpell("Paralyna", target.Name))
 				{
 					return true;
 				}

@@ -18,6 +18,7 @@ namespace Altomatic.UI.Game.Data
 
 		public bool CanCast(string spellName)
 		{
+			if (IsCasterDisabled()) return false;
 			var spell = App.Healer.Resources.GetSpell(spellName, 0);
 			if (spell == null) return false;
 
@@ -25,10 +26,16 @@ namespace Altomatic.UI.Game.Data
 				HasRequiredJob(spellName) &&
 				App.Healer.Player.HasSpell(spell.ID) &&
 				App.Healer.Recast.GetSpellRecast(spell.Index) == 0 &&
-				spell.MPCost<= App.Healer.Player.MP;
+				spell.MPCost <= App.Healer.Player.MP;
 		}
 
-		public bool HasRequiredJob(string spellName)
+		private bool IsCasterDisabled()
+		{
+			return App.Buffs.HasAny(App.Healer.Player.Name,
+				Buffs.Sleep, Buffs.Petrification, Buffs.Silence);
+		}
+
+		private bool HasRequiredJob(string spellName)
 		{
 			var spell = App.Healer.Resources.GetSpell(spellName, 0);
 			if (string.IsNullOrWhiteSpace(spell?.Name[0])) return false;
