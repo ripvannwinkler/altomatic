@@ -30,10 +30,10 @@ namespace Altomatic.UI.Game.Data
 		public bool HasRequiredJob(string spellName)
 		{
 			var spell = App.Healer.Resources.GetSpell(spellName, 0);
-			if (spell == null) return false;
+			if (string.IsNullOrWhiteSpace(spell?.Name[0])) return false;
 			if (spell.Name[0] == "Honor March") return true;
-			var ucSpellName = spell.Name[0].ToUpper();
 
+			var ucSpellName = spell.Name[0].ToUpper();
 			var mainJobLevel = spell.LevelRequired[App.Healer.Player.MainJob];
 			var subJobLevel = spell.LevelRequired[App.Healer.Player.SubJob];
 
