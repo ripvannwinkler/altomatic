@@ -20,9 +20,9 @@ namespace Altomatic.UI.Game
 		}
 
 		public void ProcessAddonEvent(AddonEvent @event)
-    {
+		{
 
-    }
+		}
 
 		public async Task<bool> UseItem(string itemName, string targetName = "<me>")
 		{
@@ -37,6 +37,7 @@ namespace Altomatic.UI.Game
 		{
 			return await DoAction(() =>
 			{
+				if (!App.Jobs.CanUseAbility(abilityName)) return false;
 				App.SetStatus($"Using ability {abilityName} on {targetName}");
 				return true;
 			});
@@ -46,6 +47,7 @@ namespace Altomatic.UI.Game
 		{
 			return await DoAction(() =>
 			{
+				if (!App.Spells.CanCast(spellName)) return false;
 				App.SetStatus($"Casting {spellName} on {targetName}");
 				return true;
 			});

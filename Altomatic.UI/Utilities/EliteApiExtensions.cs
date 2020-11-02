@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EliteMMO.API;
+using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Utilities
 {

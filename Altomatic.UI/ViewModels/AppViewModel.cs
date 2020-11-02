@@ -26,7 +26,8 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 
-		public JobNames Jobs { get; }
+		public Spells Spells { get; }
+		public Jobs Jobs { get; }
 		public ActionManager Actions { get; }
 		public AddonInterface Addon { get; } = new AddonInterface();
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
@@ -176,7 +177,8 @@ namespace Altomatic.UI.ViewModels
 			InitializePlayerData();
 			RefreshProcessList();
 
-			Jobs = new JobNames(this);
+			Jobs = new Jobs(this);
+			Spells = new Spells(this);
 			Options = new OptionsViewModel(this);
 			Actions = new ActionManager(this);
 

@@ -11,15 +11,14 @@ using static EliteMMO.API.EliteAPI;
 namespace Altomatic.UI.Game.Strategies
 {
 	/// <summary>
-	/// Casts curaga on members of the primary party if the number of required targets meet the threshold.
+	/// Casts cure on the member of the alliance with the lowest HP that meets the threshold.
 	/// </summary>
-	public class CuragaPartyStrategy : IGameStrategy
+	public class CureStrategy : IGameStrategy
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
-			var threshold = app.Options.Config.CuragaThreshold;
-			var required = app.Options.Config.CuragaRequiredTargets;
+			var threshold = app.Options.Config.CureThreshold;
 			var potencies = new CurePotency(app);
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
@@ -40,54 +39,57 @@ namespace Altomatic.UI.Game.Strategies
 						member.CurrentHP > 0 &&
 						member.CurrentHPP < threshold)
 				{
-					candidates.Add(member);
+					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
+					if (player?.IsEnabled ?? false) candidates.Add(member);
 				}
 			}
 
-			if (candidates.Count() >= required)
+			if (candidates.Any())
 			{
 				var target = candidates.FirstOrDefault();
 				var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
 
-				if (loss >= potencies.Curaga4)
+				if (loss >= potencies.Cure5)
 				{
-					if (await app.Actions.CastSpell("Curaga V", target.Name) ||
-							await app.Actions.CastSpell("Curaga IV", target.Name))
+					if (await app.Actions.CastSpell("Cure VI", target.Name) ||
+							await app.Actions.CastSpell("Cure V", target.Name) ||
+							await app.Actions.CastSpell("Cure IV", target.Name) ||
+							await app.Actions.CastSpell("Cure III", target.Name))
 					{
 						return true;
 					}
 				}
-				else if (loss >= potencies.Curaga3)
+				else if (loss >= potencies.Cure4)
 				{
-					if (await app.Actions.CastSpell("Curaga IV", target.Name) ||
-							await app.Actions.CastSpell("Curaga V", target.Name) ||
-							await app.Actions.CastSpell("Curaga III", target.Name))
+					if (await app.Actions.CastSpell("Cure V", target.Name) ||
+							await app.Actions.CastSpell("Cure IV", target.Name) ||
+							await app.Actions.CastSpell("Cure III", target.Name))
 					{
 						return true;
 					}
 				}
-				else if (loss >= potencies.Curaga2)
+				else if (loss >= potencies.Cure3)
 				{
-					if (await app.Actions.CastSpell("Curaga III", target.Name) ||
-							await app.Actions.CastSpell("Curaga IV", target.Name) ||
-							await app.Actions.CastSpell("Curaga II", target.Name))
+					if (await app.Actions.CastSpell("Cure IV", target.Name) ||
+							await app.Actions.CastSpell("Cure III", target.Name) ||
+							await app.Actions.CastSpell("Cure II", target.Name))
 					{
 						return true;
 					}
 				}
-				else if (loss >= potencies.Curaga)
+				else if (loss >= potencies.Cure2)
 				{
-					if (await app.Actions.CastSpell("Curaga II", target.Name) ||
-							await app.Actions.CastSpell("Curaga III", target.Name) ||
-							await app.Actions.CastSpell("Curaga", target.Name))
+					if (await app.Actions.CastSpell("Cure III", target.Name) ||
+							await app.Actions.CastSpell("Cure II", target.Name) ||
+							await app.Actions.CastSpell("Cure", target.Name))
 					{
 						return true;
 					}
 				}
 				else
 				{
-					if (await app.Actions.CastSpell("Curaga", target.Name) ||
-							await app.Actions.CastSpell("Curaga II", target.Name))
+					if (await app.Actions.CastSpell("Cure II", target.Name) ||
+							await app.Actions.CastSpell("Cure", target.Name))
 					{
 						return true;
 					}
