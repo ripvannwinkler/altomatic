@@ -107,4 +107,3 @@ end
 
 ashita.register_event('incoming_packet', HandleIncomingPacket)
 ashita.register_event('command', HandleAddonCommand)
-print('time: ' .. socket.gettime())

@@ -218,10 +218,11 @@ namespace Altomatic.UI.ViewModels
 		/// <summary>
 		/// Set the healer instance
 		/// </summary>
-		public void SetHealer(Process process)
+		public async Task SetHealer(Process process)
 		{
 			healerProcess = process;
 			Healer = new EliteAPI(process.Id);
+			await ReloadAddon();
 
 			var playerName = Healer?.Player?.Name ?? "";
 			var jobNumber = (ushort)(Healer?.Player?.Main ?? -1);
@@ -265,9 +266,25 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public async Task UnloadAddon()
+    {
+			if (!isAddonLoaded) return;
+			if (string.IsNullOrEmpty(healer.Player.Name)) return;
+			var mode = ProcessUtilities.GetHookMode(healerProcess);
+
+			if (mode == HookMode.Ashita)
+			{
+				await healer.SendCommand($"/addon unload altomatic", 300);
+			}
+			else if (mode == HookMode.Windower)
+			{
+				await healer.SendCommand($"//lua unload altomatic", 300);
+			}
+		}
+
 		public async Task ReloadAddon()
 		{
-			if (!IsGameReady) return;
+			if (string.IsNullOrEmpty(healer.Player.Name)) return;
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 			var ip = Addon.Endpoint.Address;
 			var port = Addon.Endpoint.Port;
@@ -280,8 +297,8 @@ namespace Altomatic.UI.ViewModels
 			}
 			else if (mode == HookMode.Windower)
 			{
-				await healer.SendCommand($"//lua unload altomatic", 300); Thread.Sleep(300);
-				await healer.SendCommand($"//lua load altomatic", 300); Thread.Sleep(1500);
+				await healer.SendCommand($"//lua unload altomatic", 300);
+				await healer.SendCommand($"//lua load altomatic", 300);
 				await healer.SendCommand($"//alto config {ip} {port}", 100);
 			}
 		}

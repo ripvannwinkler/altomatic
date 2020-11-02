@@ -41,6 +41,14 @@ namespace Altomatic.UI.Forms
 			Model.Strategies.Add(new CuragaStrategy());
 			Model.Strategies.Add(new CureStrategy());
 			DataContext = Model;
+
+			Closing += async (sender, args) =>
+			{
+				await Dispatcher.InvokeAsync(async () =>
+				{
+					await Model.UnloadAddon();
+				});
+			};
 		}
 
 		private void StartMainLoop()
@@ -97,12 +105,12 @@ namespace Altomatic.UI.Forms
 			await Model.ReloadAddon();
 		}
 
-		private void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private async void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (e.AddedItems.Count > 0)
 			{
 				ProcessUtilities.EnsureDlls();
-				Model.SetHealer(e.AddedItems[0] as Process);
+				await Model.SetHealer(e.AddedItems[0] as Process);
 			}
 		}
 
@@ -113,6 +121,6 @@ namespace Altomatic.UI.Forms
 				ProcessUtilities.EnsureDlls();
 				Model.SetMonitored(e.AddedItems[0] as Process);
 			}
-		}		
-  }
+		}
+	}
 }
