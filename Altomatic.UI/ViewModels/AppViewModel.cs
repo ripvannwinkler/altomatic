@@ -21,6 +21,7 @@ namespace Altomatic.UI.ViewModels
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
 		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
+		private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 		private Process healerProcess;
 		private string statusMessage;
 		private bool isPaused = true;
@@ -291,21 +292,24 @@ namespace Altomatic.UI.ViewModels
 		public async Task ExecuteActionsAsync()
 		{
 			if (isPaused) return;
-
-			try
+			if (await semaphore.WaitAsync(100))
 			{
-				if (IsGameReady && CanExecuteActions())
+				try
 				{
-					foreach (var strategy in Strategies)
+					if (IsGameReady && CanExecuteActions())
 					{
-						SetStatus($"Executing {strategy.GetType().Name}");
-						if (await strategy.ExecuteAsync(this)) return;
+						foreach (var strategy in Strategies)
+						{
+							SetStatus($"Executing {strategy.GetType().Name}");
+							if (await strategy.ExecuteAsync(this)) return;
+						}
 					}
 				}
-			}
-			finally
-			{
-				SetStatus();
+				finally
+				{
+					semaphore.Release();
+					SetStatus();
+				}
 			}
 		}
 
