@@ -50,16 +50,31 @@ namespace Altomatic.UI.Game.Data
 			return hasAbility && recast == 0;
 		}
 
-		public int MapPriority(PartyMember member)
+		public int MapPriority(PartyMember member, JobSort sortStrategy = JobSort.TanksFirst)
 		{
 			var entity = App.Monitored.Entity.GetEntity((int)member.TargetIndex);
 			var main = App.Jobs.GetMainJob(entity);
 			var sub = App.Jobs.GetMainJob(entity);
 
-			return
-				new[] { "PLD", "RUN", "WHM" }.Contains(main) ? 1 :
-				new[] { "SCH", "RDM", "BRD", "BLM" }.Contains(main) ? 2 :
-				new[] { "NIN" }.Contains(sub) ? 3 : 4;
+			if (sortStrategy == JobSort.TanksFirst)
+			{
+				return
+					new[] { "PLD", "RUN", "WHM" }.Contains(main) ? 1 :
+					new[] { "SCH", "RDM", "BRD", "BLM" }.Contains(main) ? 2 :
+					new[] { "NIN" }.Contains(sub) ? 3 : 4;
+			}
+			else if (sortStrategy == JobSort.HealersFirst)
+			{
+				return
+					new[] { "WHM", "SCH", "RDM" }.Contains(main) ? 1 :
+					new[] { "PLD", "RUN" }.Contains(main) ? 2 :
+					new[] { "BRD", "BLM" }.Contains(main) ? 3 :
+					new[] { "NIN" }.Contains(sub) ? 4 : 5;
+			}
+			else
+			{
+				return 1;
+			}
 		}
 
 		public bool IsMainJob(PlayerTools player, string jobName)
@@ -101,5 +116,12 @@ namespace Altomatic.UI.Game.Data
 
 			return null;
 		}
+	}
+
+	public enum JobSort
+	{
+		None,
+		TanksFirst,
+		HealersFirst
 	}
 }

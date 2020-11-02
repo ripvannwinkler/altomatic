@@ -57,28 +57,27 @@ namespace Altomatic.UI.Game
 				var casting = false;
 				var completed = false;
 				var interrupted = false;
+
 				using var sub = App.Addon.Events.Subscribe(@event =>
 				{
 					if (@event.Type == AddonEventType.CastingStarted)
           {
-						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting started...");
 						casting = true;
 					}
+
 					if (@event.Type == AddonEventType.CastingCompleted)
 					{
-						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting completed...");
 						completed = true;
 					}
+					
 					if (@event.Type == AddonEventType.CastingInteruppted)
 					{
-						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting interrupted...");
 						interrupted = true;
 					}
 				});
 
 				var timer = Stopwatch.StartNew();
 				var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
-
 				await App.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 750);
 
 				while (casting)

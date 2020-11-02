@@ -43,7 +43,7 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
-			candidates.SortByJob(app);
+			candidates.SortByJob(app, JobSort.HealersFirst);
 			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
 			{
 				foreach (var target in candidates)
