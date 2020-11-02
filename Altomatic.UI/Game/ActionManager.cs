@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 
 namespace Altomatic.UI.Game
@@ -28,6 +29,7 @@ namespace Altomatic.UI.Game
 		{
 			return await DoAction(() =>
 			{
+				if (!App.Healer.HasItem(itemName)) return false;
 				App.SetStatus($"Using item {itemName} on {targetName}");
 				return true;
 			});

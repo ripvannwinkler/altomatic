@@ -15,5 +15,20 @@ namespace Altomatic.UI.Utilities
       instance.ThirdParty.SendString(command);
       await Task.Delay(delayMs);
     }
+
+    public static bool HasItem(this EliteAPI instance, string itemName)
+    {
+      var count = 0U;
+      var itemInfo = instance.Resources.GetItem(itemName, 0);
+      if (itemInfo == null) return false;
+
+      for (var x = 0; x < 80; x++)
+      {
+        var item = instance.Inventory.GetContainerItem(0, x);
+        if (item.Id == itemInfo.ItemID) count += item.Count;
+      }
+
+      return count > 0;
+    }
   }
 }

@@ -16,5 +16,5 @@ namespace Altomatic.UI.Utilities
 				Math.Pow(entity1.Y - entity2.Y, 2) +
 				Math.Pow(entity1.Z - entity2.Z, 2));
 		}
-	}
+  }
 }
