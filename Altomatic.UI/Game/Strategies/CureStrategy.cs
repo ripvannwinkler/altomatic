@@ -21,7 +21,7 @@ namespace Altomatic.UI.Game.Strategies
 			var candidates = new List<PartyMember>();
 			var members = app.Monitored.Party.GetPartyMembers();
 
-			for (var i = 0; i < 6; i++)
+			for (var i = 0; i < 18; i++)
 			{
 				var member = members[i];
 				var memberIndex = (int)member.TargetIndex;
