@@ -16,7 +16,7 @@
 					<StackPanel Orientation="Horizontal">
 						<Button Name="Cancel1" Margin="8 0 0 0" IsCancel="True">
 							<Button.Content>
-								<TextBlock>Cancel</TextBlock>
+								<TextBlock>Close</TextBlock>
 							</Button.Content>
 						</Button>
 						<Button Name="Load1" Margin="8 0 0 0" Click="Load1_Click">

@@ -17,6 +17,10 @@ namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
+		// ================================================================
+		// Member Variables
+		// ================================================================
+
 		private EliteAPI healer;
 		private EliteAPI monitored;
 		private OptionsViewModel options;
@@ -28,6 +32,10 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 
+		// ================================================================
+		// Public Non-UI Properties
+		// ================================================================
+
 		public Buffs Buffs { get; }
 		public Spells Spells { get; }
 		public Jobs Jobs { get; }
@@ -35,6 +43,10 @@ namespace Altomatic.UI.ViewModels
 		public AddonInterface Addon { get; } = new AddonInterface();
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		// ================================================================
+		// Public UI Properties
+		// ================================================================
 
 		/// <summary>
 		/// The healing player instance
@@ -171,6 +183,9 @@ namespace Altomatic.UI.ViewModels
 			set { /* ignore */ }
 		}
 
+		// ================================================================
+		// Public Methods
+		// ================================================================
 
 		/// <summary>
 		/// Creates a new instance of <see cref="AppViewModel"/>
@@ -178,7 +193,6 @@ namespace Altomatic.UI.ViewModels
 		public AppViewModel()
 		{
 			InitializePlayerData();
-			RefreshProcessList();
 
 			Jobs = new Jobs(this);
 			Buffs = new Buffs(this);
@@ -213,14 +227,20 @@ namespace Altomatic.UI.ViewModels
 						break;
 				}
 			});
+
+			Task.Run(async () =>
+			{
+				await RefreshProcessList();
+			});
 		}
 
 		/// <summary>
 		/// Get an updated list of FFXI processes
 		/// </summary>
-		public void RefreshProcessList()
+		public async Task RefreshProcessList()
 		{
 			SetStatus("Refreshing process list...");
+			await UnloadAddon();
 			Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
 			ResetPlayerData();
 			SetStatus();
@@ -282,17 +302,24 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task UnloadAddon()
 		{
-			if (!isAddonLoaded) return;
-			if (string.IsNullOrEmpty(healer.Player.Name)) return;
+			if (!IsAddonLoaded) return;
+			if (string.IsNullOrEmpty(Healer?.Player?.Name))
+			{
+				IsAddonLoaded = false;
+				return;
+			}
+
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 
 			if (mode == HookMode.Ashita)
 			{
-				await healer.SendCommand($"/addon unload altomatic", 300);
+				await Healer.SendCommand($"/addon unload altomatic", 300);
+				IsAddonLoaded = false;
 			}
 			else if (mode == HookMode.Windower)
 			{
-				await healer.SendCommand($"//lua unload altomatic", 300);
+				await Healer.SendCommand($"//lua unload altomatic", 300);
+				IsAddonLoaded = false;
 			}
 		}
 
@@ -301,7 +328,7 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task ReloadAddon()
 		{
-			if (string.IsNullOrEmpty(healer.Player.Name)) return;
+			if (string.IsNullOrEmpty(Healer.Player.Name)) return;
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 			var ip = Addon.Endpoint.Address;
 			var port = Addon.Endpoint.Port;
@@ -311,16 +338,16 @@ namespace Altomatic.UI.ViewModels
 				await UnloadAddon();
 				Buffs.Clear();
 
-				await healer.SendCommand($"/addon load altomatic", 300);
-				await healer.SendCommand($"/alto config {ip} {port}", 100);
+				await Healer.SendCommand($"/addon load altomatic", 300);
+				await Healer.SendCommand($"/alto config {ip} {port}", 100);
 			}
 			else if (mode == HookMode.Windower)
 			{
 				await UnloadAddon();
 				Buffs.Clear();
-				
-				await healer.SendCommand($"//lua load altomatic", 300);
-				await healer.SendCommand($"//alto config {ip} {port}", 100);
+
+				await Healer.SendCommand($"//lua load altomatic", 300);
+				await Healer.SendCommand($"//alto config {ip} {port}", 100);
 			}
 		}
 
@@ -351,6 +378,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		// ================================================================
+		// Protected and Private Methods
+		// ================================================================
 
 		/// <summary>
 		/// Notify UI of property changes

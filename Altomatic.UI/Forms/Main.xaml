@@ -111,6 +111,10 @@
 								<Setter Property="Text" Value="Addon is NOT loaded."/>
 								<Setter Property="Foreground" Value="Red"/>
 								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="False">
+										<Setter Property="Text" Value="Addon is NOT loaded."/>
+										<Setter Property="Foreground" Value="Red"/>
+									</DataTrigger>
 									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="True">
 										<Setter Property="Text" Value="Addon is loaded and ready."/>
 										<Setter Property="Foreground" Value="Green"/>

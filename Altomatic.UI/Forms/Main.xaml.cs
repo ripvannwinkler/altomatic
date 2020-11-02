@@ -38,6 +38,7 @@ namespace Altomatic.UI.Forms
 			Model = new AppViewModel();
 			Model.Strategies.Add(new ValidateProcessStrategy());
 			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
+			Model.Strategies.Add(new DoomedStrategy());
 			Model.Strategies.Add(new CuragaStrategy());
 			Model.Strategies.Add(new CureStrategy());
 			DataContext = Model;
@@ -90,9 +91,9 @@ namespace Altomatic.UI.Forms
 			Model.TogglePaused();
 		}
 
-		private void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
+		private async void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
 		{
-			Model.RefreshProcessList();
+			await Model.RefreshProcessList();
 		}
 
 		private void OptionsButton_Click(object sender, RoutedEventArgs e)
