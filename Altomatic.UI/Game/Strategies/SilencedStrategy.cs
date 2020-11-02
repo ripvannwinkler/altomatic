@@ -64,9 +64,9 @@ namespace Altomatic.UI.Game.Strategies
 
 		private int MapJob(PartyMember member, AppViewModel app)
 		{
-			var e = app.Monitored.Entity.GetEntity((int)member.TargetIndex);
-			var main = app.Jobs.GetMainJob(e);
-			var sub = app.Jobs.GetMainJob(e);
+			var entity = app.Monitored.Entity.GetEntity((int)member.TargetIndex);
+			var main = app.Jobs.GetMainJob(entity);
+			var sub = app.Jobs.GetMainJob(entity);
 
 			return
 				new[] { "PLD", "RUN", "WHM" }.Contains(main) ? 1 :
