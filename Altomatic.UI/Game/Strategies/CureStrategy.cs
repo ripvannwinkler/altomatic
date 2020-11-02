@@ -18,11 +18,8 @@ namespace Altomatic.UI.Game.Strategies
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var threshold = app.Options.Config.CureThreshold;
 			var potencies = new CurePotency(app);
-			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
-
-			// sort by HPP (low to high)
-			members.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
+			var members = app.Monitored.Party.GetPartyMembers();
 
 			for (var i = 0; i < 6; i++)
 			{
@@ -40,6 +37,9 @@ namespace Altomatic.UI.Game.Strategies
 					if (player?.IsEnabled ?? false) candidates.Add(member);
 				}
 			}
+
+			// sort HPP (low to high)
+			candidates.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
 
 			if (candidates.Any())
 			{

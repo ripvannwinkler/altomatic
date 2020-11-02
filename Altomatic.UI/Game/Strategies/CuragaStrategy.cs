@@ -8,10 +8,10 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Strategies
 {
-  /// <summary>
-  /// Casts curaga on members of the primary party if the number of required targets meet the threshold.
-  /// </summary>
-  public class CuragaStrategy : IGameStrategy
+	/// <summary>
+	/// Casts curaga on members of the primary party if the number of required targets meet the threshold.
+	/// </summary>
+	public class CuragaStrategy : IGameStrategy
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
@@ -21,9 +21,6 @@ namespace Altomatic.UI.Game.Strategies
 			var potencies = new CurePotency(app);
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
-
-			// sort by HPP (low to high)
-			members.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
 
 			for (var i = 0; i < 6; i++)
 			{
@@ -40,6 +37,9 @@ namespace Altomatic.UI.Game.Strategies
 					candidates.Add(member);
 				}
 			}
+
+			// sort HPP (low to high)
+			candidates.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
 
 			if (candidates.Count() >= required)
 			{

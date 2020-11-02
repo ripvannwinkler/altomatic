@@ -68,9 +68,9 @@ namespace Altomatic.UI.Game
 					if (@event.Type == AddonEventType.CastingInteruppted) completed = true;
 				});
 
-				var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
-				await App.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 3000);
 				var timer = Stopwatch.StartNew();
+				var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
+				await App.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 2800);
 
 				while (casting)
 				{
