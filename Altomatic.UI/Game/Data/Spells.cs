@@ -24,7 +24,8 @@ namespace Altomatic.UI.Game.Data
 			return
 				HasRequiredJob(spellName) &&
 				App.Healer.Player.HasSpell(spell.ID) &&
-				App.Healer.Recast.GetSpellRecast(spell.Index) == 0;
+				App.Healer.Recast.GetSpellRecast(spell.Index) == 0 &&
+				spell.MPCost<= App.Healer.Player.MP;
 		}
 
 		public bool HasRequiredJob(string spellName)

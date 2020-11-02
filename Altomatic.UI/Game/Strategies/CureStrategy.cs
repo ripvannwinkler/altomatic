@@ -16,10 +16,11 @@ namespace Altomatic.UI.Game.Strategies
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
+			var members = app.Monitored.Party.GetPartyMembers();
+			var candidates = new List<PartyMember>();
+
 			var threshold = app.Options.Config.CureThreshold;
 			var potencies = new CurePotency(app);
-			var candidates = new List<PartyMember>();
-			var members = app.Monitored.Party.GetPartyMembers();
 
 			for (var i = 0; i < 18; i++)
 			{
@@ -43,7 +44,7 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (candidates.Any())
 			{
-				var target = candidates.FirstOrDefault();
+				var target = candidates.First();
 				var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
 
 				if (loss >= potencies.Cure5)

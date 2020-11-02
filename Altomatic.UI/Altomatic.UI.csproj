@@ -123,6 +123,7 @@
     <Compile Include="Game\Data\Spells.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />
     <Compile Include="Game\Strategies\CureStrategy.cs" />
+    <Compile Include="Game\Strategies\DoomedStrategy.cs" />
     <Compile Include="Game\Strategies\IGameStrategy.cs" />
     <Compile Include="Game\Strategies\RefreshPlayerInfoStrategy.cs" />
     <Compile Include="Game\Strategies\ValidateProcessStrategy.cs" />

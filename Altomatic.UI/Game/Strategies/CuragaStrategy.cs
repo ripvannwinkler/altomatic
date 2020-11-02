@@ -43,7 +43,7 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (candidates.Count() >= required)
 			{
-				var target = candidates.FirstOrDefault();
+				var target = candidates.First();
 				var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
 
 				if (loss >= potencies.Curaga4)

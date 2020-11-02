@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 
+		public Buffs Buffs { get; }
 		public Spells Spells { get; }
 		public Jobs Jobs { get; }
 		public ActionManager Actions { get; }
@@ -179,6 +181,7 @@ namespace Altomatic.UI.ViewModels
 			RefreshProcessList();
 
 			Jobs = new Jobs(this);
+			Buffs = new Buffs(this);
 			Spells = new Spells(this);
 			Options = new OptionsViewModel(this);
 			Actions = new ActionManager(this);
@@ -194,6 +197,14 @@ namespace Altomatic.UI.ViewModels
 						break;
 
 					case AddonEventType.BuffsUpdated:
+						var data = @event.Data.Split('_');
+						if (data.Length == 3)
+						{
+							var delims = new[] { ',' };
+							var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+							var buffs = buffCodes.Select(b => short.Parse(b));
+							Buffs.Update(data[1], buffs.ToArray());
+						}
 						break;
 
 					case AddonEventType.Loaded:
@@ -266,8 +277,11 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Unloads the game addon
+		/// </summary>
 		public async Task UnloadAddon()
-    {
+		{
 			if (!isAddonLoaded) return;
 			if (string.IsNullOrEmpty(healer.Player.Name)) return;
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
@@ -282,6 +296,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Reloads the game addon
+		/// </summary>
 		public async Task ReloadAddon()
 		{
 			if (string.IsNullOrEmpty(healer.Player.Name)) return;
@@ -291,13 +308,17 @@ namespace Altomatic.UI.ViewModels
 
 			if (mode == HookMode.Ashita)
 			{
-				await healer.SendCommand($"/addon unload altomatic", 300);
+				await UnloadAddon();
+				Buffs.Clear();
+
 				await healer.SendCommand($"/addon load altomatic", 300);
 				await healer.SendCommand($"/alto config {ip} {port}", 100);
 			}
 			else if (mode == HookMode.Windower)
 			{
-				await healer.SendCommand($"//lua unload altomatic", 300);
+				await UnloadAddon();
+				Buffs.Clear();
+				
 				await healer.SendCommand($"//lua load altomatic", 300);
 				await healer.SendCommand($"//alto config {ip} {port}", 100);
 			}
