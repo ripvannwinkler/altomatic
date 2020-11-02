@@ -60,19 +60,19 @@ namespace Altomatic.UI.Game
 
 				using var sub = App.Addon.Events.Subscribe(@event =>
 				{
-					if (@event.Type == AddonEventType.CastingStarted)
+					switch (@event.Type)
           {
-						casting = true;
-					}
+						case AddonEventType.CastingStarted:
+							casting = true;
+							break;
 
-					if (@event.Type == AddonEventType.CastingCompleted)
-					{
-						completed = true;
-					}
-					
-					if (@event.Type == AddonEventType.CastingInteruppted)
-					{
-						interrupted = true;
+						case AddonEventType.CastingInteruppted:
+							interrupted = true;
+							break;
+
+						case AddonEventType.CastingCompleted:
+							completed = true;
+							break;
 					}
 				});
 
