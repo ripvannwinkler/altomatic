@@ -97,7 +97,7 @@ namespace Altomatic.UI.Game
 						break;
 					}
 
-					await Task.Delay(100);
+					await Task.Delay(200);
 					continue;
 				}
 
