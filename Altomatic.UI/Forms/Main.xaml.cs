@@ -38,7 +38,7 @@ namespace Altomatic.UI.Forms
 			Model = new AppViewModel();
 			Model.Strategies.Add(new ValidateProcessStrategy());
 			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
-			Model.Strategies.Add(new CuragaPartyStrategy());
+			Model.Strategies.Add(new CuragaStrategy());
 			DataContext = Model;
 		}
 

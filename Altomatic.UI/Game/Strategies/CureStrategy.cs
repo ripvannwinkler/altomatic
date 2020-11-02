@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Altomatic.UI.Game.Data;
 using Altomatic.UI.Utilities;
@@ -10,10 +8,10 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Strategies
 {
-	/// <summary>
-	/// Casts cure on the member of the alliance with the lowest HP that meets the threshold.
-	/// </summary>
-	public class CureStrategy : IGameStrategy
+  /// <summary>
+  /// Casts cure on the member of the alliance with the lowest HP that meets the threshold.
+  /// </summary>
+  public class CureStrategy : IGameStrategy
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
@@ -23,10 +21,9 @@ namespace Altomatic.UI.Game.Strategies
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
-			// sort lowest HPP first
+			// sort by HPP (low to high)
 			members.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
 
-			// find candidates
 			for (var i = 0; i < 6; i++)
 			{
 				var member = members[i];
