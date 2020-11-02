@@ -19,6 +19,14 @@ namespace Altomatic.UI.Game.Strategies
       var members = app.Monitored.Party.GetPartyMembers();
       var candidates = new List<PartyMember>();
 
+			// use item if healer is doomed
+			if (app.Buffs.HasAny(app.Healer.Player.Name, Buffs.Doom, Buffs.Curse))
+      {
+				if (await app.Actions.UseItem("Hallowed Water")) return true;
+				if (await app.Actions.UseItem("Holy Water")) return true;
+			}
+
+			// cursna doomed members
 			for (var i = 0; i < 18; i++)
 			{
 				var member = members[i];
