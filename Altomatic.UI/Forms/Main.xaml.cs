@@ -43,6 +43,7 @@ namespace Altomatic.UI.Forms
 			Model.Strategies.Add(new SilencedStrategy());
 			Model.Strategies.Add(new ParalyzedStrategy());
 			Model.Strategies.Add(new MaxHpDownStrategy());
+			Model.Strategies.Add(new SlowedStrategy());
 			Model.Strategies.Add(new CuragaStrategy());
 			Model.Strategies.Add(new CureStrategy());
 			DataContext = Model;
