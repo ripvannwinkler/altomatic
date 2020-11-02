@@ -10,23 +10,15 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Strategies
 {
-	public class SilencedStrategy : IGameStrategy
+	public class AutoHasteStrategy : IGameStrategy
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!app.Spells.CanCast("Silena")) return false;
+			if (!app.Spells.CanCast("Haste")) return false;
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
-			// use item if healer is silenced
-			if (app.Buffs.HasAny(app.Healer.Player.Name, Buffs.Silence))
-			{
-				if (await app.Actions.UseItem("Echo Drops")) return true;
-				if (await app.Actions.UseItem("Remedy")) return true;
-			}
-
-			// silena party members
 			for (var i = 0; i < 18; i++)
 			{
 				var member = members[i];
@@ -36,21 +28,46 @@ namespace Altomatic.UI.Game.Strategies
 				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
 				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
 
-				if (distance < 21 && app.Buffs.HasAny(member.Name, Buffs.Silence))
+				if (distance < 21)
 				{
 					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
-					if (player?.IsEnabled ?? false) candidates.Add(member);
+					if (player == null) continue;
+
+					var enabled = player.IsEnabled;
+					var autoHaste = player.AutoBuffs.Haste;
+					var ageSeconds = app.Buffs.GetBuffAgeInSeconds(player.Name, Buffs.Haste);
+					var needsRecast = ageSeconds > app.Options.Config.AutoHasteSeconds;
+
+					if (member.Name == app.Healer.Player.Name)
+          {
+						if (app.Options.Config.SelfHaste)
+            {
+							enabled = true;
+							autoHaste = true;
+            }
+          }
+
+					if (enabled && autoHaste && needsRecast)
+					{
+						candidates.Add(member);
+					}
 				}
 			}
 
-			candidates.SortByJob(app);
 			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
 			{
-				foreach (var target in candidates)
+				var spell = new[] { "Haste II", "Haste" }
+					.Where(s => app.Spells.HasAccessTo(s))
+					.FirstOrDefault();
+
+				if (!string.IsNullOrWhiteSpace(spell))
 				{
-					if (await app.Actions.CastSpell("Silena", target.Name))
+					foreach (var target in candidates)
 					{
-						return true;
+						if (await app.Actions.CastSpell(spell, target.Name))
+						{
+							return true;
+						}
 					}
 				}
 			}

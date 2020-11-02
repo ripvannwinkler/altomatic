@@ -20,20 +20,15 @@ namespace Altomatic.UI.Game
 			this.App = App;
 		}
 
-		public void ProcessAddonEvent(AddonEvent @event)
-		{
-
-		}
-
 		public async Task<bool> UseItem(string itemName, string targetName = "<me>")
 		{
 			return await Task.Run<bool>(async () =>
 			{
 				if (!App.Healer.HasItem(itemName)) return false;
 				if (App.Healer.Player.Buffs.Contains(Buffs.Medicine))
-        {
+				{
 					if (Items.Medicines.Contains(itemName)) return false;
-        }
+				}
 
 				App.SetStatus($"Using item {itemName} on {targetName}");
 				await App.Healer.SendCommand($"/ja \"{itemName}\" {targetName}", 3000);
@@ -61,30 +56,53 @@ namespace Altomatic.UI.Game
 
 				var casting = false;
 				var completed = false;
+				var interrupted = false;
 				using var sub = App.Addon.Events.Subscribe(@event =>
 				{
-					if (@event.Type == AddonEventType.CastingStarted) casting = true;
-					if (@event.Type == AddonEventType.CastingCompleted) completed = true;
-					if (@event.Type == AddonEventType.CastingInteruppted) completed = true;
+					if (@event.Type == AddonEventType.CastingStarted)
+          {
+						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting started...");
+						casting = true;
+					}
+					if (@event.Type == AddonEventType.CastingCompleted)
+					{
+						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting completed...");
+						completed = true;
+					}
+					if (@event.Type == AddonEventType.CastingInteruppted)
+					{
+						App.Healer.ThirdParty.SendString("/echo [Altomatic] Casting interrupted...");
+						interrupted = true;
+					}
 				});
 
 				var timer = Stopwatch.StartNew();
 				var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
-				await App.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 2800);
+
+				await App.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 750);
 
 				while (casting)
 				{
-					if (completed) return true;
-					if (timer.ElapsedMilliseconds > spellInfo.CastTime)
+					var castPercent = App.Healer.CastBar.Percent;
+					if (castPercent == 1) break;
+
+					if (interrupted)
 					{
-						return false;
+						await Task.Delay(3000);
+						break;
+					}
+
+					if (completed)
+					{
+						await Task.Delay(3000);
+						break;
 					}
 
 					await Task.Delay(100);
 					continue;
 				}
 
-				return false;
+				return true;
 			});
 		}
 	}

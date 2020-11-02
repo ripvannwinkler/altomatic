@@ -46,6 +46,8 @@ namespace Altomatic.UI.Forms
 			Model.Strategies.Add(new SlowedStrategy());
 			Model.Strategies.Add(new CuragaStrategy());
 			Model.Strategies.Add(new CureStrategy());
+			Model.Strategies.Add(new AutoRefreshStrategy());
+			Model.Strategies.Add(new AutoHasteStrategy());
 			DataContext = Model;
 
 			Closing += async (sender, args) =>

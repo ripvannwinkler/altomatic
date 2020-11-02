@@ -44,50 +44,52 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (candidates.Count() >= required)
 			{
-				var target = candidates.First();
-				var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
+				foreach (var target in candidates)
+        {
+					var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
 
-				if (loss >= potencies.Curaga4)
-				{
-					if (await app.Actions.CastSpell("Curaga V", target.Name) ||
-							await app.Actions.CastSpell("Curaga IV", target.Name))
+					if (loss >= potencies.Curaga4)
 					{
-						return true;
+						if (await app.Actions.CastSpell("Curaga V", target.Name) ||
+								await app.Actions.CastSpell("Curaga IV", target.Name))
+						{
+							return true;
+						}
 					}
-				}
-				else if (loss >= potencies.Curaga3)
-				{
-					if (await app.Actions.CastSpell("Curaga IV", target.Name) ||
-							await app.Actions.CastSpell("Curaga V", target.Name) ||
-							await app.Actions.CastSpell("Curaga III", target.Name))
+					else if (loss >= potencies.Curaga3)
 					{
-						return true;
+						if (await app.Actions.CastSpell("Curaga IV", target.Name) ||
+								await app.Actions.CastSpell("Curaga V", target.Name) ||
+								await app.Actions.CastSpell("Curaga III", target.Name))
+						{
+							return true;
+						}
 					}
-				}
-				else if (loss >= potencies.Curaga2)
-				{
-					if (await app.Actions.CastSpell("Curaga III", target.Name) ||
-							await app.Actions.CastSpell("Curaga IV", target.Name) ||
-							await app.Actions.CastSpell("Curaga II", target.Name))
+					else if (loss >= potencies.Curaga2)
 					{
-						return true;
+						if (await app.Actions.CastSpell("Curaga III", target.Name) ||
+								await app.Actions.CastSpell("Curaga IV", target.Name) ||
+								await app.Actions.CastSpell("Curaga II", target.Name))
+						{
+							return true;
+						}
 					}
-				}
-				else if (loss >= potencies.Curaga)
-				{
-					if (await app.Actions.CastSpell("Curaga II", target.Name) ||
-							await app.Actions.CastSpell("Curaga III", target.Name) ||
-							await app.Actions.CastSpell("Curaga", target.Name))
+					else if (loss >= potencies.Curaga)
 					{
-						return true;
+						if (await app.Actions.CastSpell("Curaga II", target.Name) ||
+								await app.Actions.CastSpell("Curaga III", target.Name) ||
+								await app.Actions.CastSpell("Curaga", target.Name))
+						{
+							return true;
+						}
 					}
-				}
-				else
-				{
-					if (await app.Actions.CastSpell("Curaga", target.Name) ||
-							await app.Actions.CastSpell("Curaga II", target.Name))
+					else
 					{
-						return true;
+						if (await app.Actions.CastSpell("Curaga", target.Name) ||
+								await app.Actions.CastSpell("Curaga II", target.Name))
+						{
+							return true;
+						}
 					}
 				}
 			}

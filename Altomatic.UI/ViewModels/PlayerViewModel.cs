@@ -16,7 +16,14 @@ namespace Altomatic.UI.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
-		string name;
+		private string name;
+		private bool isEnabled;
+		private uint currentHp;
+		private double currentHpp;
+		private double distanceFromHealer;
+		private AppViewModel appData;
+		private AutoBuffsViewModel autoBuffs;
+
 		public string Name
 		{
 			get { return name; }
@@ -27,18 +34,16 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		bool enabled;
 		public bool IsEnabled
 		{
-			get { return enabled; }
+			get { return isEnabled; }
 			set
 			{
-				enabled = value;
+				isEnabled = value;
 				OnPropertyChanged();
 			}
 		}
 
-		double distanceFromHealer;
 		public double DistanceFromHealer
 		{
 			get { return distanceFromHealer; }
@@ -50,13 +55,6 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		public bool IsActive
-		{
-			get { return distanceFromHealer < 21 && appData.IsGameReady; }
-			set { /* ignore */}
-		}
-
-		uint currentHp;
 		public uint CurrentHp
 		{
 			get { return currentHp; }
@@ -67,7 +65,6 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		double currentHpp;
 		public double CurrentHpp
 		{
 			get { return currentHpp; }
@@ -78,7 +75,13 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		private AppViewModel appData;
+
+		public bool IsActive
+		{
+			get { return distanceFromHealer < 21 && appData.IsGameReady; }
+			set { /* ignore */}
+		}
+
 		public AppViewModel AppData
 		{
 			get { return appData; }
@@ -89,9 +92,20 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public AutoBuffsViewModel AutoBuffs
+    {
+      get { return autoBuffs; }
+      set
+      {
+				autoBuffs = value;
+				OnPropertyChanged();
+      }
+    }
+
 		public PlayerViewModel(AppViewModel appData)
 		{
 			AppData = appData;
+			AutoBuffs = new AutoBuffsViewModel();
 			DistanceFromHealer = uint.MaxValue;
 			IsEnabled = true;
 		}

@@ -35,12 +35,15 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
+			candidates.SortByJob(app);
 			if (candidates.Any() && candidates.Min(c => c.CurrentHPP) > 75)
 			{
-				var target = candidates.First();
-				if (await app.Actions.CastSpell("Stona", target.Name))
+				foreach (var target in candidates)
 				{
-					return true;
+					if (await app.Actions.CastSpell("Stona", target.Name))
+					{
+						return true;
+					}
 				}
 			}
 

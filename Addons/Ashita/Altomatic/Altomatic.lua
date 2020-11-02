@@ -16,6 +16,15 @@ local socket = require("socket")
 local ip = "127.0.0.1"
 local port = 19769
 
+function GetPlayerName()
+  local player = GetPlayerEntity()
+  if player ~= nil then
+      return player.Name
+  end
+  return nil
+end
+
+
 function SendToAltomatic(message)
   pcall(function()
     local altos = socket.udp()
@@ -73,10 +82,12 @@ function HandleIncomingPacket(id, size, data)
           SendToAltomatic('casting_completed')
         elseif category == 8 then
           local temp = ashita.bits.unpack_be(data, 86, 16);
-          if ashita.bits.unpack_be(data, 86, 16) == 28787 then
+          if temp == 28787 then
             SendToAltomatic('casting_interrupted')
-          elseif ashita.bits.unpack_be(data, 86, 16) == 24931 then
+          elseif temp == 24931 then
             SendToAltomatic('casting_started')
+          else 
+            print('unknown casting status: ' .. temp)
           end
         end
       end
@@ -87,6 +98,15 @@ function HandleIncomingPacket(id, size, data)
 
   return false
 end
+
+-- ashita.register_event('incoming_text', function(mode, chat)
+--   for k, v in pairs(onevent.events) do
+--       if (chat:contains(v[1])) then
+--           AshitaCore:GetChatManager():QueueCommand(v[2], 1);
+--       end
+--   end
+--   return false;
+-- end);
 
 function HandleAddonCommand(command, ntype)
   local args = command:args();

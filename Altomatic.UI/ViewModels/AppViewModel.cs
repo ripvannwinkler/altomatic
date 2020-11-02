@@ -204,12 +204,6 @@ namespace Altomatic.UI.ViewModels
 			{
 				switch (@event.Type)
 				{
-					case AddonEventType.CastingStarted:
-					case AddonEventType.CastingCompleted:
-					case AddonEventType.CastingInteruppted:
-						Actions.ProcessAddonEvent(@event);
-						break;
-
 					case AddonEventType.BuffsUpdated:
 						var data = @event.Data.Split('_');
 						if (data.Length == 3)

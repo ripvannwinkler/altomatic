@@ -118,9 +118,12 @@
     <Compile Include="Game\ActionManager.cs" />
     <Compile Include="Game\AddonInterface.cs" />
     <Compile Include="Game\Data\Buffs.cs" />
+    <Compile Include="Game\Data\BuffStatus.cs" />
     <Compile Include="Game\Data\Items.cs" />
     <Compile Include="Game\Data\Jobs.cs" />
     <Compile Include="Game\Data\Spells.cs" />
+    <Compile Include="Game\Strategies\AutoHasteStrategy.cs" />
+    <Compile Include="Game\Strategies\AutoRefreshStrategy.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />
     <Compile Include="Game\Strategies\CureStrategy.cs" />
     <Compile Include="Game\Strategies\DoomedStrategy.cs" />
@@ -141,6 +144,7 @@
     <Compile Include="ValueConverters\StatusBackgroundConverter.cs" />
     <Compile Include="ValueConverters\StatusLabelConverter.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="ViewModels\AutoBuffsViewModel.cs" />
     <Compile Include="ViewModels\OptionsViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Page Include="Controls\PlayerStatus.xaml">

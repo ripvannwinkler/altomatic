@@ -23,16 +23,26 @@ namespace Altomatic.UI.Game.Data
 			if (spell == null) return false;
 
 			return
-				HasRequiredJob(spellName) &&
-				App.Healer.Player.HasSpell(spell.ID) &&
+				HasRequiredJob(spellName) && HasAccessTo(spellName) &&
 				App.Healer.Recast.GetSpellRecast(spell.Index) == 0 &&
 				spell.MPCost <= App.Healer.Player.MP;
+		}
+
+		public bool HasAccessTo(string spellName)
+		{
+			var spell = App.Healer.Resources.GetSpell(spellName, 0);
+			if (spell == null) return false;
+
+			return
+				HasRequiredJob(spellName) &&
+				App.Healer.Player.HasSpell(spell.Index);
 		}
 
 		private bool IsCasterDisabled()
 		{
 			return App.Buffs.HasAny(App.Healer.Player.Name,
-				Buffs.Sleep, Buffs.Petrification, Buffs.Silence);
+				Buffs.Sleep, Buffs.Petrification, Buffs.Stun,
+				Buffs.Silence, Buffs.Terror);
 		}
 
 		private bool HasRequiredJob(string spellName)

@@ -36,10 +36,20 @@ namespace Altomatic.UI.Game.Strategies
 			var player = app.Players.ElementAt(member.MemberNumber);
 			var playerEntity = app.Healer.Entity.GetEntity((int)member.TargetIndex);
 
-			player.Name = member.Name;
-			player.CurrentHp = member.CurrentHP;
-			player.CurrentHpp = member.CurrentHPP;
-			player.DistanceFromHealer = PlayerUtilities.GetDistance(healer, playerEntity);
+			if (member.Active > 0)
+			{
+				player.Name = member.Name;
+				player.CurrentHp = member.CurrentHP;
+				player.CurrentHpp = member.CurrentHPP;
+				player.DistanceFromHealer = PlayerUtilities.GetDistance(healer, playerEntity);
+			}
+			else
+			{
+				player.Name = "";
+				player.CurrentHp = 0;
+				player.CurrentHpp = 0;
+				player.DistanceFromHealer = double.MaxValue;
+			}
 		}
 	}
 }

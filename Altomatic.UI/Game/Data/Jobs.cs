@@ -50,6 +50,18 @@ namespace Altomatic.UI.Game.Data
 			return hasAbility && recast == 0;
 		}
 
+		public int MapPriority(PartyMember member)
+		{
+			var entity = App.Monitored.Entity.GetEntity((int)member.TargetIndex);
+			var main = App.Jobs.GetMainJob(entity);
+			var sub = App.Jobs.GetMainJob(entity);
+
+			return
+				new[] { "PLD", "RUN", "WHM" }.Contains(main) ? 1 :
+				new[] { "SCH", "RDM", "BRD", "BLM" }.Contains(main) ? 2 :
+				new[] { "NIN" }.Contains(sub) ? 3 : 4;
+		}
+
 		public bool IsMainJob(PlayerTools player, string jobName)
 		{
 			if (TryGetValue(player.MainJob, out var name))

@@ -124,6 +124,10 @@ namespace Altomatic.UI.ViewModels
 		int cureThreshold = 80;
 		int curagaThreshold = 80;
 		int curagaRequiredTargets = 3;
+		int autoHasteSeconds = 300;
+
+		bool selfHaste = true;
+		bool selfRefresh = true;
 
 		public int CurePotency
 		{
@@ -164,5 +168,36 @@ namespace Altomatic.UI.ViewModels
 				OnPropertyChanged();
 			}
 		}
+
+		public int AutoHasteSeconds
+    {
+      get { return autoHasteSeconds; }
+      set
+      {
+				autoHasteSeconds = value;
+				OnPropertyChanged();
+      }
+    }
+
+
+		public bool SelfHaste
+    {
+      get { return selfHaste; }
+      set
+      {
+				selfHaste = value;
+				OnPropertyChanged();
+      }
+    }
+
+		public bool SelfRefresh
+    {
+      get { return selfRefresh; }
+      set
+      {
+				selfRefresh = value;
+				OnPropertyChanged();
+      }
+    }
 	}
 }

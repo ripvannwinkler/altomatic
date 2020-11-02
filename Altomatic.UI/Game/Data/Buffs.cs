@@ -608,7 +608,7 @@ namespace Altomatic.UI.Game.Data
 		public const short MagicEvasionBoost2 = 611;
 		public const short ColureActive = 612;
 
-		private ConcurrentDictionary<string, short[]> partyBuffs = new ConcurrentDictionary<string, short[]>(StringComparer.InvariantCultureIgnoreCase);
+		private readonly ConcurrentDictionary<string, List<BuffStatus>> partyBuffs = new ConcurrentDictionary<string, List<BuffStatus>>(StringComparer.InvariantCultureIgnoreCase);
 
 		public AppViewModel App { get; }
 
@@ -618,25 +618,79 @@ namespace Altomatic.UI.Game.Data
 		}
 
 		/// <summary>
-    /// Clears all buffs received from addon
-    /// </summary>
+		/// Clears all buffs
+		/// </summary>
 		public void Clear()
-    {
-			partyBuffs.Clear();
-    }
-
-		/// <summary>
-    /// Updates buffs received from addon
-    /// </summary>
-		public void Update(string playerName, short[] buffs)
 		{
-			partyBuffs.TryRemove(playerName, out var _);
-			partyBuffs.TryAdd(playerName, buffs);
+			partyBuffs.Clear();
 		}
 
 		/// <summary>
-    /// Does the player have any of the specified buffs?
+		/// Updates all buffs for a player
+		/// </summary>
+		public void Update(string playerName, short[] buffs)
+		{
+			partyBuffs[playerName] = buffs.Select(b => new BuffStatus(b)).ToList();
+		}
+
+		/// <summary>
+		/// Adds a buff to a player
+		/// </summary>
+		public void Add(string playerName, short buff)
+		{
+			if (!partyBuffs.TryGetValue(playerName, out var buffs))
+			{
+				partyBuffs[playerName] = buffs = new List<BuffStatus>();
+			}
+
+			Remove(playerName, buff);
+			buffs.Add(new BuffStatus(buff));
+		}
+
+		/// <summary>
+    /// Removes a buff from a player
     /// </summary>
+    /// <param name="playerName"></param>
+    /// <param name="buff"></param>
+		public void Remove(string playerName, short buff)
+		{
+			if (partyBuffs.TryGetValue(playerName, out var buffs))
+			{
+				buffs.RemoveAll(b => b.Id == buff);
+			}
+		}
+
+		/// <summary>
+    /// Gets a player buff's age in seconds
+    /// </summary>
+		public int GetBuffAgeInSeconds(string playerName, short buff)
+    {
+			if (App.Healer.Player.Name == playerName)
+			{
+				if (App.Healer.Player.Buffs.Contains(buff))
+				{
+					return -1;
+				}
+			}
+			else if (App.Monitored.Player.Name == playerName)
+			{
+				if (App.Monitored.Player.Buffs.Contains(buff))
+        {
+					return -1;
+        }
+			}
+			else if (partyBuffs.TryGetValue(playerName, out var buffs))
+      {
+				var status = buffs.SingleOrDefault(b => b.Id == buff);
+				if (status != null) return status.AgeInSeconds;
+      }
+
+			return int.MaxValue;
+    }
+
+		/// <summary>
+		/// Does the player have any of the specified buffs?
+		/// </summary>
 		public bool HasAny(string playerName, params short[] buffs)
 		{
 			var activeBuffs = new List<short>();
@@ -649,20 +703,17 @@ namespace Altomatic.UI.Game.Data
 			{
 				activeBuffs.AddRange(App.Monitored.Player.Buffs);
 			}
-			else
+			else if (partyBuffs.TryGetValue(playerName, out var playerBuffs))
 			{
-				if (partyBuffs.TryGetValue(playerName, out var playerBuffs))
-				{
-					activeBuffs.AddRange(playerBuffs);
-				}
+				activeBuffs.AddRange(playerBuffs.Select(b => b.Id).ToArray());
 			}
 
 			return buffs.Intersect(activeBuffs).Any();
 		}
 
 		/// <summary>
-    /// Does the player have all of the specified buffs?
-    /// </summary>
+		/// Does the player have all of the specified buffs?
+		/// </summary>
 		public bool HasAll(string playerName, params short[] buffs)
 		{
 			var activeBuffs = new List<short>();
@@ -675,12 +726,9 @@ namespace Altomatic.UI.Game.Data
 			{
 				activeBuffs.AddRange(App.Monitored.Player.Buffs);
 			}
-			else
+			else if (partyBuffs.TryGetValue(playerName, out var playerBuffs))
 			{
-				if (partyBuffs.TryGetValue(playerName, out var playerBuffs))
-				{
-					activeBuffs.AddRange(playerBuffs);
-				}
+				activeBuffs.AddRange(playerBuffs.Select(b => b.Id).ToArray());
 			}
 
 			return buffs.Intersect(activeBuffs).Count() == buffs.Count();

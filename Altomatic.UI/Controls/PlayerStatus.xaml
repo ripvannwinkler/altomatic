@@ -27,18 +27,18 @@
 						</Button.Content>
 						<Button.ContextMenu>
 							<ContextMenu >
-								<MenuItem IsCheckable="True" Header="Haste" />
-								<MenuItem IsCheckable="True" Header="Flurry" />
-								<MenuItem IsCheckable="True" Header="Refresh" />
-								<MenuItem IsCheckable="True" Header="Phalanx" />
-								<MenuItem IsCheckable="True" Header="Firestorm" />
-								<MenuItem IsCheckable="True" Header="Sandstorm" />
-								<MenuItem IsCheckable="True" Header="Rainstorm" />
-								<MenuItem IsCheckable="True" Header="Windstorm" />
-								<MenuItem IsCheckable="True" Header="Thunderstorm" />
-								<MenuItem IsCheckable="True" Header="Hailstorm" />
-								<MenuItem IsCheckable="True" Header="Aurastorm" />
-								<MenuItem IsCheckable="True" Header="Voidstorm" />
+								<MenuItem IsCheckable="True" Header="Haste" IsChecked="{Binding Player.AutoBuffs.Haste}" />
+								<MenuItem IsCheckable="True" Header="Flurry" IsChecked="{Binding Player.AutoBuffs.Flurry}" />
+								<MenuItem IsCheckable="True" Header="Refresh" IsChecked="{Binding Player.AutoBuffs.Refresh}" />
+								<MenuItem IsCheckable="True" Header="Phalanx" IsChecked="{Binding Player.AutoBuffs.Phalanx}" />
+								<MenuItem IsCheckable="True" Header="Firestorm" IsChecked="{Binding Player.AutoBuffs.Firestorm}" />
+								<MenuItem IsCheckable="True" Header="Sandstorm" IsChecked="{Binding Player.AutoBuffs.Sandstorm}" />
+								<MenuItem IsCheckable="True" Header="Rainstorm" IsChecked="{Binding Player.AutoBuffs.Rainstorm}" />
+								<MenuItem IsCheckable="True" Header="Windstorm" IsChecked="{Binding Player.AutoBuffs.Windstorm}" />
+								<MenuItem IsCheckable="True" Header="Thunderstorm" IsChecked="{Binding Player.AutoBuffs.Thunderstorm}" />
+								<MenuItem IsCheckable="True" Header="Hailstorm" IsChecked="{Binding Player.AutoBuffs.Hailstorm}" />
+								<MenuItem IsCheckable="True" Header="Aurorastorm" IsChecked="{Binding Player.AutoBuffs.Aurorastorm}" />
+								<MenuItem IsCheckable="True" Header="Voidstorm" IsChecked="{Binding Player.AutoBuffs.Voidstorm}" />
 							</ContextMenu>
 						</Button.ContextMenu>
 					</Button>

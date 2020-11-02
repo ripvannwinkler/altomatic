@@ -10,10 +10,10 @@ using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Strategies
 {
-  public class MaxHpDownStrategy : IGameStrategy
-  {
-    public async Task<bool> ExecuteAsync(AppViewModel app)
-    {
+	public class MaxHpDownStrategy : IGameStrategy
+	{
+		public async Task<bool> ExecuteAsync(AppViewModel app)
+		{
 			if (!app.Spells.CanCast("Erase")) return false;
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var members = app.Monitored.Party.GetPartyMembers();
@@ -35,9 +35,9 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
-			if (candidates.Any())
+			candidates.SortByJob(app);
+			foreach (var target in candidates)
 			{
-				var target = candidates.First();
 				if (await app.Actions.CastSpell("Erase", target.Name))
 				{
 					return true;
@@ -46,5 +46,5 @@ namespace Altomatic.UI.Game.Strategies
 
 			return false;
 		}
-  }
+	}
 }
