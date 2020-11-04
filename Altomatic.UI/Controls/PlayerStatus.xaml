@@ -18,7 +18,11 @@
 			<Border BorderBrush="{x:Null}" BorderThickness="0 0 0 5" DockPanel.Dock="Bottom"/>
 			<Border Padding="5 5 5 5" Background="Transparent">
 				<DockPanel>
-					<Button Name="Auto" Padding="5 2 5 2" DockPanel.Dock="Right" VerticalAlignment="Center" ContextMenuService.Placement="Bottom">
+					<Button 
+						Padding="8 4 8 4" 
+						DockPanel.Dock="Right" 
+						VerticalAlignment="Center" 
+						ContextMenuService.Placement="Bottom">
 						<behaviors:Interaction.Behaviors>
 							<interactive:DropDownButtonBehavior/>
 						</behaviors:Interaction.Behaviors>
@@ -43,10 +47,14 @@
 						</Button.ContextMenu>
 					</Button>
 					<CheckBox 
-						x:Name="Enabled" 
+						Margin="0 0 4 0" 
+						DockPanel.Dock="Left" 
+						VerticalAlignment="Center" 
+						IsChecked="{Binding Player.IsGeoTarget}" 
+						ToolTip="Use this player as the target for geomancy spells."/>
+					<CheckBox 
 						Cursor="Hand" 
 						Margin="0 0 5 0" 
-						DockPanel.Dock="Left" 
 						VerticalAlignment="Center" 
 						ToolTip="Enable actions on this player" 
 						HorizontalContentAlignment="Stretch" 

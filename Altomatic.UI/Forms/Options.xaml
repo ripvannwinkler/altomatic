@@ -257,14 +257,17 @@
 											<Slider VerticalAlignment="Center" Minimum="0" Maximum="3600" SmallChange="5" LargeChange="30" TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding Model.Config.AutoAdloquiumSeconds}"/>
 										</DockPanel>
 									</StackPanel>
-								</Grid>								
+								</Grid>
 							</StackPanel>
 						</DockPanel>
 					</Border>
 				</TabItem>
 				<TabItem Header="Debuff Removal">
 					<Border Padding="10">
-						<TextBlock>Debuff stuff</TextBlock>
+						<StackPanel>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer holy / hallowed water over Cursna on healer</CheckBox>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer remedy over Paralyna on healer</CheckBox>
+						</StackPanel>
 					</Border>
 				</TabItem>
 				<TabItem Header="Geomancy">
@@ -273,8 +276,50 @@
 					</Border>
 				</TabItem>
 				<TabItem Header="Job Abilities">
-					<Border Padding="10">
-						<TextBlock>Job ability stuff</TextBlock>
+					<Border Padding="4">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+								<ColumnDefinition Width="1*"/>
+							</Grid.ColumnDefinitions>
+							<StackPanel Grid.Column="0">
+								<GroupBox Header="Scholar" Margin="4" Grid.Column="0">
+									<StackPanel Margin="0 0 0 4">
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableSublimation}">Sublimation</CheckBox>
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableLightArts}">Light Arts</CheckBox>
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableAddendumWhite}">Addendum: White</CheckBox>
+									</StackPanel>
+								</GroupBox>
+								<GroupBox Header="Red Mage" Margin="4" Grid.Column="0">
+									<StackPanel>
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableComposure}">Composure</CheckBox>
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableConvert}">Convert</CheckBox>
+									</StackPanel>
+								</GroupBox>
+							</StackPanel>
+							<GroupBox Header="White Mage" Margin="4" Grid.Column="1">
+								<StackPanel>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableAfflatusSolace}">Afflatus Solace</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableAfflatusMisery}">Afflatus Misery</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableDivineSeal}">Divine Caress</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableDivineCaress}">Divine Seal</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableDevotion}">Devotion</CheckBox>
+								</StackPanel>
+							</GroupBox>
+							<GroupBox Header="Geomancer" Margin="4" Grid.Column="2">
+								<StackPanel>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableEntrust}">Entrust</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableFullCircle}">Convert</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableDematerialize}">Dematerialize</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableBlazeOfGlory}">Blaze Of Glory</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableRadialArcana}">Radial Arcana</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableEclipticAttrition}">Ecliptic Attrition</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableLifeCycle}">Life Cycle</CheckBox>
+								</StackPanel>
+							</GroupBox>
+							<StackPanel Grid.Column="0"></StackPanel>
+						</Grid>
 					</Border>
 				</TabItem>
 				<TabItem Header="Other">

@@ -126,6 +126,7 @@
     <Compile Include="Game\Strategies\AutoBuffsStrategy.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />
     <Compile Include="Game\Strategies\CureStrategy.cs" />
+    <Compile Include="Game\Strategies\GeomancerStrategy.cs" />
     <Compile Include="Game\Strategies\JobAbilitiesStrategy.cs" />
     <Compile Include="Game\Strategies\RemoveCriticalDebuffStrategy.cs" />
     <Compile Include="Game\Strategies\RemoveDebuffStrategy.cs" />

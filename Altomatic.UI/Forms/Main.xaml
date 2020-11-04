@@ -7,10 +7,10 @@
 				xmlns:uc="clr-namespace:Altomatic.UI.Controls"
 				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
-				MinWidth="800"
-				MinHeight="530"
-				Height="450"
-				Width="800"
+				MinWidth="900"
+				MinHeight="600"
+				Height="600"
+				Width="900"
 				Name="MainWindow1"
         Title="Altomatic 1.0">
 	<Window.Resources>
@@ -102,6 +102,8 @@
 		<Border Padding="15 5 15 15" DockPanel.Dock="Top">
 			<StackPanel HorizontalAlignment="Center">
 				<Label 
+					FontSize="20"
+					FontWeight="DemiBold"
 					Margin="0 0 0 8"
 					HorizontalContentAlignment="Stretch" 
 					HorizontalAlignment="Center">

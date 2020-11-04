@@ -260,8 +260,133 @@ namespace Altomatic.UI.ViewModels
 		}
 		#endregion
 
-		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		#region Job Abilities
+		private bool enableAfflatusMisery;
+		public bool EnableAfflatusMisery
+    {
+			get => enableAfflatusMisery;
+      set { enableAfflatusMisery = value; OnPropertyChanged(); }
+    }
+
+		private bool enableAfflatusSolace;
+		public bool EnableAfflatusSolace
+		{
+			get => enableAfflatusSolace;
+			set { enableAfflatusSolace = value; OnPropertyChanged(); }
+		}
+
+		private bool enableDevotion;
+		public bool EnableDevotion
+    {
+			get => enableDevotion;
+      set { enableDevotion = value; OnPropertyChanged(); }
+    }
+
+		private bool enableDivineSeal;
+		public bool EnableDivineSeal
+    {
+			get => enableDivineSeal;
+      set { enableDivineSeal = value; OnPropertyChanged(); }
+    }
+
+		private bool enableDivineCaress;
+		public bool EnableDivineCaress
+		{
+			get => enableDivineCaress;
+			set { enableDivineCaress = value; OnPropertyChanged(); }
+		}
+
+		private bool enableComposure;
+		public bool EnableComposure
+		{
+			get => enableComposure;
+			set { enableComposure = value; OnPropertyChanged(); }
+		}
+
+		private bool enableConvert;
+		public bool EnableConvert
+		{
+			get => enableConvert;
+			set { enableConvert = value; OnPropertyChanged(); }
+		}
+
+		private bool enableEntrust;
+		public bool EnableEntrust
+		{
+			get => enableEntrust;
+			set { enableEntrust = value; OnPropertyChanged(); }
+		}
+
+		private bool enableFullCircle;
+		public bool EnableFullCircle
+		{
+			get => enableFullCircle;
+			set { enableFullCircle = value; OnPropertyChanged(); }
+		}
+
+		private bool enableDematerialize;
+		public bool EnableDematerialize
+		{
+			get => enableDematerialize;
+			set { enableDematerialize = value; OnPropertyChanged(); }
+		}
+
+		private bool enableBlazeOfGlory;
+		public bool EnableBlazeOfGlory
+		{
+			get => enableBlazeOfGlory;
+			set { enableBlazeOfGlory = value; OnPropertyChanged(); }
+		}
+
+		private bool enableRadialArcana;
+		public bool EnableRadialArcana
+		{
+			get => enableRadialArcana;
+			set { enableRadialArcana = value; OnPropertyChanged(); }
+		}
+
+		private bool enableEclipticAttrition;
+		public bool EnableEclipticAttrition
+		{
+			get => enableEclipticAttrition;
+			set { enableEclipticAttrition = value; OnPropertyChanged(); }
+		}
+
+		private bool enableLifeCycle;
+		public bool EnableLifeCycle
+		{
+			get => enableLifeCycle;
+			set { enableLifeCycle = value; OnPropertyChanged(); }
+		}
+
+		private bool enableSublimation;
+		public bool EnableSublimation
+		{
+			get => enableSublimation;
+			set { enableSublimation = value; OnPropertyChanged(); }
+		}
+
+		private bool enableLightArts;
+		public bool EnableLightArts
+		{
+			get => enableLightArts;
+			set { enableLightArts = value; OnPropertyChanged(); }
+		}
+
+		private bool enableAddendumWhite;
+		public bool EnableAddendumWhite
+		{
+			get => enableAddendumWhite;
+			set { enableAddendumWhite = value; OnPropertyChanged(); }
+		}
+    #endregion
+
+    #region Geomancer
+
+    #endregion
+
+    #region INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

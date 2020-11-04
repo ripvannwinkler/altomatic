@@ -19,26 +19,20 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		private string name;
-		private bool isEnabled;
-		private uint currentHp;
-		private double currentHpp;
-		private double distanceFromHealer;
-		private AppViewModel appData;
-		private AutoBuffsViewModel autoBuffs;
-		private PartyMember member;
-
 		public string Name
 		{
 			get { return name; }
 			set { name = value; OnPropertyChanged(); }
 		}
 
+		private bool isEnabled;
 		public bool IsEnabled
 		{
 			get { return isEnabled; }
 			set { isEnabled = value; OnPropertyChanged(); }
 		}
 
+		private double distanceFromHealer;
 		public double DistanceFromHealer
 		{
 			get { return distanceFromHealer; }
@@ -50,12 +44,14 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private uint currentHp;
 		public uint CurrentHp
 		{
 			get { return currentHp; }
 			set { currentHp = value; OnPropertyChanged(); }
 		}
 
+		private double currentHpp;
 		public double CurrentHpp
 		{
 			get { return currentHpp; }
@@ -73,6 +69,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private AppViewModel appData;
 		public AppViewModel AppData
 		{
 			get { return appData; }
@@ -84,12 +81,14 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private AutoBuffsViewModel autoBuffs;
 		public AutoBuffsViewModel AutoBuffs
 		{
 			get { return autoBuffs; }
 			set { autoBuffs = value; OnPropertyChanged(); }
 		}
 
+		private PartyMember member;
 		public PartyMember Member
 		{
 			get { return member; }
@@ -100,6 +99,25 @@ namespace Altomatic.UI.ViewModels
 				OnPropertyChanged(nameof(IsActive));
 			}
 		}
+
+		private bool isGeoTarget;
+		public bool IsGeoTarget
+    {
+			get => isGeoTarget;
+      set
+      {
+				if (value)
+        {
+					foreach (var player in AppData.Players)
+          {
+						player.IsGeoTarget = false;
+          }
+        }
+
+				isGeoTarget = value;
+				OnPropertyChanged();
+      }
+    }
 
 		public PlayerViewModel(AppViewModel appData)
 		{
