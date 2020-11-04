@@ -17,19 +17,6 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		private bool haste;
-		private bool flurry;
-		private bool phalanx;
-		private bool refresh;
-
-		private bool firestorm;
-		private bool sandstorm;
-		private bool rainstorm;
-		private bool windstorm;
-		private bool thunderstorm;
-		private bool hailstorm;
-		private bool aurorastorm;
-		private bool voidstorm;
-
 		public bool Haste
 		{
 			get { return haste; }
@@ -45,6 +32,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool flurry;
 		public bool Flurry
 		{
 			get { return flurry; }
@@ -60,26 +48,42 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool phalanx;
 		public bool Phalanx
 		{
 			get { return phalanx; }
-			set
-			{
-				phalanx = value;
-				OnPropertyChanged();
-			}
+			set { phalanx = value; OnPropertyChanged(); }
 		}
 
+		private bool refresh;
 		public bool Refresh
 		{
 			get { return refresh; }
-			set
-			{
-				refresh = value;
-				OnPropertyChanged();
-			}
+			set { refresh = value; OnPropertyChanged(); }
 		}
 
+		private bool regen;
+		public bool Regen
+		{
+			get { return regen; }
+			set { regen = value; OnPropertyChanged(); }
+		}
+
+		private bool protect;
+		public bool Protect
+		{
+			get { return protect; }
+			set { protect = value; OnPropertyChanged(); }
+		}
+
+		private bool shell;
+		public bool Shell
+		{
+			get { return shell; }
+			set { shell = value; OnPropertyChanged(); }
+		}
+
+		private bool firestorm;		
 		public bool Firestorm
 		{
 			get { return firestorm; }
@@ -101,6 +105,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool sandstorm;
 		public bool Sandstorm
 		{
 			get { return sandstorm; }
@@ -122,6 +127,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool rainstorm;
 		public bool Rainstorm
 		{
 			get { return rainstorm; }
@@ -143,6 +149,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool windstorm;
 		public bool Windstorm
 		{
 			get { return windstorm; }
@@ -164,6 +171,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool thunderstorm;
 		public bool Thunderstorm
 		{
 			get { return thunderstorm; }
@@ -185,6 +193,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool hailstorm;
 		public bool Hailstorm
 		{
 			get { return hailstorm; }
@@ -206,6 +215,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool aurorastorm;
 		public bool Aurorastorm
 		{
 			get { return aurorastorm; }
@@ -227,6 +237,7 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool voidstorm;
 		public bool Voidstorm
 		{
 			get { return voidstorm; }

@@ -8,7 +8,7 @@ namespace Altomatic.UI
 {
   public static class Constants
   {
-    public const int LowHpThreshold = 75;
+    public const int LowHpThreshold = 80;
     public const int DefaultCastRange = 21;
   }
 }

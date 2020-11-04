@@ -42,6 +42,7 @@ namespace Altomatic.UI.Game.Strategies
 				player.CurrentHp = member.CurrentHP;
 				player.CurrentHpp = member.CurrentHPP;
 				player.DistanceFromHealer = PlayerUtilities.GetDistance(healer, playerEntity);
+				player.Member = member;
 			}
 			else
 			{
@@ -49,6 +50,7 @@ namespace Altomatic.UI.Game.Strategies
 				player.CurrentHp = 0;
 				player.CurrentHpp = 0;
 				player.DistanceFromHealer = double.MaxValue;
+				player.Member = null;
 			}
 		}
 	}

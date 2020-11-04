@@ -19,6 +19,7 @@ namespace Altomatic.UI.Game.Data
 		public bool CanCast(string spellName)
 		{
 			if (IsCasterDisabled()) return false;
+			if (string.IsNullOrWhiteSpace(spellName)) return false;
 			var spell = App.Healer.Resources.GetSpell(spellName, 0);
 			if (spell == null) return false;
 
@@ -36,6 +37,11 @@ namespace Altomatic.UI.Game.Data
 			return
 				HasRequiredJob(spellName) &&
 				App.Healer.Player.HasSpell(spell.Index);
+		}
+
+		public string FirstAvailable(params string[] spellNames)
+		{
+			return spellNames.FirstOrDefault(s => HasAccessTo(s));
 		}
 
 		private bool IsCasterDisabled()

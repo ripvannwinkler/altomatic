@@ -663,7 +663,7 @@ namespace Altomatic.UI.Game.Data
 		/// <summary>
     /// Gets a player buff's age in seconds
     /// </summary>
-		public int GetBuffAgeInSeconds(string playerName, short buff)
+		public int GetBuffAgeSeconds(string playerName, short buff)
     {
 			if (App.Healer.Player.Name == playerName)
 			{

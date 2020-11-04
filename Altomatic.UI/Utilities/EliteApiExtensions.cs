@@ -33,14 +33,22 @@ namespace Altomatic.UI.Utilities
 			return count > 0;
 		}
 
-		public static void SortByJob(this List<PartyMember> members, AppViewModel app, JobSort sortStrategy = JobSort.TanksFirst)
-		{
-			members.Sort((a, b) =>
-			{
-				var a1 = app.Jobs.MapPriority(a, sortStrategy);
-				var b1 = app.Jobs.MapPriority(b, sortStrategy);
-				return a1.CompareTo(b1);
-			});
-		}
+		public static bool HasAnyBuff(this EliteAPI instance, params short[] buffs)
+    {
+			return instance.Player.Buffs.Intersect(buffs).Any();
+    }
+
+		public static IOrderedEnumerable<PlayerViewModel> SortByJob(this IEnumerable<PlayerViewModel> players, JobSort sortStrategy = JobSort.TanksFirst)
+    {
+			return memoizedSortByJobInternal(players, sortStrategy);
+    }
+
+    private static IOrderedEnumerable<PlayerViewModel> SortByJobInternal(IEnumerable<PlayerViewModel> players, JobSort sortStrategy)
+    {
+      return players.OrderBy(p => p.AppData.Jobs.MapPriority(p.Member, sortStrategy));
+    }
+
+		private static Func<IEnumerable<PlayerViewModel>, JobSort, IOrderedEnumerable<PlayerViewModel>> memoizedSortByJobInternal =
+			Memoizer.Memoize<IEnumerable<PlayerViewModel>, JobSort, IOrderedEnumerable<PlayerViewModel>>(SortByJobInternal);
 	}
 }

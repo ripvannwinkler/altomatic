@@ -35,19 +35,7 @@ namespace Altomatic.UI.Forms
 
 		private void InitializeAppData()
 		{
-			Model = new AppViewModel();
-			Model.Strategies.Add(new ValidateProcessStrategy());
-			Model.Strategies.Add(new RefreshPlayerInfoStrategy());
-			Model.Strategies.Add(new DoomedStrategy());
-			Model.Strategies.Add(new PetrifiedStrategy());
-			Model.Strategies.Add(new SilencedStrategy());
-			Model.Strategies.Add(new ParalyzedStrategy());
-			Model.Strategies.Add(new MaxHpDownStrategy());
-			Model.Strategies.Add(new SlowedStrategy());
-			Model.Strategies.Add(new CuragaStrategy());
-			Model.Strategies.Add(new CureStrategy());
-			Model.Strategies.Add(new AutoRefreshStrategy());
-			Model.Strategies.Add(new AutoHasteStrategy());
+			Model = new AppViewModel();			
 			DataContext = Model;
 
 			Closing += async (sender, args) =>

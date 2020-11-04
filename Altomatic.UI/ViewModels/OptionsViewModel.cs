@@ -11,60 +11,69 @@ using System.Xml.Serialization;
 
 namespace Altomatic.UI.ViewModels
 {
-	public class OptionsViewModel : INotifyPropertyChanged
+  public class OptionsViewModel : INotifyPropertyChanged
 	{
-		AppViewModel App;
-		Config config = new Config();
-		string settingsDir = Path.Combine(Environment.CurrentDirectory, "settings");
-		string settingsFile;
+		private static readonly string settingsDir = Path.Combine(Environment.CurrentDirectory, "settings");
+		private static readonly string settingsFilter = "Settings Files | *.xml";
 
+		#region INotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
+		#endregion
 
-		public Config Config
+		private ConfigViewModel config;
+		public ConfigViewModel Config
 		{
 			get { return config; }
-			set
-			{
-				config = value;
-				OnPropertyChanged();
-			}
+			set { config = value; OnPropertyChanged(); }
 		}
 
+		private AppViewModel appData;
+		public AppViewModel AppData
+		{
+			get { return appData; }
+			set { appData = value; OnPropertyChanged(); }
+		}
+
+		private string settingsFile;
 		public string SettingsFile
 		{
 			get { return settingsFile; }
-			set
-			{
-				settingsFile = value;
-				OnPropertyChanged();
-			}
+			set { settingsFile = value; OnPropertyChanged(); }
 		}
 
 		public OptionsViewModel(AppViewModel app)
 		{
-			App = app ?? throw new ArgumentNullException(nameof(app));
+			Config = new ConfigViewModel();
+			AppData = app ?? throw new ArgumentNullException(nameof(app));
 			Directory.CreateDirectory(settingsDir);
 		}
 
+		/// <summary>
+    /// Saves settings the current <see cref="SettingsFile"/>, if specified
+    /// </summary>
 		public void Save()
 		{
 			if (!string.IsNullOrEmpty(SettingsFile))
 			{
 				using var writer = File.CreateText(SettingsFile);
-				var xml = new XmlSerializer(typeof(Config));
+				var xml = new XmlSerializer(typeof(ConfigViewModel));
 				xml.Serialize(writer, Config);
 			}
 		}
 
+		/// <summary>
+    /// Saves settings to a new <see cref="SettingsFile"/>
+    /// </summary>
 		public void SaveAs()
 		{
 			var fd = new SaveFileDialog();
 			fd.InitialDirectory = settingsDir;
-			fd.Filter = "Settings Files | *.xml";
+			fd.Filter = settingsFilter;
+
 			if (fd.ShowDialog() == DialogResult.OK)
 			{
 				SettingsFile = fd.FileName;
@@ -72,21 +81,28 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Loads settings from the current <see cref="SettingsFile"/>, if specified
+    /// </summary>
 		public void Load()
 		{
 			if (!string.IsNullOrWhiteSpace(SettingsFile))
 			{
 				using var reader = File.OpenText(SettingsFile);
-				var xml = new XmlSerializer(typeof(Config));
-				Config = (Config)xml.Deserialize(reader);
+				var xml = new XmlSerializer(typeof(ConfigViewModel));
+				Config = (ConfigViewModel)xml.Deserialize(reader);
 			}
 		}
 
+		/// <summary>
+    /// Loads settings from a new <see cref="SettingsFile"/>
+    /// </summary>
 		public void LoadFrom()
 		{
 			var fd = new OpenFileDialog();
 			fd.InitialDirectory = settingsDir;
-			fd.Filter = "Settings Files | *.xml";
+			fd.Filter = settingsFilter;
+
 			if (fd.ShowDialog() == DialogResult.OK)
 			{
 				SettingsFile = fd.FileName;
@@ -94,120 +110,27 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Loads settings based on current player and job, if possible
+    /// </summary>
 		public void Autoload(string playerName, string jobName)
 		{
 			if (!string.IsNullOrWhiteSpace(playerName))
 			{
-				if (File.Exists($@"settings\{playerName}_{jobName}.xml"))
+				var filesToTry = new[]
 				{
-					SettingsFile = $@"settings\{playerName}_{jobName}.xml";
-					Load();
-				}
-				else if (File.Exists($@"settings\{jobName}.xml"))
+					$@"{settingsDir}\{playerName}_{jobName}.xml",
+					$@"{settingsDir}\{jobName}.xml",
+				};
+
+				foreach (var filename in filesToTry)
 				{
-					SettingsFile = $@"settings\{jobName}.xml";
-					Load();
+					if (File.Exists(filename))
+					{
+						SettingsFile = filename;
+						Load();
+					}
 				}
-			}
-		}
-	}
-
-	public class Config : INotifyPropertyChanged
-	{
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void OnPropertyChanged([CallerMemberName] string name = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-		}
-
-		int curePotency = 50;
-		int cureThreshold = 80;
-		int curagaThreshold = 80;
-		int curagaRequiredTargets = 3;
-		int autoHasteSeconds = 300;
-
-		bool selfHaste = true;
-		bool selfRefresh = true;
-		bool selfPhalanx = true;
-
-		public int CurePotency
-		{
-			get { return curePotency; }
-			set
-			{
-				curePotency = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public int CureThreshold
-		{
-			get { return cureThreshold; }
-			set
-			{
-				cureThreshold = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public int CuragaThreshold
-		{
-			get { return curagaThreshold; }
-			set
-			{
-				curagaThreshold = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public int CuragaRequiredTargets
-		{
-			get { return curagaRequiredTargets; }
-			set
-			{
-				curagaRequiredTargets = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public int AutoHasteSeconds
-    {
-      get { return autoHasteSeconds; }
-      set
-      {
-				autoHasteSeconds = value;
-				OnPropertyChanged();
-      }
-    }
-
-
-		public bool SelfHaste
-    {
-      get { return selfHaste; }
-      set
-      {
-				selfHaste = value;
-				OnPropertyChanged();
-      }
-    }
-
-		public bool SelfRefresh
-    {
-      get { return selfRefresh; }
-      set
-      {
-				selfRefresh = value;
-				OnPropertyChanged();
-      }
-    }
-
-		public bool SelfPhalanx
-		{
-			get { return selfPhalanx; }
-			set
-			{
-				selfPhalanx = value;
-				OnPropertyChanged();
 			}
 		}
 	}

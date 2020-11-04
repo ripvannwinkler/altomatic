@@ -1,0 +1,271 @@
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace Altomatic.UI.ViewModels
+{
+	public class ConfigViewModel : INotifyPropertyChanged
+	{
+		#region Healing Magic
+		private int curePotency = 50;
+		public int CurePotency
+		{
+			get { return curePotency; }
+			set { curePotency = value; OnPropertyChanged(); }
+		}
+
+		private int cureThreshold = 80;
+		public int CureThreshold
+		{
+			get { return cureThreshold; }
+			set { cureThreshold = value; OnPropertyChanged(); }
+		}
+
+		private int curagaThreshold = 80;
+		public int CuragaThreshold
+		{
+			get { return curagaThreshold; }
+			set { curagaThreshold = value; OnPropertyChanged(); }
+		}
+
+		private int curagaRequiredTargets = 3;
+		public int CuragaRequiredTargets
+		{
+			get { return curagaRequiredTargets; }
+			set { curagaRequiredTargets = value; OnPropertyChanged(); }
+		}
+		#endregion
+
+		#region Enhancing Magic
+		private int autoHasteSeconds = 180;
+		public int AutoHasteSeconds
+		{
+			get { return autoHasteSeconds; }
+			set { autoHasteSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoRefreshSeconds = 180;
+		public int AutoRefreshSeconds
+		{
+			get { return autoRefreshSeconds; }
+			set { autoRefreshSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoRegenSeconds = 60;
+		public int AutoRegenSeconds
+		{
+			get { return autoRegenSeconds; }
+			set { autoRegenSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoPhalanxSeconds = 180;
+		public int AutoPhalanxSeconds
+		{
+			get { return autoPhalanxSeconds; }
+			set { autoPhalanxSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoProtectSeconds = 1800;
+		public int AutoProtectSeconds
+		{
+			get { return autoProtectSeconds; }
+			set { autoProtectSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoShellSeconds = 1800;
+		public int AutoShellSeconds
+		{
+			get { return autoShellSeconds; }
+			set { autoShellSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoStormSeconds = 180;
+		public int AutoStormSeconds
+		{
+			get { return autoStormSeconds; }
+			set { autoStormSeconds = value; OnPropertyChanged(); }
+		}
+
+		private int autoAdloquiumSeconds = 180;
+		public int AutoAdloquiumSeconds
+		{
+			get { return autoAdloquiumSeconds; }
+			set { autoAdloquiumSeconds = value; OnPropertyChanged(); }
+		}
+
+		private bool selfReraise = false;
+		public bool SelfReraise
+		{
+			get { return selfReraise; }
+			set { selfReraise = value; OnPropertyChanged(); }
+		}
+
+		private bool selfProtect = false;
+		public bool SelfProtect
+		{
+			get { return selfProtect; }
+			set { selfProtect = value; OnPropertyChanged(); }
+		}
+
+		private bool selfShell = false;
+		public bool SelfShell
+		{
+			get { return selfShell; }
+			set { selfShell = value; OnPropertyChanged(); }
+		}
+
+		private bool selfRegen = false;
+		public bool SelfRegen
+		{
+			get { return selfRegen; }
+			set { selfRegen = value; OnPropertyChanged(); }
+		}
+
+		private bool selfRefresh = false;
+		public bool SelfRefresh
+		{
+			get { return selfRefresh; }
+			set { selfRefresh = value; OnPropertyChanged(); }
+		}
+
+		private bool selfHaste = false;
+		public bool SelfHaste
+		{
+			get { return selfHaste; }
+			set { selfHaste = value; OnPropertyChanged(); }
+		}
+
+		private bool selfPhalanx = false;
+		public bool SelfPhalanx
+		{
+			get { return selfPhalanx; }
+			set { selfPhalanx = value; OnPropertyChanged(); }
+		}
+
+		private bool selfAquaveil = false;
+		public bool SelfAquaveil
+		{
+			get { return selfAquaveil; }
+			set { selfAquaveil = value; OnPropertyChanged(); }
+		}
+
+		private bool selfBlink = false;
+		public bool SelfBlink
+		{
+			get { return selfBlink; }
+			set { selfBlink = value; OnPropertyChanged(); }
+		}
+
+		private bool selfStoneskin = false;
+		public bool SelfStoneskin
+		{
+			get { return selfStoneskin; }
+			set { selfStoneskin = value; OnPropertyChanged(); }
+		}
+
+		private bool selfKlimaform = false;
+		public bool SelfKlimaform
+		{
+			get { return selfKlimaform; }
+			set { selfKlimaform = value; OnPropertyChanged(); }
+		}
+
+		private bool selfStormSpell = false;
+		public bool SelfStormSpell
+		{
+			get { return selfStormSpell; }
+			set { selfStormSpell = value; OnPropertyChanged(); }
+		}
+
+		private bool selfSpikesSpell = false;
+		public bool SelfSpikesSpell
+		{
+			get { return selfSpikesSpell; }
+			set { selfSpikesSpell = value; OnPropertyChanged(); }
+		}
+
+		private bool selfEnspell = false;
+		public bool SelfEnspell
+		{
+			get { return selfEnspell; }
+			set { selfEnspell = value; OnPropertyChanged(); }
+		}
+
+		public string[] Enspells { get; } =
+		{
+			"",
+			"Enfire",
+			"Enstone",
+			"Enwater",
+			"Enaero",
+			"Enthunder",
+			"Enblizzard",
+		};
+
+		private string selfEnspellName = "";
+		public string SelfEnspellName
+		{
+			get { return selfEnspellName; }
+			set { selfEnspellName = value; OnPropertyChanged(); }
+		}
+
+		public string[] StormSpells { get; } =
+		{
+			"",
+			"Firestorm",
+			"Sandstorm",
+			"Rainstorm",
+			"Windstorm",
+			"Thunderstorm",
+			"Hailstorm",
+			"Aurorastorm",
+			"Voidstorm",
+		};
+
+		private string selfStormSpellName = "";
+		public string SelfStormSpellName
+		{
+			get { return selfStormSpellName; }
+			set { selfStormSpellName = value; OnPropertyChanged(); }
+		}
+
+		public string[] SpikesSpells { get; } =
+		{
+			"Blaze Spikes",
+			"Ice Spikes",
+			"Shock Spikes",
+		};
+
+		private string selfSpikesSpellName = "";
+		public string SelfSpikesSpellName
+		{
+			get => selfSpikesSpellName;
+			set { selfSpikesSpellName = value; OnPropertyChanged(); }
+		}
+
+		#endregion
+
+		#region Debuff Removal
+		private bool preferItemOverCursna;
+		public bool PreferItemOverCursna
+		{
+			get => preferItemOverCursna;
+			set { preferItemOverCursna = value; OnPropertyChanged(); }
+		}
+
+		private bool preferItemOverParalyna;
+		public bool PreferItemOverParalyna
+		{
+			get => preferItemOverParalyna;
+			set { preferItemOverParalyna = value; OnPropertyChanged(); }
+		}
+		#endregion
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string name = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+		}
+		#endregion
+	}
+}

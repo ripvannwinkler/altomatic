@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
 {
-  public class Jobs : Dictionary<ushort, string>
+	public class Jobs : Dictionary<ushort, string>
 	{
 		public AppViewModel App { get; }
 
@@ -40,9 +41,12 @@ namespace Altomatic.UI.Game.Data
 
 		public bool CanUseAbility(string abilityName)
 		{
-			var amnesia = App.Healer.Player.Buffs.Contains(Buffs.Amnesia);
-			var impaired = App.Healer.Player.Buffs.Contains(Buffs.Impairment);
-			if (amnesia || impaired) return false;
+			if (App.Healer.HasAnyBuff(
+				Buffs.Amnesia, Buffs.Impairment, Buffs.Terror,
+				Buffs.Stun, Buffs.Sleep, Buffs.Petrification))
+			{
+				return false;
+			}
 
 			var ability = App.Healer.Resources.GetAbility(abilityName, 0);
 			var hasAbility = App.Healer.Player.HasAbility(ability.ID);

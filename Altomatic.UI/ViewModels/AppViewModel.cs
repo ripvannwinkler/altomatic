@@ -118,7 +118,14 @@ namespace Altomatic.UI.ViewModels
 			{
 				players = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(ActivePlayers));
 			}
+		}
+
+		public IEnumerable<PlayerViewModel> ActivePlayers
+		{
+			get { return Players.Where(p => p.IsActive); }
+			set { /* ignore */ }
 		}
 
 		/// <summary>
@@ -179,6 +186,14 @@ namespace Altomatic.UI.ViewModels
 		public AppViewModel()
 		{
 			InitializePlayerData();
+
+			Strategies.Add(new ValidateProcessStrategy());
+			Strategies.Add(new RefreshPlayerInfoStrategy());
+			Strategies.Add(new RemoveCriticalDebuffStrategy());
+			Strategies.Add(new RemoveDebuffStrategy());
+			Strategies.Add(new AutoBuffsStrategy());
+			Strategies.Add(new CuragaStrategy());
+			Strategies.Add(new CureStrategy());
 
 			Jobs = new Jobs(this);
 			Buffs = new Buffs(this);
