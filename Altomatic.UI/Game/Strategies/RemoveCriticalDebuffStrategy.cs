@@ -11,11 +11,13 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RemoveCriticalDebuffStrategy : IGameStrategy
 	{
+		private static readonly string[] silenaJobs = new[] { "WHM", "RDM", "SCH", "PLD", "NIN", "RUN" };
+
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (await RemoveSilenceFromHealer(app) || 
-					await RemoveDoomFromPlayers(app) ||					
-					await RemoveSleepgaFromParty(app) ||
+			if (await RemoveSilenceFromHealer(app) ||
+					await RemoveDoomFromPlayers(app) ||
+					await RemoveSleepgaFromPlayers(app) ||
 					await RemoveParalyzeFromHealer(app) ||
 					await RemoveSilenceFromPlayers(app) ||
 					await RemovePetrifyFromPlayers(app))
@@ -46,15 +48,15 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			foreach (var player in app.ActivePlayers.SortByJob())
-      {
-				if(player.HasAnyBuff(Buffs.Doom, Buffs.Curse))
-        {
+			{
+				if (player.HasAnyBuff(Buffs.Doom, Buffs.Curse))
+				{
 					if (await app.Actions.CastSpell("Cursna"))
-          {
+					{
 						return true;
-          }
-        }
-      }
+					}
+				}
+			}
 
 			return false;
 		}
@@ -73,21 +75,38 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-		private async Task<bool> RemoveSleepgaFromParty(AppViewModel app)
+		private async Task<bool> RemoveSleepgaFromPlayers(AppViewModel app)
 		{
-			var sleeping = new List<PlayerViewModel>();
+			var party = new List<PlayerViewModel>();
+			var other = new List<PlayerViewModel>();
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.IsInHealerParty && app.Buffs.HasAny(player.Name, Buffs.Sleep))
+				if (app.Buffs.HasAny(player.Name, Buffs.Sleep, Buffs.Sleep2))
 				{
-					sleeping.Add(player);
+					if (player.IsInHealerParty)
+					{
+						party.Add(player);
+					}
+					else
+					{
+						other.Add(player);
+					}
 				}
 			}
 
-			if (sleeping.Count > 0)
+			if (party.Any())
 			{
-				var target = sleeping.First();
+				var target = party.First();
 				if (await app.Actions.CastSpell("Curaga", target.Name))
+				{
+					return true;
+				}
+			}
+
+			if (other.Any())
+      {
+				var target = other.First();
+				if (await app.Actions.CastSpell("Cure", target.Name))
 				{
 					return true;
 				}
@@ -120,6 +139,7 @@ namespace Altomatic.UI.Game.Strategies
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.HealersFirst))
 			{
 				if (app.Buffs.HasAny(player.Name, Buffs.Silence) &&
+						silenaJobs.Contains(app.Jobs.GetMainJob(player.Entity)) &&
 						await app.Actions.CastSpell("Silena", player.Name))
 				{
 					return true;
