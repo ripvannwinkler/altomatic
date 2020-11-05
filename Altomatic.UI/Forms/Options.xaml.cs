@@ -52,5 +52,10 @@ namespace Altomatic.UI.Forms
 			Model.LoadFrom();
     }
 
+    private void Reset1_Click(object sender, RoutedEventArgs e)
+    {
+			Model.SettingsFile = null;
+			Model.Config = new ConfigViewModel();
+    }
   }
 }

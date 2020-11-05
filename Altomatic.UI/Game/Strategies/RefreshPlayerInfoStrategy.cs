@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
+using Altomatic.UI.Game.Data;
 using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 using EliteMMO.API;
@@ -30,30 +31,9 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			HandleZoning(app);
-			DetectMovement(app);
 			UpdateActiveBuffs(app);
 			return Task.FromResult(false);
 		}
-
-    private void DetectMovement(AppViewModel app)
-    {
-			var position = new Point3D(
-				app.Healer.Player.X,
-				app.Healer.Player.Y,
-				app.Healer.Player.Z);
-
-			if (position.X != lastPosition.X ||
-					position.Y != lastPosition.Y ||
-					position.Z != lastPosition.Z)
-      {
-				lastPosition = position;
-				lastPosChange = DateTime.Now;
-				app.IsPlayerMoving = true;
-      } else
-      {
-				app.IsPlayerMoving = false;
-      }
-    }
 
     private void HandleZoning(AppViewModel app)
 		{
@@ -88,7 +68,8 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (buff > 0)
 				{
-					app.ActiveBuffs.Add(new Tuple<string, string>(myName, buff.ToString()));
+					var status = new BuffStatus(myName, buff);
+					app.ActiveBuffs.Add(status);
 				}
 			}
 

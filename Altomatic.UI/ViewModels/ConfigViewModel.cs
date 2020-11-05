@@ -169,25 +169,11 @@ namespace Altomatic.UI.ViewModels
 			set { selfKlimaform = value; OnPropertyChanged(); }
 		}
 
-		private bool selfStormSpell = false;
-		public bool SelfStormSpell
+		private bool selfTemper = false;
+		public bool SelfTemper
 		{
-			get { return selfStormSpell; }
-			set { selfStormSpell = value; OnPropertyChanged(); }
-		}
-
-		private bool selfSpikesSpell = false;
-		public bool SelfSpikesSpell
-		{
-			get { return selfSpikesSpell; }
-			set { selfSpikesSpell = value; OnPropertyChanged(); }
-		}
-
-		private bool selfEnspell = false;
-		public bool SelfEnspell
-		{
-			get { return selfEnspell; }
-			set { selfEnspell = value; OnPropertyChanged(); }
+			get { return selfTemper; }
+			set { selfTemper = value; OnPropertyChanged(); }
 		}
 
 		public string[] Enspells { get; } =
@@ -414,7 +400,6 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => new string[]
 			{
-				"",
 				"Acumen",
 				"Attunement",
 				"Barrier",

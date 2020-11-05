@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using Altomatic.UI.Game;
 using Altomatic.UI.Game.Data;
 using Altomatic.UI.Game.Strategies;
@@ -22,15 +23,17 @@ namespace Altomatic.UI.ViewModels
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
 		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
-		private ObservableCollection<Tuple<string,string>> activeBuffs = new ObservableCollection<Tuple<string,string>>();
+		private ObservableCollection<BuffStatus> activeBuffs = new ObservableCollection<BuffStatus>();
 		private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 		private Process healerProcess;
 		private string statusMessage;
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
+		private Point3D lastPosition;
+		private DateTime lastPosChange;
 
-		
+
 		public Buffs Buffs { get; }
 		public Spells Spells { get; }
 		public Jobs Jobs { get; }
@@ -39,7 +42,7 @@ namespace Altomatic.UI.ViewModels
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		
+
 		/// <summary>
 		/// The healing player instance
 		/// </summary>
@@ -115,8 +118,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// List of players who are active (alive, in range, etc.)
-    /// </summary>
+		/// List of players who are active (alive, in range, etc.)
+		/// </summary>
 		public IEnumerable<PlayerViewModel> ActivePlayers
 		{
 			get { return Players.Where(p => p.IsActive); }
@@ -124,13 +127,13 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// List of active player buffs
-    /// </summary>
-		public ObservableCollection<Tuple<string,string>> ActiveBuffs
-    {
+		/// List of active player buffs
+		/// </summary>
+		public ObservableCollection<BuffStatus> ActiveBuffs
+		{
 			get => activeBuffs;
-      set { /* ignore */ }
-    }
+			set { /* ignore */ }
+		}
 
 		/// <summary>
 		/// The status message to display
@@ -181,13 +184,13 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Is the player moving?
-    /// </summary>
+		/// Is the player moving?
+		/// </summary>
 		public bool IsPlayerMoving
-    {
+		{
 			get => isPlayerMoving;
-      set { isPlayerMoving = value; OnPropertyChanged(); }
-    }
+			set { isPlayerMoving = value; OnPropertyChanged(); }
+		}
 
 
 		/// <summary>
@@ -239,6 +242,18 @@ namespace Altomatic.UI.ViewModels
 			{
 				await RefreshProcessList();
 			});
+
+			new Thread(() =>
+			{
+				while (true)
+				{
+					DetectMovement();
+					Thread.Sleep(500);
+				}
+			})
+			{
+				IsBackground = true
+			}.Start();
 		}
 
 		/// <summary>
@@ -358,6 +373,28 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public void DetectMovement()
+		{
+			if (Healer == null) return;
+			if (Healer.Player.LoginStatus == (int)LoginStatus.LoginScreen ||
+					Healer.Player.LoginStatus == (int)LoginStatus.Loading)
+			{
+				return;
+			}
+
+			var position = new Point3D(Healer.Player.X, Healer.Player.Y, Healer.Player.Z);
+			if (position.X != lastPosition.X || position.Y != lastPosition.Y || position.Z != lastPosition.Z)
+			{
+				lastPosition = position;
+				lastPosChange = DateTime.Now;
+				IsPlayerMoving = true;
+			}
+			else
+			{
+				IsPlayerMoving = false;
+			}
+		}
+
 		/// <summary>
 		/// Execute the main action loop
 		/// </summary>
@@ -372,7 +409,6 @@ namespace Altomatic.UI.ViewModels
 					{
 						foreach (var strategy in Strategies)
 						{
-							SetStatus($"Executing {strategy.GetType().Name}");
 							if (await strategy.ExecuteAsync(this)) return;
 						}
 					}

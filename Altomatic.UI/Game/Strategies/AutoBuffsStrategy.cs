@@ -21,6 +21,7 @@ namespace Altomatic.UI.Game.Strategies
 		private async Task<bool> BuffSelf(AppViewModel app)
 		{
 			var hasteSpell = app.Spells.FirstAvailable("Haste II", "Haste");
+      var temperSpell = app.Spells.FirstAvailable("Temper II", "Temper");
 			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
 			var reraiseSpell = app.Spells.FirstAvailable("Reraise IV", "Reraise III", "Reraise II", "Reraise");
 			var regenSpell = app.Spells.FirstAvailable("Regen V", "Regen IV", "Regen III", "Regen II", "Regen");
@@ -69,6 +70,14 @@ namespace Altomatic.UI.Game.Strategies
 			if (app.Options.Config.SelfStoneskin &&
 					!app.Healer.HasAnyBuff(Buffs.Stoneskin) &&
 					await app.Actions.CastSpell("Stoneskin")) return true;
+
+			if (app.Options.Config.SelfKlimaform &&
+					!app.Healer.HasAnyBuff(Buffs.Klimaform) &&
+					await app.Actions.CastSpell("Klimaform")) return true;
+
+			if (app.Options.Config.SelfTemper &&
+					!app.Healer.HasAnyBuff(Buffs.MultiStrikes) &&
+					await app.Actions.CastSpell(temperSpell)) return true;
 
 			if (!app.Healer.HasAnyBuff(
 						Buffs.Firestorm2, Buffs.Firestorm, Buffs.Sandstorm2, Buffs.Sandstorm,

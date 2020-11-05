@@ -200,6 +200,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Buffs.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="EliteMMO.API.dll" />
   </ItemGroup>
   <ItemGroup>

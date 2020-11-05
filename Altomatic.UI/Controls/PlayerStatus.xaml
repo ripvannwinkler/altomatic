@@ -22,6 +22,7 @@
 						Padding="8 4 8 4" 
 						DockPanel.Dock="Right" 
 						VerticalAlignment="Center" 
+						ToolTip="Control which buffs are automatically applied to this player"
 						ContextMenuService.Placement="Bottom">
 						<behaviors:Interaction.Behaviors>
 							<interactive:DropDownButtonBehavior/>
@@ -67,9 +68,9 @@
 						VerticalAlignment="Center" 
 						IsChecked="{Binding Player.IsEntrustTarget}" 
 						ToolTip="Use this player as the target for entrusted indocolure spells."/>
-					<DockPanel Margin="4 0 8 0">
-						<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
-							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>
+					<DockPanel Margin="4 0 8 0" VerticalAlignment="Center">
+						<Label Name="PlayerName" Padding="0" Margin="0" VerticalAlignment="Center" DockPanel.Dock="Top">
+							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name, FallbackValue='Player Name'}"/>
 						</Label>
 						<ProgressBar 
 							Minimum="0" Maximum="100" Height="2" 

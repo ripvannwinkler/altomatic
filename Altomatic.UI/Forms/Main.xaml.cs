@@ -93,7 +93,13 @@ namespace Altomatic.UI.Forms
 
 		private void OptionsButton_Click(object sender, RoutedEventArgs e)
 		{
-			new Options(Model.Options).ShowDialog();
+			var window = new Options(Model.Options)
+			{
+				Owner = this,
+				WindowStartupLocation = WindowStartupLocation.CenterOwner
+			};
+
+			window.ShowDialog();
 		}
 
 		private async void ReloadAddonButton_Click(object sender, RoutedEventArgs e)

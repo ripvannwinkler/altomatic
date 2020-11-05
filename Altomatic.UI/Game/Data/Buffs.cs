@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using Altomatic.UI.ViewModels;
 
 namespace Altomatic.UI.Game.Data
 {
-	public class Buffs : IEnumerable<Tuple<string, string>>
+	public class Buffs : IEnumerable<BuffStatus>
 	{
 		public const short KO = 0;
 		public const short Weakness = 1;
@@ -631,7 +634,7 @@ namespace Altomatic.UI.Game.Data
 		/// </summary>
 		public void Update(string playerName, short[] buffs)
 		{
-			partyBuffs[playerName] = buffs.Select(b => new BuffStatus(b)).ToList();
+			partyBuffs[playerName] = buffs.Select(b => new BuffStatus(playerName, b)).ToList();
 		}
 
 		/// <summary>
@@ -645,7 +648,7 @@ namespace Altomatic.UI.Game.Data
 			}
 
 			Remove(playerName, buff);
-			buffs.Add(new BuffStatus(buff));
+			buffs.Add(new BuffStatus(playerName, buff));
 		}
 
 		/// <summary>
@@ -735,15 +738,15 @@ namespace Altomatic.UI.Game.Data
 			return buffs.Intersect(activeBuffs).Count() == buffs.Count();
 		}
 
-		public IEnumerator<Tuple<string, string>> GetEnumerator()
+		public IEnumerator<BuffStatus> GetEnumerator()
 		{
 			foreach (var buff in partyBuffs)
 			{
-				foreach (var status in buff.Value)
+				foreach (var buffInfo in buff.Value)
 				{
-					if (status.Id > 0)
+					if (buffInfo.Id > 0)
 					{
-						yield return new Tuple<string, string>(buff.Key, status.Id.ToString());
+						yield return buffInfo;
 					}
 				}
 			}

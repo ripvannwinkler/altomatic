@@ -28,19 +28,28 @@
 	</Window.Resources>
 	<DockPanel LastChildFill="False">
 		<StatusBar DockPanel.Dock="Bottom">
-			<StatusBarItem Name="Status">
+			<StatusBarItem DockPanel.Dock="Right">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Margin="4 0 4 0">Moving:</TextBlock>
+					<TextBlock Margin="0 0 4 0" Text="{Binding IsPlayerMoving, FallbackValue=False	}"/>
+				</StackPanel>
+			</StatusBarItem>
+			<StatusBarItem>
 				<TextBlock Text="{Binding StatusMessage}"/>
 			</StatusBarItem>
 		</StatusBar>
 		<Border Padding="12 16 8 8" DockPanel.Dock="Right" MinWidth="300">
 			<DockPanel>
 				<Label DockPanel.Dock="Top">Active Party Buffs</Label>
-				<DataGrid ItemsSource="{Binding ActiveBuffs}" AutoGenerateColumns="False">
+				<DataGrid 
+					AutoGenerateColumns="False" 
+					ItemsSource="{Binding ActiveBuffs}" 
+					MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualWidth}">
 					<DataGrid.Columns>
-						<DataGridTextColumn Header="Player" Binding="{Binding Item1}"/>
-						<DataGridTextColumn Header="Buff ID" Binding="{Binding Item2}"/>
+						<DataGridTextColumn Header="Player" Width="Auto" MinWidth="70" Binding="{Binding Player}"/>
+						<DataGridTextColumn Header="Buff ID" Width="Auto" MinWidth="60" Binding="{Binding Id}"/>
+						<DataGridTextColumn Header="Buff Name" Width="*" Binding="{Binding Name}"/>
 					</DataGrid.Columns>
-					
 				</DataGrid>
 			</DockPanel>
 		</Border>

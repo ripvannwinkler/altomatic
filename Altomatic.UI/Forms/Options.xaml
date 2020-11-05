@@ -9,32 +9,39 @@
 				MinWidth="800"
 				Name="OptionsWindow"
         Title="Options" Height="450" Width="800">
+	<Window.Resources>
+		<Style TargetType="{x:Type TextBlock}" x:Key="LinkText">
+			<Setter Property="Foreground" Value="Blue"/>
+			<Setter Property="TextDecorations" Value="Underline"/>
+		</Style>
+	</Window.Resources>
 	<Border Padding="8" DataContext="{Binding ElementName=OptionsWindow}">
 		<DockPanel>
-			<StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+			<StackPanel DockPanel.Dock="Bottom">
 				<Border Padding="0 8 0 0">
-					<StackPanel Orientation="Horizontal">
-						<Button Name="Cancel1" Margin="8 0 0 0" IsCancel="True">
-							<Button.Content>
-								<TextBlock>Close</TextBlock>
-							</Button.Content>
-						</Button>
-						<Button Name="Load1" Margin="8 0 0 0" Click="Load1_Click">
-							<Button.Content>
-								<TextBlock>Load</TextBlock>
-							</Button.Content>
-						</Button>
-						<Button Name="Save1" Margin="8 0 0 0" IsDefault="True" Click="Save1_Click">
-							<Button.Content>
-								<TextBlock>Save</TextBlock>
-							</Button.Content>
-						</Button>
-						<Button Name="Save2" Margin="8 0 0 0" Click="Save2_Click">
-							<Button.Content>
-								<TextBlock>Save As...</TextBlock>
-							</Button.Content>
-						</Button>
-					</StackPanel>
+					<DockPanel>
+						<StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+							<Button Name="Load1" Margin="8 0 0 0" Click="Load1_Click">
+								<Button.Content>
+									<TextBlock>Load Profile...</TextBlock>
+								</Button.Content>
+							</Button>
+							<Button Name="Save2" Margin="8 0 0 0" Click="Save2_Click">
+								<Button.Content>
+									<TextBlock>Save Profile As...</TextBlock>
+								</Button.Content>
+							</Button>
+							<Button Name="Save1" Margin="8 0 0 0" IsCancel="True" IsDefault="True" Click="Save1_Click">
+								<Button.Content>
+									<TextBlock Padding="16 0 16 0">OK</TextBlock>
+								</Button.Content>
+							</Button>
+						</StackPanel>
+						<StackPanel DockPanel.Dock="Left">
+							<Button Name="Reset1" Click="Reset1_Click">Reset</Button>
+						</StackPanel>
+						<StackPanel/>
+					</DockPanel>
 				</Border>
 			</StackPanel>
 			<TabControl>
@@ -194,6 +201,7 @@
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfBlink}">Blink</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfStoneskin}">Stoneskin</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfKlimaform}">Klimaform</CheckBox>
+												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfTemper}">Temper</CheckBox>
 											</StackPanel>
 										</Grid>
 									</DockPanel>
