@@ -247,8 +247,9 @@ namespace Altomatic.UI.ViewModels
 			{
 				while (true)
 				{
+					PauseIfZoning();
 					DetectMovement();
-					Thread.Sleep(500);
+					Thread.Sleep(100);
 				}
 			})
 			{
@@ -374,8 +375,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Detect whether the healer is moving
-    /// </summary>
+		/// Detect whether the healer is moving
+		/// </summary>
 		public void DetectMovement()
 		{
 			if (Healer == null) return;
@@ -471,6 +472,20 @@ namespace Altomatic.UI.ViewModels
 			for (var i = 0; i < players.Count; i++)
 			{
 				players[i].ResetVitals();
+			}
+		}
+
+		/// <summary>
+		/// Pauses the bot if player is zoning
+		/// </summary>
+		private void PauseIfZoning()
+		{
+			if (IsPaused) return;
+			if (Healer?.Player?.LoginStatus == (int)LoginStatus.Loading ||
+					Healer?.Player?.LoginStatus == (int)LoginStatus.Loading)
+			{
+				SetStatus("Paused due to zoning...");
+				IsPaused = true;
 			}
 		}
 	}

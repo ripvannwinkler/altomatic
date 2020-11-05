@@ -14,33 +14,16 @@ namespace Altomatic.UI.Game.Strategies
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
 		/// <inheritdoc/>
-		public Task<bool> ExecuteAsync(AppViewModel app)
+		public async  Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			var members = app.Monitored.Party.GetPartyMembers();
+			await Task.Yield();			
+			foreach (var member in app.Monitored.Party.GetPartyMembers())
+      {
+				UpdatePlayerInfo(app, member);
+      }
 
-			for (var i = 0; i < members.Count; i++)
-			{
-				if (members.Count >= i)
-				{
-					UpdatePlayerInfo(app, members[i]);
-				}
-			}
-
-			HandleZoning(app);
 			UpdateActiveBuffs(app);
-			return Task.FromResult(false);
-		}
-
-    private void HandleZoning(AppViewModel app)
-		{
-			if (app.Healer.Player.LoginStatus == (int)LoginStatus.Loading ||
-					app.Healer.Player.LoginStatus == (int)LoginStatus.Loading)
-			{
-				if (!app.IsPaused)
-				{
-					app.IsPaused = true;
-				}
-			}
+			return false;
 		}
 
 		/// <summary>
@@ -49,7 +32,6 @@ namespace Altomatic.UI.Game.Strategies
 		private void UpdateActiveBuffs(AppViewModel app)
 		{
 			app.ActiveBuffs.Clear();
-
 			var myName = app.Healer.Player.Name;
 			foreach (var buff in app.Healer.Player.Buffs)
 			{
