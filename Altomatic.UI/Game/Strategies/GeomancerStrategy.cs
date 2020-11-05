@@ -42,10 +42,10 @@ namespace Altomatic.UI.Game.Strategies
 		private async Task<bool> CastIndiSpell(AppViewModel app)
 		{
 			if (!app.Options.Config.EnableIndiSpells) return false;
-			var spellName = app.Options.Config.IndiSpellName;
 
 			// don't recast same indi spell if colure active
 			// but do try to recast if indi spell has changed
+			var spellName = app.Options.Config.IndiSpellName;
 			if (app.Healer.HasAnyBuff(Buffs.ColureActive) &&
 					lastIndiSpell == spellName) return false;
 
@@ -60,9 +60,10 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> CastEntrustIndiSpell(AppViewModel app)
 		{
-			var target = GetGeoSpellTarget(app);
 			if (!app.Options.Config.EnableIndiSpells) return false;
 			if (!app.Options.Config.EnableEntrust) return false;
+
+			var target = GetGeoSpellTarget(app);
 			if (target == null) return false;
 
 			foreach (var player in app.ActivePlayers)
@@ -90,8 +91,9 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> CastGeoSpell(AppViewModel app)
 		{
-			var target = GetGeoSpellTarget(app);
 			if (!app.Options.Config.EnableGeoSpells) return false;
+
+			var target = GetGeoSpellTarget(app);
 			if (target == null) return false;
 
 			if (app.Healer.Player.Pet?.HealthPercent < 1)
