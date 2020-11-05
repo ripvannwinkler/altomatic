@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using Altomatic.UI.ViewModels;
 
 namespace Altomatic.UI.Game.Data
 {
-	public class Buffs
+	public class Buffs : IEnumerable<Tuple<string, string>>
 	{
 		public const short KO = 0;
 		public const short Weakness = 1;
@@ -648,10 +649,10 @@ namespace Altomatic.UI.Game.Data
 		}
 
 		/// <summary>
-    /// Removes a buff from a player
-    /// </summary>
-    /// <param name="playerName"></param>
-    /// <param name="buff"></param>
+		/// Removes a buff from a player
+		/// </summary>
+		/// <param name="playerName"></param>
+		/// <param name="buff"></param>
 		public void Remove(string playerName, short buff)
 		{
 			if (partyBuffs.TryGetValue(playerName, out var buffs))
@@ -661,10 +662,10 @@ namespace Altomatic.UI.Game.Data
 		}
 
 		/// <summary>
-    /// Gets a player buff's age in seconds
-    /// </summary>
+		/// Gets a player buff's age in seconds
+		/// </summary>
 		public int GetBuffAgeSeconds(string playerName, short buff)
-    {
+		{
 			if (App.Healer.Player.Name == playerName)
 			{
 				if (App.Healer.Player.Buffs.Contains(buff))
@@ -675,18 +676,18 @@ namespace Altomatic.UI.Game.Data
 			else if (App.Monitored.Player.Name == playerName)
 			{
 				if (App.Monitored.Player.Buffs.Contains(buff))
-        {
+				{
 					return -1;
-        }
+				}
 			}
 			else if (partyBuffs.TryGetValue(playerName, out var buffs))
-      {
+			{
 				var status = buffs.SingleOrDefault(b => b.Id == buff);
 				if (status != null) return status.AgeInSeconds;
-      }
+			}
 
 			return int.MaxValue;
-    }
+		}
 
 		/// <summary>
 		/// Does the player have any of the specified buffs?
@@ -732,6 +733,25 @@ namespace Altomatic.UI.Game.Data
 			}
 
 			return buffs.Intersect(activeBuffs).Count() == buffs.Count();
+		}
+
+		public IEnumerator<Tuple<string, string>> GetEnumerator()
+		{
+			foreach (var buff in partyBuffs)
+			{
+				foreach (var status in buff.Value)
+				{
+					if (status.Id > 0)
+					{
+						yield return new Tuple<string, string>(buff.Key, status.Id.ToString());
+					}
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }

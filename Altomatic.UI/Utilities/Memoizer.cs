@@ -47,13 +47,13 @@ namespace Altomatic.UI.Utilities
 				}
 				else
 				{
-					value = cache.GetOrAdd((arg1, arg2), value);
+					value = cache.GetOrAdd((arg1, arg2), func(arg1, arg2));
 					return value;
 				}
 			};
 		}
 
-		public static Func<TArg1, TArg2, TArg3, TReturn> Memoize<TArg1, TArg2, TArg3, TReturn>(Func<TArg1, TArg3, TArg2, TReturn> func)
+		public static Func<TArg1, TArg2, TArg3, TReturn> Memoize<TArg1, TArg2, TArg3, TReturn>(Func<TArg1, TArg2, TArg3, TReturn> func)
 		{
 			var cache = new ConcurrentDictionary<(TArg1, TArg2, TArg3), TReturn>();
 			return (arg1, arg2, arg3) =>
@@ -64,7 +64,7 @@ namespace Altomatic.UI.Utilities
 				}
 				else
 				{
-					value = cache.GetOrAdd((arg1, arg2, arg3), value);
+					value = cache.GetOrAdd((arg1, arg2, arg3), func(arg1, arg2, arg3));
 					return value;
 				}
 			};

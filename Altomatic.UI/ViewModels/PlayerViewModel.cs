@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using EliteMMO.API;
 using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.ViewModels
@@ -69,6 +70,28 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public XiEntity Entity
+		{
+			get => AppData.Healer.Entity.GetEntity((int)member.TargetIndex);
+		}
+
+		public EntityStatus EntityStatus
+		{
+			get => (EntityStatus)Entity.Status;
+		}
+
+		public XiEntity TargetEntity
+		{
+			get { return AppData.Healer.Entity.GetEntity((int)Entity.TargetingIndex); }
+		}
+
+		public bool IsInHealerParty
+		{
+			get => AppData.Healer.Party
+				.GetPartyMembers().Where(m => m.MemberNumber < 6)
+				.Select(m => m.Name).Contains(Name);
+		}
+
 		private AppViewModel appData;
 		public AppViewModel AppData
 		{
@@ -102,22 +125,41 @@ namespace Altomatic.UI.ViewModels
 
 		private bool isGeoTarget;
 		public bool IsGeoTarget
-    {
+		{
 			get => isGeoTarget;
-      set
-      {
+			set
+			{
 				if (value)
-        {
+				{
 					foreach (var player in AppData.Players)
-          {
+					{
 						player.IsGeoTarget = false;
-          }
-        }
+					}
+				}
 
 				isGeoTarget = value;
 				OnPropertyChanged();
-      }
-    }
+			}
+		}
+
+		private bool isEntrustTarget;
+		public bool IsEntrustTarget
+		{
+			get => isEntrustTarget;
+			set
+			{
+				if (value)
+				{
+					foreach (var player in AppData.Players)
+					{
+						player.IsEntrustTarget = false;
+					}
+				}
+
+				isEntrustTarget = value;
+				OnPropertyChanged();
+			}
+		}
 
 		public PlayerViewModel(AppViewModel appData)
 		{
@@ -147,28 +189,28 @@ namespace Altomatic.UI.ViewModels
 			return age;
 		}
 
-    public override bool Equals(object obj)
-    {
+		public override bool Equals(object obj)
+		{
 			if (obj is PlayerViewModel other)
-      {
+			{
 				return
 					Name == other.Name &&
 					CurrentHpp == other.CurrentHpp &&
 					Member?.MainJob == other.Member?.MainJob &&
 					Member?.SubJob == other.member?.SubJob;
-      }
+			}
 
 			return false;
-    }
+		}
 
-    public override int GetHashCode()
-    {
+		public override int GetHashCode()
+		{
 			return (
 				Name,
 				CurrentHpp,
 				Member?.MainJob,
 				Member?.SubJob
 			).GetHashCode();
-    }
-  }
+		}
+	}
 }

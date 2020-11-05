@@ -18,6 +18,17 @@ namespace Altomatic.UI.Utilities
 			await Task.Delay(delayMs);
 		}
 
+		public static EntityStatus GetEntityStatus(this EliteAPI instance)
+    {
+			return (EntityStatus)instance.Player.Status;
+    }
+
+		public static XiEntity GetTargetEntity(this EliteAPI instance)
+		{
+			var id = instance.Target.GetTargetInfo()?.TargetIndex ?? 0;
+			return id > 0 ? instance.Entity.GetEntity((int)id) : null;
+		}
+
 		public static bool HasItem(this EliteAPI instance, string itemName)
 		{
 			var count = 0U;
@@ -34,19 +45,19 @@ namespace Altomatic.UI.Utilities
 		}
 
 		public static bool HasAnyBuff(this EliteAPI instance, params short[] buffs)
-    {
+		{
 			return instance.Player.Buffs.Intersect(buffs).Any();
-    }
+		}
 
 		public static IOrderedEnumerable<PlayerViewModel> SortByJob(this IEnumerable<PlayerViewModel> players, JobSort sortStrategy = JobSort.TanksFirst)
-    {
+		{
 			return memoizedSortByJobInternal(players, sortStrategy);
-    }
+		}
 
-    private static IOrderedEnumerable<PlayerViewModel> SortByJobInternal(IEnumerable<PlayerViewModel> players, JobSort sortStrategy)
-    {
-      return players.OrderBy(p => p.AppData.Jobs.MapPriority(p.Member, sortStrategy));
-    }
+		private static IOrderedEnumerable<PlayerViewModel> SortByJobInternal(IEnumerable<PlayerViewModel> players, JobSort sortStrategy)
+		{
+			return players.OrderBy(p => p.AppData.Jobs.MapPriority(p.Member, sortStrategy));
+		}
 
 		private static Func<IEnumerable<PlayerViewModel>, JobSort, IOrderedEnumerable<PlayerViewModel>> memoizedSortByJobInternal =
 			Memoizer.Memoize<IEnumerable<PlayerViewModel>, JobSort, IOrderedEnumerable<PlayerViewModel>>(SortByJobInternal);

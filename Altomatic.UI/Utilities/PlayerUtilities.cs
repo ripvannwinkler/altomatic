@@ -25,7 +25,7 @@ namespace Altomatic.UI.Utilities
     {
 			if (!players.Any()) return true;
 			var threshold = players.First().AppData.Options.Config.CureThreshold;
-			return players.Min(p => p.CurrentHpp) > threshold;
+			return players.Min(p => p.CurrentHpp) >= threshold;
     }
 
 		public static bool NeedCures(this IEnumerable<PlayerViewModel> players)

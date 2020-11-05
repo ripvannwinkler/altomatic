@@ -263,10 +263,10 @@ namespace Altomatic.UI.ViewModels
 		#region Job Abilities
 		private bool enableAfflatusMisery;
 		public bool EnableAfflatusMisery
-    {
+		{
 			get => enableAfflatusMisery;
-      set { enableAfflatusMisery = value; OnPropertyChanged(); }
-    }
+			set { enableAfflatusMisery = value; OnPropertyChanged(); }
+		}
 
 		private bool enableAfflatusSolace;
 		public bool EnableAfflatusSolace
@@ -277,17 +277,17 @@ namespace Altomatic.UI.ViewModels
 
 		private bool enableDevotion;
 		public bool EnableDevotion
-    {
+		{
 			get => enableDevotion;
-      set { enableDevotion = value; OnPropertyChanged(); }
-    }
+			set { enableDevotion = value; OnPropertyChanged(); }
+		}
 
 		private bool enableDivineSeal;
 		public bool EnableDivineSeal
-    {
+		{
 			get => enableDivineSeal;
-      set { enableDivineSeal = value; OnPropertyChanged(); }
-    }
+			set { enableDivineSeal = value; OnPropertyChanged(); }
+		}
 
 		private bool enableDivineCaress;
 		public bool EnableDivineCaress
@@ -379,14 +379,118 @@ namespace Altomatic.UI.ViewModels
 			get => enableAddendumWhite;
 			set { enableAddendumWhite = value; OnPropertyChanged(); }
 		}
-    #endregion
+		#endregion
 
-    #region Geomancer
+		#region Geomancer
+		private bool enableIndiSpells;
+		public bool EnableIndiSpells
+		{
+			get => enableIndiSpells;
+			set { enableIndiSpells = value; OnPropertyChanged(); }
+		}
 
-    #endregion
+		private bool enableGeoSpells;
+		public bool EnableGeoSpells
+		{
+			get => enableGeoSpells;
+			set { enableGeoSpells = value; OnPropertyChanged(); }
+		}
 
-    #region INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
+		private bool enableGeomancyWhenEngagedOnly;
+		public bool EnableGeomancyWhenEngagedOnly
+		{
+			get => enableGeomancyWhenEngagedOnly;
+			set { enableGeomancyWhenEngagedOnly = value; OnPropertyChanged(); }
+		}
+
+		private bool disableGeoDebuffs;
+		public bool DisableGeoDebuffs
+		{
+			get => disableGeoDebuffs;
+			set { disableGeoDebuffs = value; OnPropertyChanged(); }
+		}
+
+		public string[] GeoSpells
+		{
+			get => new string[]
+			{
+				"",
+				"Acumen",
+				"Attunement",
+				"Barrier",
+				"Fade",
+				"Fend",
+				"Focus",
+				"Frailty",
+				"Fury",
+				"Gravity",
+				"Haste",
+				"Languor",
+				"Malaise",
+				"Paralysis",
+				"Poison",
+				"Precision",
+				"Refresh",
+				"Regen",
+				"Slip",
+				"Slow",
+				"Torpor",
+				"Vex",
+				"Voidance",
+				"Wilt",
+				"AGI",
+				"CHR",
+				"DEX",
+				"INT",
+				"MND",
+				"STR",
+				"VIT",
+			};
+		}
+
+		public string[] GeoDebuffs
+		{
+			get => new string[]
+			{
+				"Fade",
+				"Frailty",
+				"Gravity",
+				"Languor",
+				"Malaise",
+				"Paralysis",
+				"Poison",
+				"Slip",
+				"Slow",
+				"Torpor",
+				"Vex",
+				"Wilt",
+			};
+		}
+
+		private string indiSpellName;
+		public string IndiSpellName
+		{
+			get => indiSpellName;
+			set { indiSpellName = value; OnPropertyChanged(); }
+		}
+
+		private string entrustIndiSpellName;
+		public string EntrustIndiSpellName
+		{
+			get => entrustIndiSpellName;
+			set { entrustIndiSpellName = value; OnPropertyChanged(); }
+		}
+
+		private string geoSpellName;
+		public string GeoSpellName
+		{
+			get => geoSpellName;
+			set { geoSpellName = value; OnPropertyChanged(); }
+		}
+		#endregion
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

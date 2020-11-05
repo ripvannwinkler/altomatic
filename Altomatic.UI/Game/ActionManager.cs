@@ -25,7 +25,7 @@ namespace Altomatic.UI.Game
 			return await Task.Run<bool>(async () =>
 			{
 				if (!App.Healer.HasItem(itemName)) return false;
-				if (App.Healer.Player.Buffs.Contains(Buffs.Medicine))
+				if (targetName == "<me>" && App.Healer.Player.Buffs.Contains(Buffs.Medicine))
 				{
 					if (Items.Medicines.Contains(itemName)) return false;
 				}
@@ -61,7 +61,7 @@ namespace Altomatic.UI.Game
 				using var sub = App.Addon.Events.Subscribe(@event =>
 				{
 					switch (@event.Type)
-          {
+					{
 						case AddonEventType.CastingStarted:
 							casting = true;
 							break;

@@ -39,7 +39,7 @@
 			</StackPanel>
 			<TabControl>
 				<TabItem Header="Healing Magic">
-					<Border Padding="10">
+					<Border Padding="8">
 						<StackPanel>
 							<DockPanel Margin="0 0 0 8">
 								<Label 
@@ -144,7 +144,7 @@
 					</Border>
 				</TabItem>
 				<TabItem Header="Enhancing Magic">
-					<Border Padding="10">
+					<Border Padding="8">
 						<DockPanel>
 							<GroupBox Header="Self Buffs" DockPanel.Dock="Bottom">
 								<Border Padding="8">
@@ -205,7 +205,7 @@
 										<ColumnDefinition Width="1*"/>
 										<ColumnDefinition Width="1*"/>
 									</Grid.ColumnDefinitions>
-									<StackPanel Grid.Column="0" Margin="8 0 8 0">
+									<StackPanel Grid.Column="0" Margin="0 0 8 0">
 										<DockPanel Margin="0 0 0 8" ToolTip="How often should we recast haste or flurry (in seconds)?">
 											<Label VerticalContentAlignment="Center" DockPanel.Dock="Left" Width="120">Haste Recast</Label>
 											<Label DockPanel.Dock="Right">Seconds</Label>
@@ -231,7 +231,7 @@
 											<Slider VerticalAlignment="Center" Minimum="0" Maximum="3600" SmallChange="5" LargeChange="30" TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding Model.Config.AutoPhalanxSeconds}"/>
 										</DockPanel>
 									</StackPanel>
-									<StackPanel Grid.Column="1" Margin="8 0 8 0">
+									<StackPanel Grid.Column="1" Margin="8 0 0 0">
 										<DockPanel Margin="0 0 0 8" ToolTip="How often should we recast protect or flurry (in seconds)?">
 											<Label VerticalContentAlignment="Center" DockPanel.Dock="Left" Width="120">Protect Recast</Label>
 											<Label DockPanel.Dock="Right">Seconds</Label>
@@ -263,7 +263,7 @@
 					</Border>
 				</TabItem>
 				<TabItem Header="Debuff Removal">
-					<Border Padding="10">
+					<Border Padding="8">
 						<StackPanel>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer holy / hallowed water over Cursna on healer</CheckBox>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer remedy over Paralyna on healer</CheckBox>
@@ -271,12 +271,59 @@
 					</Border>
 				</TabItem>
 				<TabItem Header="Geomancy">
-					<Border Padding="10">
-						<TextBlock>Geomancy stuff</TextBlock>
+					<Border Padding="8">
+						<DockPanel>
+							<StackPanel DockPanel.Dock="Top">
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="1*"/>
+										<ColumnDefinition Width="1*"/>
+									</Grid.ColumnDefinitions>
+									<StackPanel Grid.Column="0">
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableIndiSpells}">Enable INDI Spells</CheckBox>
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableGeoSpells}">Enable GEO Spells</CheckBox>
+									</StackPanel>
+									<StackPanel Grid.Column="1">
+										<CheckBox Margin="8" IsChecked="{Binding Model.Config.DisableGeoDebuffs}">Disable target debuffs</CheckBox>
+									</StackPanel>
+								</Grid>
+							</StackPanel>
+							<Grid Margin="0 8 0 0" Height="250">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="1*"/>
+									<ColumnDefinition Width="1*"/>
+								</Grid.ColumnDefinitions>
+								<DockPanel Grid.Column="0">
+									<Label DockPanel.Dock="Top">Indi Spell</Label>
+									<ListBox 
+										ScrollViewer.CanContentScroll="True" 
+										ScrollViewer.VerticalScrollBarVisibility="Visible"
+										ItemsSource="{Binding Model.Config.GeoSpells}"
+										SelectedItem="{Binding Model.Config.IndiSpellName}" />
+								</DockPanel>
+								<DockPanel Grid.Column="1" Margin="8 0 8 0">
+									<Label DockPanel.Dock="Top">Entrusted Indi Spell</Label>
+									<ListBox 
+										ScrollViewer.CanContentScroll="True" 
+										ScrollViewer.VerticalScrollBarVisibility="Visible"
+										ItemsSource="{Binding Model.Config.GeoSpells}"
+										SelectedItem="{Binding Model.Config.EntrustIndiSpellName}" />
+								</DockPanel>
+								<DockPanel Grid.Column="2">
+									<Label DockPanel.Dock="Top">Geo Spell</Label>
+									<ListBox 
+										ScrollViewer.CanContentScroll="True" 
+										ScrollViewer.VerticalScrollBarVisibility="Visible"
+										ItemsSource="{Binding Model.Config.GeoSpells}"
+										SelectedItem="{Binding Model.Config.GeoSpellName}" />
+								</DockPanel>
+							</Grid>
+						</DockPanel>
 					</Border>
 				</TabItem>
-				<TabItem Header="Job Abilities">
-					<Border Padding="4">
+				<TabItem Header="Job Abilities" Height="22" VerticalAlignment="Bottom">
+					<Border Padding="8">
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="1*"/>
@@ -310,11 +357,10 @@
 							<GroupBox Header="Geomancer" Margin="4" Grid.Column="2">
 								<StackPanel>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableEntrust}">Entrust</CheckBox>
-									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableFullCircle}">Convert</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableDematerialize}">Dematerialize</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableEclipticAttrition}">Ecliptic Attrition</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableBlazeOfGlory}">Blaze Of Glory</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableRadialArcana}">Radial Arcana</CheckBox>
-									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableEclipticAttrition}">Ecliptic Attrition</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableLifeCycle}">Life Cycle</CheckBox>
 								</StackPanel>
 							</GroupBox>
@@ -323,8 +369,8 @@
 					</Border>
 				</TabItem>
 				<TabItem Header="Other">
-					<Border Padding="10">
-						<TextBlock>Other stuff</TextBlock>
+					<Border Padding="8">
+						<Label>Nothing to see here yet.</Label>
 					</Border>
 				</TabItem>
 			</TabControl>

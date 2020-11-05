@@ -11,6 +11,8 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
+		private bool resumePause;
+
 		/// <inheritdoc/>
 		public Task<bool> ExecuteAsync(AppViewModel app)
 		{
@@ -24,7 +26,52 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
+			HandleZoning(app);
+			UpdateActiveBuffs(app);
 			return Task.FromResult(false);
+		}
+
+		private void HandleZoning(AppViewModel app)
+		{
+			if (app.Healer.Player.LoginStatus == (int)LoginStatus.Loading ||
+					app.Healer.Player.LoginStatus == (int)LoginStatus.Loading)
+			{
+				if (!app.IsPaused)
+				{
+					resumePause = true;
+					app.IsPaused = true;
+				}
+			}
+			else
+			{
+				if (resumePause)
+				{
+					resumePause = false;
+					app.IsPaused = false;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Update active buff list
+		/// </summary>
+		private void UpdateActiveBuffs(AppViewModel app)
+		{
+			app.ActiveBuffs.Clear();
+
+			var myName = app.Healer.Player.Name;
+			foreach (var buff in app.Healer.Player.Buffs)
+			{
+				if (buff > 0)
+				{
+					app.ActiveBuffs.Add(new Tuple<string, string>(myName, buff.ToString()));
+				}
+			}
+
+			foreach (var playerBuff in app.Buffs)
+			{
+				app.ActiveBuffs.Add(playerBuff);
+			}
 		}
 
 		/// <summary>

@@ -47,12 +47,6 @@
 						</Button.ContextMenu>
 					</Button>
 					<CheckBox 
-						Margin="0 0 4 0" 
-						DockPanel.Dock="Left" 
-						VerticalAlignment="Center" 
-						IsChecked="{Binding Player.IsGeoTarget}" 
-						ToolTip="Use this player as the target for geomancy spells."/>
-					<CheckBox 
 						Cursor="Hand" 
 						Margin="0 0 5 0" 
 						VerticalAlignment="Center" 
@@ -60,13 +54,27 @@
 						HorizontalContentAlignment="Stretch" 
 						VerticalContentAlignment="Center"
 						IsChecked="{Binding Player.IsEnabled}">
-						<DockPanel>
-							<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
-								<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>
-							</Label>
-							<ProgressBar x:Name="PlayerHpp" Minimum="0" Maximum="100" Height="3" Foreground="{Binding Player.CurrentHpp, Converter={StaticResource hppBrushConverter}}" Value="{Binding Player.CurrentHpp}"/>
-						</DockPanel>
 					</CheckBox>
+					<CheckBox 
+						Margin="0 0 4 0" 
+						DockPanel.Dock="Left" 
+						VerticalAlignment="Center" 
+						IsChecked="{Binding Player.IsGeoTarget}" 
+						ToolTip="Use this player as the target for geocolure spells."/>
+					<CheckBox 
+						Margin="0 0 4 0" 
+						DockPanel.Dock="Left" 
+						VerticalAlignment="Center" 
+						IsChecked="{Binding Player.IsEntrustTarget}" 
+						ToolTip="Use this player as the target for entrusted indocolure spells."/>
+					<DockPanel Margin="4 0 8 0">
+						<Label Name="PlayerName" Padding="0" Margin="0 0 0 2" VerticalAlignment="Center" DockPanel.Dock="Top">
+							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name}"/>
+						</Label>
+						<ProgressBar 
+							Minimum="0" Maximum="100" Height="2" 
+							Foreground="{Binding Player.CurrentHpp, Converter={StaticResource hppBrushConverter}}" Value="{Binding Player.CurrentHpp}"/>
+					</DockPanel>
 				</DockPanel>
 			</Border>
 		</DockPanel>

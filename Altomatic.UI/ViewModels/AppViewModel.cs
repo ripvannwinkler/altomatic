@@ -17,25 +17,19 @@ namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
-		// ================================================================
-		// Member Variables
-		// ================================================================
-
 		private EliteAPI healer;
 		private EliteAPI monitored;
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
 		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
+		private ObservableCollection<Tuple<string,string>> activeBuffs = new ObservableCollection<Tuple<string,string>>();
 		private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 		private Process healerProcess;
 		private string statusMessage;
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 
-		// ================================================================
-		// Public Non-UI Properties
-		// ================================================================
-
+		
 		public Buffs Buffs { get; }
 		public Spells Spells { get; }
 		public Jobs Jobs { get; }
@@ -44,10 +38,7 @@ namespace Altomatic.UI.ViewModels
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		// ================================================================
-		// Public UI Properties
-		// ================================================================
-
+		
 		/// <summary>
 		/// The healing player instance
 		/// </summary>
@@ -122,11 +113,23 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// List of players who are active (alive, in range, etc.)
+    /// </summary>
 		public IEnumerable<PlayerViewModel> ActivePlayers
 		{
 			get { return Players.Where(p => p.IsActive); }
 			set { /* ignore */ }
 		}
+
+		/// <summary>
+    /// List of active player buffs
+    /// </summary>
+		public ObservableCollection<Tuple<string,string>> ActiveBuffs
+    {
+			get => activeBuffs;
+      set { /* ignore */ }
+    }
 
 		/// <summary>
 		/// The status message to display
@@ -176,9 +179,6 @@ namespace Altomatic.UI.ViewModels
 			set { /* ignore */ }
 		}
 
-		// ================================================================
-		// Public Methods
-		// ================================================================
 
 		/// <summary>
 		/// Creates a new instance of <see cref="AppViewModel"/>
@@ -253,7 +253,7 @@ namespace Altomatic.UI.ViewModels
 			await ReloadAddon();
 
 			var playerName = Healer?.Player?.Name ?? "";
-			var jobNumber = (ushort)(Healer?.Player?.Main ?? -1);
+			var jobNumber = (ushort)(Healer?.Player?.MainJob ?? -1);
 			if (Jobs.TryGetValue(jobNumber, out var jobName))
 			{
 				Options.Autoload(playerName, jobName);
@@ -375,9 +375,6 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		// ================================================================
-		// Protected and Private Methods
-		// ================================================================
 
 		/// <summary>
 		/// Notify UI of property changes

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Altomatic.UI.ViewModels
 {
-  public class OptionsViewModel : INotifyPropertyChanged
+	public class OptionsViewModel : INotifyPropertyChanged
 	{
 		private static readonly string settingsDir = Path.Combine(Environment.CurrentDirectory, "settings");
 		private static readonly string settingsFilter = "Settings Files | *.xml";
@@ -42,7 +42,17 @@ namespace Altomatic.UI.ViewModels
 		public string SettingsFile
 		{
 			get { return settingsFile; }
-			set { settingsFile = value; OnPropertyChanged(); }
+			set
+			{
+				settingsFile = value; OnPropertyChanged();
+				OnPropertyChanged(nameof(SettingsFilenameOnly));
+			}
+		}
+
+		public string SettingsFilenameOnly
+		{
+			get => string.IsNullOrWhiteSpace(SettingsFile)
+				? "None" : Path.GetFileNameWithoutExtension(SettingsFile);
 		}
 
 		public OptionsViewModel(AppViewModel app)
@@ -53,8 +63,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Saves settings the current <see cref="SettingsFile"/>, if specified
-    /// </summary>
+		/// Saves settings the current <see cref="SettingsFile"/>, if specified
+		/// </summary>
 		public void Save()
 		{
 			if (!string.IsNullOrEmpty(SettingsFile))
@@ -66,8 +76,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Saves settings to a new <see cref="SettingsFile"/>
-    /// </summary>
+		/// Saves settings to a new <see cref="SettingsFile"/>
+		/// </summary>
 		public void SaveAs()
 		{
 			var fd = new SaveFileDialog();
@@ -76,14 +86,20 @@ namespace Altomatic.UI.ViewModels
 
 			if (fd.ShowDialog() == DialogResult.OK)
 			{
-				SettingsFile = fd.FileName;
+				var temp = fd.FileName;
+				if (!temp.ToLower().EndsWith(".xml"))
+				{
+					temp += ".xml";
+				}
+
+				SettingsFile = temp;
 				Save();
 			}
 		}
 
 		/// <summary>
-    /// Loads settings from the current <see cref="SettingsFile"/>, if specified
-    /// </summary>
+		/// Loads settings from the current <see cref="SettingsFile"/>, if specified
+		/// </summary>
 		public void Load()
 		{
 			if (!string.IsNullOrWhiteSpace(SettingsFile))
@@ -95,8 +111,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Loads settings from a new <see cref="SettingsFile"/>
-    /// </summary>
+		/// Loads settings from a new <see cref="SettingsFile"/>
+		/// </summary>
 		public void LoadFrom()
 		{
 			var fd = new OpenFileDialog();
@@ -111,24 +127,30 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Loads settings based on current player and job, if possible
-    /// </summary>
+		/// Loads settings based on current player and job, if possible
+		/// </summary>
 		public void Autoload(string playerName, string jobName)
 		{
 			if (!string.IsNullOrWhiteSpace(playerName))
 			{
 				var filesToTry = new[]
 				{
-					$@"{settingsDir}\{playerName}_{jobName}.xml",
-					$@"{settingsDir}\{jobName}.xml",
+					$@"{playerName}_{jobName}.xml",
+					$@"{jobName}.xml",
 				};
 
-				foreach (var filename in filesToTry)
+				foreach (var file in Directory.GetFiles(settingsDir))
 				{
-					if (File.Exists(filename))
+					foreach (var myFile in filesToTry)
 					{
-						SettingsFile = filename;
-						Load();
+						var name1 = Path.GetFileName(file).ToLower();
+						var name2 = myFile.ToLower();
+
+						if (name1 == name2)
+						{
+							SettingsFile = file;
+							Load(); break;
+						}
 					}
 				}
 			}

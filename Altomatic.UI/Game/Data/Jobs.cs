@@ -50,7 +50,10 @@ namespace Altomatic.UI.Game.Data
 
 			var ability = App.Healer.Resources.GetAbility(abilityName, 0);
 			var hasAbility = App.Healer.Player.HasAbility(ability.ID);
-			var recast = App.Healer.Recast.GetAbilityRecast(ability.ID);
+
+			var timers = App.Healer.Recast.GetAbilityIds();
+			var timerIndex = timers.IndexOf(ability.TimerID);
+			var recast = App.Healer.Recast.GetAbilityRecast(timerIndex);
 			return hasAbility && recast == 0;
 		}
 

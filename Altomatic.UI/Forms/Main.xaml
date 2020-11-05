@@ -7,10 +7,10 @@
 				xmlns:uc="clr-namespace:Altomatic.UI.Controls"
 				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
-				MinWidth="900"
+				MinWidth="1200"
 				MinHeight="600"
 				Height="600"
-				Width="900"
+				Width="1200"
 				Name="MainWindow1"
         Title="Altomatic 1.0">
 	<Window.Resources>
@@ -27,6 +27,23 @@
 		</Storyboard>
 	</Window.Resources>
 	<DockPanel LastChildFill="False">
+		<StatusBar DockPanel.Dock="Bottom">
+			<StatusBarItem Name="Status">
+				<TextBlock Text="{Binding StatusMessage}"/>
+			</StatusBarItem>
+		</StatusBar>
+		<Border Padding="12 16 8 8" DockPanel.Dock="Right" MinWidth="300">
+			<DockPanel>
+				<Label DockPanel.Dock="Top">Active Party Buffs</Label>
+				<DataGrid ItemsSource="{Binding ActiveBuffs}" AutoGenerateColumns="False">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Player" Binding="{Binding Item1}"/>
+						<DataGridTextColumn Header="Buff ID" Binding="{Binding Item2}"/>
+					</DataGrid.Columns>
+					
+				</DataGrid>
+			</DockPanel>
+		</Border>
 		<Border Padding="10 15 10 5" DockPanel.Dock="Top">
 			<DockPanel>
 				<GroupBox Header="Select your game instances:" VerticalAlignment="Center" Padding="8 12 8 12">
@@ -59,11 +76,6 @@
 				</GroupBox>
 			</DockPanel>
 		</Border>
-		<StatusBar DockPanel.Dock="Bottom">
-			<StatusBarItem Name="Status">
-				<TextBlock Text="{Binding StatusMessage}"/>
-			</StatusBarItem>
-		</StatusBar>
 		<Border Padding="10 0 10 10" DockPanel.Dock="Bottom">
 			<GroupBox Header="Party Members">
 				<Grid>
@@ -165,6 +177,14 @@
 							<TextBlock>Reload Addon</TextBlock>
 						</Button.Content>
 					</Button>
+				</StackPanel>
+				<StackPanel Margin="0 8 0 0">
+					<Label HorizontalAlignment="Center">
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Margin="0 0 4 0">Profile:</TextBlock>
+							<TextBlock Text="{Binding Options.SettingsFilenameOnly}"></TextBlock>
+						</StackPanel>
+					</Label>
 				</StackPanel>
 			</StackPanel>
 		</Border>
