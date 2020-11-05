@@ -79,6 +79,11 @@ namespace Altomatic.UI.Game.Strategies
 					!app.Healer.HasAnyBuff(Buffs.MultiStrikes) &&
 					await app.Actions.CastSpell(temperSpell)) return true;
 
+			if (app.Options.Config.SelfUtsusemi &&
+					!app.Healer.HasAnyBuff(Buffs.CopyImage, Buffs.CopyImage2, Buffs.CopyImage3, Buffs.CopyImage4) &&
+					await app.Actions.CastSpell("Utsusemi: Ni") ||
+					await app.Actions.CastSpell("Utsusemi: Ichi")) return true;
+
 			if (!app.Healer.HasAnyBuff(
 						Buffs.Firestorm2, Buffs.Firestorm, Buffs.Sandstorm2, Buffs.Sandstorm,
 						Buffs.Rainstorm2, Buffs.Rainstorm, Buffs.Windstorm2, Buffs.Windstorm,

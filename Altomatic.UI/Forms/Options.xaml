@@ -190,18 +190,19 @@
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfProtect}">Protect</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfShell}">Shell</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfRegen}">Regen</CheckBox>
+												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfRefresh}">Refresh</CheckBox>
 											</StackPanel>
 											<StackPanel Grid.Column="1">
-												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfRefresh}">Refresh</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfHaste}">Haste</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfPhalanx}">Phalanx</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfAquaveil}">Aquaveil</CheckBox>
-											</StackPanel>
-											<StackPanel Grid.Column="2">
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfBlink}">Blink</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfStoneskin}">Stoneskin</CheckBox>
+											</StackPanel>
+											<StackPanel Grid.Column="2">
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfKlimaform}">Klimaform</CheckBox>
 												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfTemper}">Temper</CheckBox>
+												<CheckBox Margin="8" IsChecked="{Binding Model.Config.SelfUtsusemi}">Utsusemi</CheckBox>
 											</StackPanel>
 										</Grid>
 									</DockPanel>

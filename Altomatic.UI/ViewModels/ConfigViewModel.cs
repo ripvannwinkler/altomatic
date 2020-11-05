@@ -176,6 +176,13 @@ namespace Altomatic.UI.ViewModels
 			set { selfTemper = value; OnPropertyChanged(); }
 		}
 
+		private bool selfUtsusemi = false;
+		public bool SelfUtsusemi
+		{
+			get { return selfUtsusemi; }
+			set { selfUtsusemi = value; OnPropertyChanged(); }
+		}
+
 		public string[] Enspells { get; } =
 		{
 			"",
