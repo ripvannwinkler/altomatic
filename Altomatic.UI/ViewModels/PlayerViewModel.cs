@@ -189,6 +189,11 @@ namespace Altomatic.UI.ViewModels
 			return age;
 		}
 
+		public bool HasAnyBuff(params short[] buffs)
+    {
+			return AppData.Buffs.HasAny(Name, buffs);
+    }
+
 		public override bool Equals(object obj)
 		{
 			if (obj is PlayerViewModel other)
