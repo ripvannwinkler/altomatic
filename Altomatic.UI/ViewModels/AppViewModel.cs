@@ -373,6 +373,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Detect whether the healer is moving
+    /// </summary>
 		public void DetectMovement()
 		{
 			if (Healer == null) return;
