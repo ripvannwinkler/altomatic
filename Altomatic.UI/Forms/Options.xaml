@@ -347,6 +347,16 @@
 						</DockPanel>
 					</Border>
 				</TabItem>
+				<TabItem Header="Corsair" Height="22" VerticalAlignment="Bottom">
+					<Border Padding="8" IsEnabled="False">
+						<Label>Coming soon...</Label>
+					</Border>
+				</TabItem>
+				<TabItem Header="Bard" Height="22" VerticalAlignment="Bottom">
+					<Border Padding="8" IsEnabled="False">
+						<Label>Coming soon...</Label>
+					</Border>
+				</TabItem>
 				<TabItem Header="Job Abilities" Height="22" VerticalAlignment="Bottom">
 					<Border Padding="8">
 						<Grid>
