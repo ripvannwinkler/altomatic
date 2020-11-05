@@ -27,6 +27,7 @@ namespace Altomatic.UI.ViewModels
 		private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 		private Process healerProcess;
 		private string statusMessage;
+		private short lastKnownRoll;
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
@@ -149,6 +150,15 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
+    /// The last known corsair roll value
+    /// </summary>
+		public short LastKnownRoll
+    {
+			get => lastKnownRoll;
+      set { lastKnownRoll = value; }
+    }
+
+		/// <summary>
 		/// Is the bot paused?
 		/// </summary>
 		public bool IsPaused
@@ -207,6 +217,7 @@ namespace Altomatic.UI.ViewModels
 			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new RemoveDebuffStrategy());
 			Strategies.Add(new AutoBuffsStrategy());
+			Strategies.Add(new CorsairRollStrategy());
 			Strategies.Add(new GeomancerStrategy());
 			Strategies.Add(new CuragaStrategy());
 			Strategies.Add(new CureStrategy());
@@ -219,10 +230,11 @@ namespace Altomatic.UI.ViewModels
 
 			Addon.Events.Subscribe((@event) =>
 			{
+				string[] data;
 				switch (@event.Type)
 				{
 					case AddonEventType.BuffsUpdated:
-						var data = @event.Data.Split('_');
+						data = @event.Data.Split('_');
 						if (data.Length == 3)
 						{
 							var delims = new[] { ',' };
@@ -230,6 +242,17 @@ namespace Altomatic.UI.ViewModels
 							var buffs = buffCodes.Select(b => short.Parse(b));
 							Buffs.Update(data[1], buffs.ToArray());
 						}
+						break;
+
+					case AddonEventType.CorsairRoll:
+						data = @event.Data.Split('_');
+						if (data.Length == 2)
+            {
+							if (short.TryParse(data[1], out var roll))
+              {
+								LastKnownRoll = roll;
+              }
+            }
 						break;
 
 					case AddonEventType.Loaded:
@@ -326,13 +349,6 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task UnloadAddon()
 		{
-			if (!IsAddonLoaded) return;
-			if (string.IsNullOrEmpty(Healer?.Player?.Name))
-			{
-				IsAddonLoaded = false;
-				return;
-			}
-
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 
 			if (mode == HookMode.Ashita)

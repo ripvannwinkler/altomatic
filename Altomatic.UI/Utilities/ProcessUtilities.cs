@@ -32,6 +32,7 @@ namespace Altomatic.UI.Utilities
 		public static HookMode GetHookMode(Process process)
 		{
 			var modules = new List<string>();
+			if (process == null) return HookMode.None;
 			foreach (ProcessModule module in process.Modules)
 			{
 				modules.Add(Path.GetFileName(module.FileName));

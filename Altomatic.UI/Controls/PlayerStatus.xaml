@@ -68,6 +68,12 @@
 						VerticalAlignment="Center" 
 						IsChecked="{Binding Player.IsEntrustTarget}" 
 						ToolTip="Use this player as the target for entrusted indocolure spells."/>
+					<CheckBox 
+						Margin="0 0 4 0" 
+						DockPanel.Dock="Left" 
+						VerticalAlignment="Center" 
+						IsChecked="{Binding Player.IsRequiredForRolls}" 
+						ToolTip="This player must be present for Corsair rolls."/>
 					<DockPanel Margin="4 0 8 0" VerticalAlignment="Center">
 						<Label Name="PlayerName" Padding="0" Margin="0" VerticalAlignment="Center" DockPanel.Dock="Top">
 							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name, FallbackValue='Player Name'}"/>

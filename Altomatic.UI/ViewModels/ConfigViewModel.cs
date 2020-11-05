@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Altomatic.UI.Game.Data;
 
 namespace Altomatic.UI.ViewModels
 {
@@ -516,6 +517,79 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => geoSpellName;
 			set { geoSpellName = value; OnPropertyChanged(); }
+		}
+		#endregion
+
+		#region Corsair
+		public CorsairRoll[] CorsairRolls { get; } = new[]
+		{
+			new CorsairRoll("", 0, -1 -1),
+			new CorsairRoll("Fighter's Roll", Buffs.FightersRoll, 5, 9),
+			new CorsairRoll("Monk's Roll", Buffs.MonksRoll, 3, 7),
+			new CorsairRoll("Healer's Roll", Buffs.HealersRoll, 3, 7),
+			new CorsairRoll("Wizard's Roll", Buffs.WizardsRoll, 5, 9),
+			new CorsairRoll("Warlock's Roll", Buffs.WarlocksRoll, 4, 8),
+			new CorsairRoll("Rogue's Roll", Buffs.RoguesRoll, 5, 9),
+			new CorsairRoll("Gallant's Roll", Buffs.GallantsRoll, 3, 7),
+			new CorsairRoll("Chaos Roll", Buffs.ChaosRoll, 4, 8),
+			new CorsairRoll("Beast Roll", Buffs.BeastRoll, 4, 8),
+			new CorsairRoll("Choral Roll", Buffs.ChoralRoll, 2, 6),
+			new CorsairRoll("Hunter's Roll", Buffs.HuntersRoll, 4, 8),
+			new CorsairRoll("Samurai Roll", Buffs.SamuraiRoll, 2, 6),
+			new CorsairRoll("Ninja Roll", Buffs.NinjaRoll, 4, 8),
+			new CorsairRoll("Drachen Roll", Buffs.DrachenRoll, 4, 8),
+			new CorsairRoll("Evoker's Roll", Buffs.EvokersRoll, 5, 9),
+			new CorsairRoll("Magus's Roll", Buffs.MagussRoll, 2, 6),
+			new CorsairRoll("Corsair's Roll", Buffs.CorsairsRoll, 5, 9),
+			new CorsairRoll("Puppet Roll", Buffs.PuppetRoll, 3, 7),
+			new CorsairRoll("Dancer's Roll", Buffs.DancersRoll, 3, 7),
+			new CorsairRoll("Scholar's Roll", Buffs.ScholarsRoll, 2, 6),
+			new CorsairRoll("Bolter's Roll", Buffs.BoltersRoll, 3, 9),
+			new CorsairRoll("Caster's Roll", Buffs.CastersRoll, 2, 7),
+			new CorsairRoll("Courser's Roll", Buffs.CoursersRoll, 3, 9),
+			new CorsairRoll("Blitzer's Roll", Buffs.BlitzersRoll, 4, 9),
+			new CorsairRoll("Tactician's Roll", Buffs.TacticiansRoll, 5, 8),
+			new CorsairRoll("Allies' Roll", Buffs.AlliesRoll, 3, 10),
+			new CorsairRoll("Miser's Roll", Buffs.MisersRoll, 5, 7),
+			new CorsairRoll("Companion's Roll", Buffs.CompanionsRoll, 2, 10),
+			new CorsairRoll("Avenger's Roll", Buffs.AvengersRoll, 4, 8),
+			new CorsairRoll("Naturalist's Roll", Buffs.NaturalistsRoll, 3, 7),
+			new CorsairRoll("Runeist's Roll", Buffs.RuneistsRoll, 4, 8),
+		};
+
+		private CorsairRoll roll1;
+		public CorsairRoll Roll1
+		{
+			get => roll1;
+			set { roll1 = value; OnPropertyChanged(); }
+		}
+
+		private CorsairRoll roll2;
+		public CorsairRoll Roll2
+		{
+			get => roll2;
+			set { roll2 = value; OnPropertyChanged(); }
+		}
+
+		private bool enableCrookedCards;
+		public bool EnableCrookedCards
+		{
+			get => enableCrookedCards;
+			set { enableCrookedCards = value; OnPropertyChanged(); }
+		}
+
+		private bool enableRandomDeal;
+		public bool EnableRandomDeal
+		{
+			get => enableRandomDeal;
+			set { enableRandomDeal = value; OnPropertyChanged(); }
+		}
+
+		private bool enableSnakeEye;
+		public bool EnableSnakeEye
+		{
+			get => enableSnakeEye;
+			set { enableSnakeEye = value; OnPropertyChanged(); }
 		}
 		#endregion
 

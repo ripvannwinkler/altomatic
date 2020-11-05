@@ -89,6 +89,11 @@ function HandleIncomingPacket(id, size, data)
           else 
             print('unknown casting status: ' .. temp)
           end
+        elseif category == 6 then
+          local effect = ashita.bits.unpack_be(data, 213, 17);
+          if effect then
+            SendToAltomatic("roll_"..effect)
+          end
         end
       end
     elseif id == PACKET_PARTY_BUFFS then

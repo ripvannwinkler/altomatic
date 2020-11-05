@@ -119,11 +119,13 @@
     <Compile Include="Game\AddonInterface.cs" />
     <Compile Include="Game\Data\Buffs.cs" />
     <Compile Include="Game\Data\BuffStatus.cs" />
+    <Compile Include="Game\Data\CorsairRoll.cs" />
     <Compile Include="Game\Data\Items.cs" />
     <Compile Include="Game\Data\Jobs.cs" />
     <Compile Include="Game\Data\JobSort.cs" />
     <Compile Include="Game\Data\Spells.cs" />
     <Compile Include="Game\Strategies\AutoBuffsStrategy.cs" />
+    <Compile Include="Game\Strategies\CorsairRollStrategy.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />
     <Compile Include="Game\Strategies\CureStrategy.cs" />
     <Compile Include="Game\Strategies\GeomancerStrategy.cs" />

@@ -91,6 +91,10 @@ namespace Altomatic.UI.Game
 			{
 				Events.OnNext(new AddonEvent(AddonEventType.BuffsUpdated, data));
 			}
+			else if (data.StartsWith("roll_"))
+      {
+				Events.OnNext(new AddonEvent(AddonEventType.CorsairRoll, data));
+      }
 			else
 			{
 				Debug.WriteLine("Unexpected data from addon:");
@@ -107,7 +111,8 @@ namespace Altomatic.UI.Game
 		CastingCompleted,
 		CastingInteruppted,
 		BuffsUpdated,
-	}
+    CorsairRoll,
+  }
 
 	public class AddonEvent
 	{

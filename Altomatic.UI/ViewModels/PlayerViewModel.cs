@@ -161,6 +161,13 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		private bool isRequiredForRolls;
+		public bool IsRequiredForRolls
+		{
+			get => isRequiredForRolls;
+			set { isRequiredForRolls = value; OnPropertyChanged(); }
+		}
+
 		public PlayerViewModel(AppViewModel appData)
 		{
 			AppData = appData;
@@ -190,9 +197,9 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		public bool HasAnyBuff(params short[] buffs)
-    {
+		{
 			return AppData.Buffs.HasAny(Name, buffs);
-    }
+		}
 
 		public override bool Equals(object obj)
 		{

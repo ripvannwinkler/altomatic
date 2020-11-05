@@ -102,11 +102,19 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public void Load()
 		{
-			if (!string.IsNullOrWhiteSpace(SettingsFile))
+			try
 			{
-				using var reader = File.OpenText(SettingsFile);
-				var xml = new XmlSerializer(typeof(ConfigViewModel));
-				Config = (ConfigViewModel)xml.Deserialize(reader);
+				if (!string.IsNullOrWhiteSpace(SettingsFile))
+				{
+					using var reader = File.OpenText(SettingsFile);
+					var xml = new XmlSerializer(typeof(ConfigViewModel));
+					Config = (ConfigViewModel)xml.Deserialize(reader);
+				}
+			}
+			catch (Exception ex)
+			{
+				AppData.SetStatus($"Error loading profile '{SettingsFilenameOnly}'. {ex.Message}");
+
 			}
 		}
 
