@@ -13,8 +13,8 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (await RemoveDoomFromPlayers(app) ||
-					await RemoveSilenceFromHealer(app) ||
+			if (await RemoveSilenceFromHealer(app) || 
+					await RemoveDoomFromPlayers(app) ||					
 					await RemoveSleepgaFromParty(app) ||
 					await RemoveParalyzeFromHealer(app) ||
 					await RemoveSilenceFromPlayers(app) ||
