@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 
 namespace Altomatic.UI.Game.Data
@@ -46,7 +47,7 @@ namespace Altomatic.UI.Game.Data
 
 		private bool IsCasterDisabled()
 		{
-			return App.Buffs.HasAny(App.Healer.Player.Name,
+			return App.Healer.HasAnyBuff(
 				Buffs.Sleep, Buffs.Petrification, Buffs.Stun,
 				Buffs.Silence, Buffs.Terror);
 		}

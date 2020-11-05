@@ -69,7 +69,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.IsInHealerParty && player.IsEntrustTarget)
 				{
-					if (!app.Buffs.HasAny(player.Name, Buffs.ColureActive))
+					if (!player.HasAnyBuff(Buffs.ColureActive))
 					{
 						if (await app.Actions.UseAbility("Entrust"))
 						{

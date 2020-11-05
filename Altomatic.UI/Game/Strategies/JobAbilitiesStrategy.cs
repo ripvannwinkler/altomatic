@@ -58,7 +58,7 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			if (app.Options.Config.EnableLightArts &&
-					app.Healer.HasAnyBuff(Buffs.LightArts) == false &&
+					app.Healer.HasAnyBuff(Buffs.LightArts, Buffs.AddendumWhite) == false &&
 					await app.Actions.UseAbility("Light Arts"))
 			{
 				return true;
