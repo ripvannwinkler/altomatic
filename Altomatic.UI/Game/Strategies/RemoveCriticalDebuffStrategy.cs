@@ -63,27 +63,27 @@ namespace Altomatic.UI.Game.Strategies
 		}
 
 		private async Task<bool> RemoveSleepgaFromParty(AppViewModel app)
-    {
+		{
 			var sleeping = new List<PlayerViewModel>();
 			foreach (var player in app.ActivePlayers.SortByJob())
-      {
+			{
 				if (player.IsInHealerParty && app.Buffs.HasAny(player.Name, Buffs.Sleep))
-        {
+				{
 					sleeping.Add(player);
-        }
-      }
+				}
+			}
 
-			if (sleeping.Count>0)
-      {
+			if (sleeping.Count > 0)
+			{
 				var target = sleeping.First();
 				if (await app.Actions.CastSpell("Curaga", target.Name))
-        {
+				{
 					return true;
-        }
-      }
+				}
+			}
 
 			return false;
-    }
+		}
 
 		private async Task<bool> RemoveParalyzeFromHealer(AppViewModel app)
 		{
