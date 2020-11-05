@@ -13,7 +13,7 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (await RemoveDoomFromHealer(app) ||
+			if (await RemoveDoomFromPlayers(app) ||
 					await RemoveSilenceFromHealer(app) ||
 					await RemoveSleepgaFromParty(app) ||
 					await RemoveParalyzeFromHealer(app) ||
@@ -26,7 +26,7 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-		private async Task<bool> RemoveDoomFromHealer(AppViewModel app)
+		private async Task<bool> RemoveDoomFromPlayers(AppViewModel app)
 		{
 			if (app.Healer.HasAnyBuff(Buffs.Doom, Buffs.Curse))
 			{
@@ -44,6 +44,17 @@ namespace Altomatic.UI.Game.Strategies
 					return true;
 				}
 			}
+
+			foreach (var player in app.ActivePlayers.SortByJob())
+      {
+				if(player.HasAnyBuff(Buffs.Doom, Buffs.Curse))
+        {
+					if (await app.Actions.CastSpell("Cursna"))
+          {
+						return true;
+          }
+        }
+      }
 
 			return false;
 		}
