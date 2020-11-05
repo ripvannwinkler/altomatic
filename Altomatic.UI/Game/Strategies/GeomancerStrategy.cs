@@ -119,7 +119,7 @@ namespace Altomatic.UI.Game.Strategies
 			}
 			else
 			{
-				if (eclipticActive == false &&
+				if (!eclipticActive &&
 						app.Options.Config.EnableEclipticAttrition &&
 						await app.Actions.UseAbility("Ecliptic Attrition"))
 				{
