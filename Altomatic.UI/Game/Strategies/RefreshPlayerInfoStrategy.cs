@@ -13,10 +13,6 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
-		private bool resumePause;
-		private DateTime lastPosChange;
-		private Point3D lastPosition;
-
 		/// <inheritdoc/>
 		public Task<bool> ExecuteAsync(AppViewModel app)
 		{
@@ -42,16 +38,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (!app.IsPaused)
 				{
-					resumePause = true;
 					app.IsPaused = true;
-				}
-			}
-			else
-			{
-				if (resumePause)
-				{
-					resumePause = false;
-					app.IsPaused = false;
 				}
 			}
 		}
