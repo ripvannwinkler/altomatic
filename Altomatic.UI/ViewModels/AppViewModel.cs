@@ -203,6 +203,7 @@ namespace Altomatic.UI.ViewModels
 			Strategies.Add(new ValidateProcessStrategy());
 			Strategies.Add(new RefreshPlayerInfoStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
+			Strategies.Add(new SleepCharmedPlayersStrategy());
 			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new RemoveDebuffStrategy());
 			Strategies.Add(new AutoBuffsStrategy());

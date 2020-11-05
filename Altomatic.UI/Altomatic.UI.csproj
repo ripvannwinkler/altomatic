@@ -132,6 +132,7 @@
     <Compile Include="Game\Strategies\RemoveDebuffStrategy.cs" />
     <Compile Include="Game\Strategies\IGameStrategy.cs" />
     <Compile Include="Game\Strategies\RefreshPlayerInfoStrategy.cs" />
+    <Compile Include="Game\Strategies\SleepCharmedPlayersStrategy.cs" />
     <Compile Include="Game\Strategies\ValidateProcessStrategy.cs" />
     <Compile Include="Game\Data\CurePotency.cs" />
     <Compile Include="Utilities\EliteApiExtensions.cs" />

@@ -396,7 +396,9 @@
 				</TabItem>
 				<TabItem Header="Other">
 					<Border Padding="8">
-						<Label>Nothing to see here yet.</Label>
+						<StackPanel>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.SleepCharmedPlayers}">Sleep charmed players</CheckBox>
+						</StackPanel>
 					</Border>
 				</TabItem>
 			</TabControl>

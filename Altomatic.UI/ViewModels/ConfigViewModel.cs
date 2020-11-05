@@ -519,6 +519,15 @@ namespace Altomatic.UI.ViewModels
 		}
 		#endregion
 
+		#region Other
+		private bool sleepCharmedPlayers;
+		public bool SleepCharmedPlayers
+		{
+			get => sleepCharmedPlayers;
+			set { sleepCharmedPlayers = value; OnPropertyChanged(); }
+		}
+		#endregion
+
 		#region INotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string name = null)
