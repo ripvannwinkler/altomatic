@@ -96,27 +96,24 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (app.Healer.Player.Pet?.HealthPercent < 1)
 			{
-				if (app.Options.Config.EnableGeoSpells)
+				var spellName = app.Options.Config.GeoSpellName;
+				var isDebuff = app.Options.Config.GeoDebuffs.Contains(spellName);
+				var canUseGeoSpell = isDebuff ? !app.Options.Config.DisableGeoDebuffs : true;
+
+				if (canUseGeoSpell)
 				{
-					var spellName = app.Options.Config.GeoSpellName;
-					var isDebuff = app.Options.Config.GeoDebuffs.Contains(spellName);
-					var canUseGeoSpell = isDebuff ? !app.Options.Config.DisableGeoDebuffs : true;
-
-					if (canUseGeoSpell)
+					if (app.Options.Config.EnableBlazeOfGlory &&
+						await app.Actions.UseAbility("Blaze Of Glory", "<me>"))
 					{
-						if (app.Options.Config.EnableBlazeOfGlory &&
-							await app.Actions.UseAbility("Blaze Of Glory", "<me>"))
-						{
-							return true;
-						}
+						return true;
+					}
 
-						app.Healer.Target.SetTarget((int)target.TargetID);
-						if (await app.Actions.CastSpell($"Geo-{spellName}", $"<t>"))
-						{
-							eclipticActive = false;
-							lastGeoTargetId = target.TargetID;
-							return true;
-						}
+					app.Healer.Target.SetTarget((int)target.TargetID);
+					if (await app.Actions.CastSpell($"Geo-{spellName}", $"<t>"))
+					{
+						eclipticActive = false;
+						lastGeoTargetId = target.TargetID;
+						return true;
 					}
 				}
 			}
@@ -215,11 +212,10 @@ namespace Altomatic.UI.Game.Strategies
 
 		private XiEntity GetGeoSpellTarget(AppViewModel app)
 		{
-			var geoTargetPlayer = app.Healer.Party
-				.GetPartyMembers().Where(m => m.MemberNumber < 6)
+			var geoTargetPlayer = app.Healer.Party.GetPartyMembers()
 				.Join(app.ActivePlayers, m => m.Name, p => p.Name, (m, p) => p)
-				.FirstOrDefault(p => p.IsGeoTarget)?.Name
-					?? app.Healer.Player.Name;
+				.Where(p => p.IsInHealerParty).FirstOrDefault(p => p.IsGeoTarget)?
+				.Name ?? app.Healer.Player.Name;
 
 			for (var i = 0; i < 2048; i++)
 			{
