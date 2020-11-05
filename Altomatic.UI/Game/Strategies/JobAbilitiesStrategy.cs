@@ -74,7 +74,8 @@ namespace Altomatic.UI.Game.Strategies
 			if (app.ActivePlayers.AreHealthy())
 			{
 				if (app.Options.Config.EnableConvert &&
-						(app.Healer.Player.MP < 200 || app.Healer.Player.MPP < 15))
+						(app.Healer.Player.MP < 100 || app.Healer.Player.MPP < 15) &&
+						await app.Actions.UseAbility("Convert"))
 				{
 					return true;
 				}
