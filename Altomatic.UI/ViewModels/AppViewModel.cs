@@ -28,6 +28,7 @@ namespace Altomatic.UI.ViewModels
 		private string statusMessage;
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
+		private bool isPlayerMoving = false;
 
 		
 		public Buffs Buffs { get; }
@@ -178,6 +179,15 @@ namespace Altomatic.UI.ViewModels
 			get { return healer != null && monitored != null; }
 			set { /* ignore */ }
 		}
+
+		/// <summary>
+    /// Is the player moving?
+    /// </summary>
+		public bool IsPlayerMoving
+    {
+			get => isPlayerMoving;
+      set { isPlayerMoving = value; OnPropertyChanged(); }
+    }
 
 
 		/// <summary>

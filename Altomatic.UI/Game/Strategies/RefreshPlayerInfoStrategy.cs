@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
 using EliteMMO.API;
@@ -12,6 +13,8 @@ namespace Altomatic.UI.Game.Strategies
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
 		private bool resumePause;
+		private DateTime lastPosChange;
+		private Point3D lastPosition;
 
 		/// <inheritdoc/>
 		public Task<bool> ExecuteAsync(AppViewModel app)
@@ -27,11 +30,32 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			HandleZoning(app);
+			DetectMovement(app);
 			UpdateActiveBuffs(app);
 			return Task.FromResult(false);
 		}
 
-		private void HandleZoning(AppViewModel app)
+    private void DetectMovement(AppViewModel app)
+    {
+			var position = new Point3D(
+				app.Healer.Player.X,
+				app.Healer.Player.Y,
+				app.Healer.Player.Z);
+
+			if (position.X != lastPosition.X ||
+					position.Y != lastPosition.Y ||
+					position.Z != lastPosition.Z)
+      {
+				lastPosition = position;
+				lastPosChange = DateTime.Now;
+				app.IsPlayerMoving = true;
+      } else
+      {
+				app.IsPlayerMoving = false;
+      }
+    }
+
+    private void HandleZoning(AppViewModel app)
 		{
 			if (app.Healer.Player.LoginStatus == (int)LoginStatus.Loading ||
 					app.Healer.Player.LoginStatus == (int)LoginStatus.Loading)

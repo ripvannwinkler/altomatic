@@ -15,10 +15,11 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			if (await RemoveDoomFromHealer(app) ||
 					await RemoveSilenceFromHealer(app) ||
+					await RemoveSleepgaFromParty(app) ||
 					await RemoveParalyzeFromHealer(app) ||
 					await RemoveSilenceFromPlayers(app) ||
 					await RemovePetrifyFromPlayers(app))
-      {
+			{
 				return true;
 			}
 
@@ -46,33 +47,56 @@ namespace Altomatic.UI.Game.Strategies
 
 			return false;
 		}
-		
+
 		private async Task<bool> RemoveSilenceFromHealer(AppViewModel app)
-    {
+		{
 			if (app.Healer.HasAnyBuff(Buffs.Silence))
 			{
 				if (await app.Actions.UseItem("Echo Drops") ||
 						await app.Actions.UseItem("Remedy"))
-        {
+				{
 					return true;
 				}
 			}
 
 			return false;
 		}
-		
+
+		private async Task<bool> RemoveSleepgaFromParty(AppViewModel app)
+    {
+			var sleeping = new List<PlayerViewModel>();
+			foreach (var player in app.ActivePlayers.SortByJob())
+      {
+				if (player.IsInHealerParty && app.Buffs.HasAny(player.Name, Buffs.Sleep))
+        {
+					sleeping.Add(player);
+        }
+      }
+
+			if (sleeping.Count>0)
+      {
+				var target = sleeping.First();
+				if (await app.Actions.CastSpell("Curaga", target.Name))
+        {
+					return true;
+        }
+      }
+
+			return false;
+    }
+
 		private async Task<bool> RemoveParalyzeFromHealer(AppViewModel app)
 		{
 			if (app.Healer.HasAnyBuff(Buffs.Paralysis))
 			{
 				if (app.Options.Config.PreferItemOverParalyna &&
 						await app.Actions.UseItem("Remedy"))
-        {
+				{
 					return true;
 				}
 
 				if (await app.Actions.CastSpell("Paralyna"))
-        {
+				{
 					return true;
 				}
 			}
@@ -86,7 +110,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (app.Buffs.HasAny(player.Name, Buffs.Silence) &&
 						await app.Actions.CastSpell("Silena", player.Name))
-        {
+				{
 					return true;
 				}
 			}
@@ -94,7 +118,7 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemovePetrifyFromPlayers(AppViewModel app)
+		private async Task<bool> RemovePetrifyFromPlayers(AppViewModel app)
 		{
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.HealersFirst))
 			{

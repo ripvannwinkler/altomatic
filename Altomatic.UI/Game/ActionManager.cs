@@ -24,6 +24,7 @@ namespace Altomatic.UI.Game
 		{
 			return await Task.Run<bool>(async () =>
 			{
+				if (App.IsPlayerMoving) return false;
 				if (!App.Healer.HasItem(itemName)) return false;
 				if (targetName == "<me>" && App.Healer.Player.Buffs.Contains(Buffs.Medicine))
 				{
@@ -40,6 +41,7 @@ namespace Altomatic.UI.Game
 		{
 			return await Task.Run<bool>(async () =>
 			{
+				if (App.IsPlayerMoving) return false;
 				if (!App.Jobs.CanUseAbility(abilityName)) return false;
 				App.SetStatus($"Using ability {abilityName} on {targetName}");
 				await App.Healer.SendCommand($"/ja \"{abilityName}\" {targetName}", 2000);
@@ -51,6 +53,7 @@ namespace Altomatic.UI.Game
 		{
 			return await Task.Run<bool>(async () =>
 			{
+				if (App.IsPlayerMoving) return false;
 				if (!App.Spells.CanCast(spellName)) return false;
 				App.SetStatus($"Casting {spellName} on {targetName}");
 
