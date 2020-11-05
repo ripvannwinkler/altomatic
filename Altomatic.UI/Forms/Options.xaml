@@ -156,7 +156,23 @@
 							<GroupBox Header="Self Buffs" DockPanel.Dock="Bottom">
 								<Border Padding="8">
 									<DockPanel>
-										<StackPanel DockPanel.Dock="Right">
+										<StackPanel Margin="24 0 0 0" DockPanel.Dock="Right">
+											<StackPanel Margin="0 0 0 8">
+												<Label Padding="0 0 0 2">Bar-element</Label>
+												<ComboBox 
+													Width="160" 
+													ItemsSource="{Binding Model.Config.BarElementSpells, Mode=OneWay}" 
+													SelectedItem="{Binding Model.Config.SelfBarElementSpellName}"/>
+											</StackPanel>
+											<StackPanel Margin="0 0 0 8">
+												<Label Padding="0 0 0 2">Bar-status</Label>
+												<ComboBox 
+													Width="160" 
+													ItemsSource="{Binding Model.Config.BarStatusSpells, Mode=OneWay}" 
+													SelectedItem="{Binding Model.Config.SelfBarStatusSpellName}"/>
+											</StackPanel>
+										</StackPanel>
+										<StackPanel Margin="24 0 0 0" DockPanel.Dock="Right">
 											<StackPanel Margin="0 0 0 8">
 												<Label Padding="0 0 0 2">Enspells</Label>
 												<ComboBox 

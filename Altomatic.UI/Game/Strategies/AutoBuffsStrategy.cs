@@ -81,9 +81,15 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (app.Options.Config.SelfUtsusemi &&
 					!app.Healer.HasAnyBuff(Buffs.CopyImage, Buffs.CopyImage2, Buffs.CopyImage3, Buffs.CopyImage4) &&
-					await app.Actions.CastSpell("Utsusemi: San") ||
-					await app.Actions.CastSpell("Utsusemi: Ni") || 
-					await app.Actions.CastSpell("Utsusemi: Ichi")) return true;
+					(await app.Actions.CastSpell("Utsusemi: San") ||
+					 await app.Actions.CastSpell("Utsusemi: Ni") ||
+					 await app.Actions.CastSpell("Utsusemi: Ichi"))) return true;
+
+			if (!string.IsNullOrWhiteSpace(app.Options.Config.SelfBarElementSpellName) &&
+					await CastBarElementSpell(app)) return true;
+
+			if (!string.IsNullOrWhiteSpace(app.Options.Config.SelfBarStatusSpellName) &&
+					await CastBarStatusSpell(app)) return true;
 
 			if (!app.Healer.HasAnyBuff(
 						Buffs.Firestorm2, Buffs.Firestorm, Buffs.Sandstorm2, Buffs.Sandstorm,
@@ -105,7 +111,6 @@ namespace Altomatic.UI.Game.Strategies
 
 			return false;
 		}
-
 
 		private async Task<bool> BuffOthers(AppViewModel app)
 		{
@@ -152,6 +157,81 @@ namespace Altomatic.UI.Game.Strategies
 							await app.Actions.CastSpell(app.Spells.FirstAvailable("Firestorm II", "Firestorm"), player.Name)) return true;
 				}
 			}
+
+			return false;
+		}
+
+		private async Task<bool> CastBarElementSpell(AppViewModel app)
+		{
+			if (app.Options.Config.SelfBarElementSpellName == "Fire" &&
+					!app.Healer.HasAnyBuff(Buffs.Barfire) &&
+					(await app.Actions.CastSpell("Barfira") ||
+					 await app.Actions.CastSpell("Barfire"))) return true;
+
+			if (app.Options.Config.SelfBarElementSpellName == "Earth" &&
+					!app.Healer.HasAnyBuff(Buffs.Barstone) &&
+					(await app.Actions.CastSpell("Barstonra") ||
+					 await app.Actions.CastSpell("Barstone"))) return true;
+
+			if (app.Options.Config.SelfBarElementSpellName == "Water" &&
+					!app.Healer.HasAnyBuff(Buffs.Barwater) &&
+					(await app.Actions.CastSpell("Barwatera") ||
+					 await app.Actions.CastSpell("Barwater"))) return true;
+
+			if (app.Options.Config.SelfBarElementSpellName == "Wind" &&
+					!app.Healer.HasAnyBuff(Buffs.Baraero) &&
+					(await app.Actions.CastSpell("Baraera") ||
+					 await app.Actions.CastSpell("Baraero"))) return true;
+
+			if (app.Options.Config.SelfBarElementSpellName == "Thunder" &&
+					!app.Healer.HasAnyBuff(Buffs.Barthunder) &&
+					(await app.Actions.CastSpell("Barthundra") ||
+					 await app.Actions.CastSpell("Barthunder"))) return true;
+
+			if (app.Options.Config.SelfBarElementSpellName == "Ice" &&
+					!app.Healer.HasAnyBuff(Buffs.Barblizzard) &&
+					(await app.Actions.CastSpell("Barblizzara") ||
+					 await app.Actions.CastSpell("Barblizzard"))) return true;
+
+			return false;
+		}
+
+		private async Task<bool> CastBarStatusSpell(AppViewModel app)
+		{
+			if (app.Options.Config.SelfBarStatusSpellName == "Amnesia" &&
+					!app.Healer.HasAnyBuff(Buffs.Baramnesia) &&
+					(await app.Actions.CastSpell("Baramnesra") ||
+					 await app.Actions.CastSpell("Baramnesia"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Virus" &&
+					!app.Healer.HasAnyBuff(Buffs.Barvirus) &&
+					(await app.Actions.CastSpell("Barvira") ||
+					 await app.Actions.CastSpell("Barvirus"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Paralyze" &&
+					!app.Healer.HasAnyBuff(Buffs.Barparalyze) &&
+					(await app.Actions.CastSpell("Barparalyzra") ||
+					 await app.Actions.CastSpell("Barparalyze"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Petrify" &&
+					!app.Healer.HasAnyBuff(Buffs.Barpetrify) &&
+					(await app.Actions.CastSpell("Barpetra") ||
+					 await app.Actions.CastSpell("Barpetrify"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Poison" &&
+					!app.Healer.HasAnyBuff(Buffs.Barpoison) &&
+					(await app.Actions.CastSpell("Barpoisonra") ||
+					 await app.Actions.CastSpell("Barpoison"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Blind" &&
+					!app.Healer.HasAnyBuff(Buffs.Barblind) &&
+					(await app.Actions.CastSpell("Barblindra") ||
+					 await app.Actions.CastSpell("Barblind"))) return true;
+
+			if (app.Options.Config.SelfBarStatusSpellName == "Sleep" &&
+					!app.Healer.HasAnyBuff(Buffs.Barparalyze) &&
+					(await app.Actions.CastSpell("Barsleepra") ||
+					 await app.Actions.CastSpell("Barsleep"))) return true;
 
 			return false;
 		}

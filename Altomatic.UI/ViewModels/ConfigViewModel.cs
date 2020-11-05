@@ -236,6 +236,43 @@ namespace Altomatic.UI.ViewModels
 			set { selfSpikesSpellName = value; OnPropertyChanged(); }
 		}
 
+		public string[] BarElementSpells { get; } =
+		{
+			"",
+			"Fire",
+			"Earth",
+			"Water",
+			"Wind",
+			"Thunder",
+			"Ice",
+		};
+
+		private string selfBarElementSpellName = "";
+		public string SelfBarElementSpellName
+		{
+			get => selfBarElementSpellName;
+			set { selfBarElementSpellName = value; OnPropertyChanged(); }
+		}
+
+		public string[] BarStatusSpells { get; } =
+		{
+			"",
+			"Amnesia",
+			"Virus",
+			"Paralyze",
+			"Petrify",
+			"Poison",
+			"Blind",
+			"Sleep",
+		};
+
+		private string selfBarStatusSpellName = "";
+		public string SelfBarStatusSpellName
+		{
+			get => selfBarStatusSpellName;
+			set { selfBarStatusSpellName = value; OnPropertyChanged(); }
+		}
+
 		#endregion
 
 		#region Debuff Removal
