@@ -223,6 +223,7 @@ namespace Altomatic.UI.ViewModels
 
 		public string[] SpikesSpells { get; } =
 		{
+			"",
 			"Blaze Spikes",
 			"Ice Spikes",
 			"Shock Spikes",
