@@ -371,6 +371,7 @@
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableBlazeOfGlory}">Blaze Of Glory</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableRadialArcana}">Radial Arcana</CheckBox>
 									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableLifeCycle}">Life Cycle</CheckBox>
+									<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableFullCircle}">Full Circle</CheckBox>
 								</StackPanel>
 							</GroupBox>
 							<StackPanel Grid.Column="0"></StackPanel>

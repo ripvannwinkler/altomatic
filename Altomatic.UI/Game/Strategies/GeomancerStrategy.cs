@@ -33,6 +33,7 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> DoGeomancyStuff(AppViewModel app)
 		{
+			if (await UseFullCircle(app)) return true;
 			if (await CastIndiSpell(app)) return true;
 			if (await CastEntrustIndiSpell(app)) return true;
 			if (await CastGeoSpell(app)) return true;
@@ -155,11 +156,6 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					return true;
 				}
-
-				if (await UseFullCircle(app))
-				{
-					return true;
-				}
 			}
 
 			return false;
@@ -168,6 +164,7 @@ namespace Altomatic.UI.Game.Strategies
 		private async Task<bool> UseFullCircle(AppViewModel app)
 		{
 			if (!app.Options.Config.EnableFullCircle) return false;
+			if (app.Healer.Player.Pet.HealthPercent < 1) return false;
 			var petEntity = app.Healer.Entity.GetEntity((int)app.Healer.Player.Pet.TargetID);
 			var geoTargetPlayer = app.ActivePlayers.FirstOrDefault(p => p.IsGeoTarget);
 			var geoEntity = geoTargetPlayer == null
