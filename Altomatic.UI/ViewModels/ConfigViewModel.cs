@@ -600,6 +600,20 @@ namespace Altomatic.UI.ViewModels
 			get => sleepCharmedPlayers;
 			set { sleepCharmedPlayers = value; OnPropertyChanged(); }
 		}
+
+		private bool raiseTheDead;
+		public bool RaiseTheDead
+		{
+			get => raiseTheDead;
+			set { raiseTheDead = value; OnPropertyChanged(); }
+		}
+
+		private bool acceptRaise;
+		public bool AcceptRaise
+		{
+			get => acceptRaise;
+			set { acceptRaise = value; OnPropertyChanged(); }
+		}
 		#endregion
 
 		#region INotifyPropertyChanged

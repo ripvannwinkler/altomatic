@@ -439,6 +439,8 @@
 					<Border Padding="8">
 						<StackPanel>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.SleepCharmedPlayers}">Sleep charmed players</CheckBox>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.RaiseTheDead}">Raise dead players</CheckBox>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.AcceptRaise}">Accept raise</CheckBox>
 						</StackPanel>
 					</Border>
 				</TabItem>

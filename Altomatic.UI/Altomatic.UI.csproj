@@ -160,6 +160,7 @@
     <Compile Include="Game\Data\Jobs.cs" />
     <Compile Include="Game\Data\JobSort.cs" />
     <Compile Include="Game\Data\Spells.cs" />
+    <Compile Include="Game\Strategies\AcceptRaiseStrategy.cs" />
     <Compile Include="Game\Strategies\AutoBuffsStrategy.cs" />
     <Compile Include="Game\Strategies\CorsairRollStrategy.cs" />
     <Compile Include="Game\Strategies\CuragaStrategy.cs" />

@@ -282,6 +282,7 @@ namespace Altomatic.UI.ViewModels
 
 			Strategies.Add(new ValidateProcessStrategy());
 			Strategies.Add(new RefreshPlayerInfoStrategy());
+			Strategies.Add(new AcceptRaiseStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
 			Strategies.Add(new CureWarningStrategy());
 			Strategies.Add(new CuragaStrategy());
