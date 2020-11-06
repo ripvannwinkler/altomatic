@@ -58,6 +58,8 @@ namespace Altomatic.UI.ViewModels
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(AppTitle));
 				OnPropertyChanged(nameof(IsGameReady));
+				OnPropertyChanged(nameof(HealerMainJob));
+				OnPropertyChanged(nameof(HealerSubJob));
 			}
 		}
 
@@ -137,6 +139,22 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => activeBuffs;
 			set { /* ignore */ }
+		}
+
+		/// <summary>
+    /// The healer's main job
+    /// </summary>
+		public string HealerMainJob
+		{
+			get => Jobs.GetMainJob(Healer?.Player?.MainJob ?? 99);
+		}
+
+		/// <summary>
+    /// The healer's sub job
+    /// </summary>
+		public string HealerSubJob
+		{
+			get => Jobs.GetMainJob(Healer?.Player?.SubJob ?? 99);
 		}
 
 		/// <summary>
@@ -311,7 +329,7 @@ namespace Altomatic.UI.ViewModels
 
 					case AddonEventType.Loaded:
 						IsAddonLoaded = true;
-						SetStatus("Addon loaded successfully.");
+						SetStatus();
 						break;
 				}
 			});
@@ -574,6 +592,7 @@ namespace Altomatic.UI.ViewModels
 			if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
 					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
 			{
+				SetStatus("Paused due to death...");
 				autoResumePause = true;
 				IsPaused = true;
 			}
@@ -581,6 +600,7 @@ namespace Altomatic.UI.ViewModels
 			{
 				if (autoResumePause)
 				{
+					SetStatus();
 					autoResumePause = false;
 					IsPaused = false;
 				}

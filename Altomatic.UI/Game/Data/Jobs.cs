@@ -105,14 +105,14 @@ namespace Altomatic.UI.Game.Data
 		}
 
 		public string GetMainJob(EliteAPI instance)
-    {
+		{
 			return GetMainJob(instance.Player.MainJob);
-    }
+		}
 
 		public string GetMainJob(PartyMember member)
-    {
+		{
 			return GetMainJob(member.MainJob);
-    }
+		}
 
 		public string GetMainJob(ushort jobNumber)
 		{
@@ -121,7 +121,7 @@ namespace Altomatic.UI.Game.Data
 				return name;
 			}
 
-			return null;
+			return "???";
 		}
 
 		public string GetSubob(EliteAPI instance)
@@ -141,7 +141,7 @@ namespace Altomatic.UI.Game.Data
 				return name;
 			}
 
-			return null;
+			return "???";
 		}
 	}
 }

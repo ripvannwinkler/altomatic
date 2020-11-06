@@ -120,7 +120,19 @@ namespace Altomatic.UI.ViewModels
 				member = value;
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(IsActive));
+				OnPropertyChanged(nameof(MainJob));
+				OnPropertyChanged(nameof(SubJob));
 			}
+		}
+
+		public string MainJob
+    {
+			get => AppData.Jobs.GetMainJob(Member);
+    }
+
+		public string SubJob
+		{
+			get => AppData.Jobs.GetSubJob(Member);
 		}
 
 		private bool isGeoTarget;
