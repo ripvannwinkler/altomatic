@@ -51,7 +51,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.HasAnyBuff(Buffs.Doom, Buffs.Curse))
 				{
-					if (await app.Actions.CastSpell("Cursna"))
+					if (await app.Actions.CastSpell("Cursna", player.Name))
 					{
 						return true;
 					}

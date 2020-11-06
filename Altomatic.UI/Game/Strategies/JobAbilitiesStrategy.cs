@@ -35,6 +35,27 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
+			if (app.Options.Config.EnableSublimation &&
+					!app.Healer.HasAnyBuff(Buffs.SublimationActivated, Buffs.SublimationComplete) &&
+					await app.Actions.UseAbility("Sublimation"))
+			{
+				return true;
+			}
+
+			if (app.Options.Config.EnableSublimation &&
+					app.Healer.HasAnyBuff(Buffs.SublimationComplete) &&
+					await app.Actions.UseAbility("Sublimation"))
+			{
+				return true;
+			}
+
+			if (app.Options.Config.EnableSublimation && app.Healer.Player.MP < 200 &&
+						app.Healer.HasAnyBuff(Buffs.SublimationActivated, Buffs.SublimationComplete) &&
+						await app.Actions.UseAbility("Sublimation"))
+			{
+				return true;
+			}
+
 			if (app.Options.Config.EnableComposure &&
 					app.Healer.HasAnyBuff(Buffs.Composure) == false &&
 					await app.Actions.UseAbility("Composure"))
