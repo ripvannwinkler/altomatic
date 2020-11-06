@@ -68,7 +68,7 @@
 									LargeChange="5"
 									TickFrequency="1"
 									IsSnapToTickEnabled="True"
-									Minimum="0" Maximum="100" 
+									Minimum="0" Maximum="200" 
 									Value="{Binding Model.Config.CurePotency, FallbackValue=0}"
 									VerticalAlignment="Center" 
 									VerticalContentAlignment="Stretch" />
