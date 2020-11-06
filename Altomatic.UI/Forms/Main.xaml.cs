@@ -28,7 +28,12 @@ namespace Altomatic.UI.Forms
 
 		public string AppTitle
 		{
-			get => $"Altomatic {Assembly.GetExecutingAssembly().GetName().Version}";
+			get
+      {
+				var assembly = Assembly.GetExecutingAssembly();
+				var info = FileVersionInfo.GetVersionInfo(assembly.Location);
+				return $"Altomatic {info.ProductVersion}";
+      }
 		}
 
 		public MainWindow()
