@@ -31,9 +31,9 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
+		private bool autoResumePause = false;
 		private Point3D lastPosition;
 		private DateTime lastPosChange;
-
 
 		public Buffs Buffs { get; }
 		public Spells Spells { get; }
@@ -150,13 +150,13 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// The last known corsair roll value
-    /// </summary>
+		/// The last known corsair roll value
+		/// </summary>
 		public short LastKnownRoll
-    {
+		{
 			get => lastKnownRoll;
-      set { lastKnownRoll = value; }
-    }
+			set { lastKnownRoll = value; }
+		}
 
 		/// <summary>
 		/// Is the bot paused?
@@ -247,12 +247,12 @@ namespace Altomatic.UI.ViewModels
 					case AddonEventType.CorsairRoll:
 						data = @event.Data.Split('_');
 						if (data.Length == 2)
-            {
+						{
 							if (short.TryParse(data[1], out var roll))
-              {
+							{
 								LastKnownRoll = roll;
-              }
-            }
+							}
+						}
 						break;
 
 					case AddonEventType.Loaded:
@@ -271,6 +271,7 @@ namespace Altomatic.UI.ViewModels
 			{
 				while (true)
 				{
+					PauseIfDead();
 					PauseIfZoning();
 					DetectMovement();
 					Thread.Sleep(100);
@@ -503,6 +504,27 @@ namespace Altomatic.UI.ViewModels
 			{
 				SetStatus("Paused due to zoning...");
 				IsPaused = true;
+			}
+		}
+
+		/// <summary>
+		/// Pauses the bot if the player is dead
+		/// </summary>
+		private void PauseIfDead()
+		{
+			if (Healer.GetEntityStatus() == EntityStatus.Dead ||
+					Healer.GetEntityStatus() == EntityStatus.DeadEngaged)
+			{
+				autoResumePause = true;
+				IsPaused = true;
+			}
+			else
+			{
+				if (autoResumePause)
+				{
+					autoResumePause = false;
+					IsPaused = false;
+				}
 			}
 		}
 	}
