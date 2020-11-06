@@ -30,6 +30,7 @@ namespace Altomatic.UI.ViewModels
 		private Process healerProcess;
 		private string statusMessage;
 		private short lastKnownRoll;
+		private bool isBusy = false;
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
@@ -138,6 +139,9 @@ namespace Altomatic.UI.ViewModels
 			set { /* ignore */ }
 		}
 
+		/// <summary>
+		/// The application window title
+		/// </summary>
 		public string AppTitle
 		{
 			get
@@ -173,6 +177,28 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => lastKnownRoll;
 			set { lastKnownRoll = value; }
+		}
+
+		/// <summary>
+		/// Is the application busy performing a user task?
+		/// </summary>
+		public bool IsBusy
+		{
+			get => isBusy;
+			set
+			{
+				isBusy = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsNotBusy));
+			}
+		}
+
+		/// <summary>
+		/// Is the application ready to perform a user task?
+		/// </summary>
+		public bool IsNotBusy
+		{
+			get => !IsBusy;
 		}
 
 		/// <summary>
@@ -215,7 +241,7 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public bool IsGameReady
 		{
-			get { return healer != null && monitored != null; }
+			get { return Healer != null && Monitored != null && IsNotBusy; }
 			set { /* ignore */ }
 		}
 
@@ -315,11 +341,9 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task RefreshProcessList()
 		{
-			SetStatus("Refreshing process list...");
 			await UnloadAddon();
 			Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
 			ResetPlayerData();
-			SetStatus();
 		}
 
 		/// <summary>
@@ -403,6 +427,7 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task ReloadAddon()
 		{
+			if (healerProcess == null) return;
 			if (string.IsNullOrEmpty(Healer.Player.Name)) return;
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 			var ip = Addon.Endpoint.Address;

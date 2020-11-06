@@ -182,6 +182,23 @@ namespace Altomatic.UI.ViewModels
 			CurrentHp = 0;
 			CurrentHpp = 0;
 			DistanceFromHealer = uint.MaxValue;
+			IsGeoTarget = false;
+			IsEntrustTarget = false;
+			IsRequiredForRolls = false;
+
+			AutoBuffs.Haste = false;
+			AutoBuffs.Flurry = false;
+			AutoBuffs.Refresh = false;
+			AutoBuffs.Phalanx = false;
+			AutoBuffs.Regen = false;
+			AutoBuffs.Firestorm = false;
+			AutoBuffs.Sandstorm = false;
+			AutoBuffs.Rainstorm = false;
+			AutoBuffs.Windstorm = false;
+			AutoBuffs.Thunderstorm = false;
+			AutoBuffs.Hailstorm = false;
+			AutoBuffs.Aurorastorm = false;
+			AutoBuffs.Voidstorm = false;
 		}
 
 		public int GetBuffAgeSeconds(params short[] buffs)

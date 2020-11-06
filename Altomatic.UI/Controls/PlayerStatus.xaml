@@ -13,7 +13,7 @@
 	<UserControl.Resources>
 		<converters:CurrentHppBrushConverter x:Key="hppBrushConverter"/>
 	</UserControl.Resources>
-	<Grid DataContext="{Binding ElementName=PlayerStatusControl}" IsEnabled="{Binding Player.IsActive}">
+	<Grid DataContext="{Binding ElementName=PlayerStatusControl}">
 		<DockPanel>
 			<Border BorderBrush="{x:Null}" BorderThickness="0 0 0 5" DockPanel.Dock="Bottom"/>
 			<Border Padding="5 5 5 5" Background="Transparent">
@@ -44,6 +44,10 @@
 								<MenuItem IsCheckable="True" Header="Hailstorm" IsChecked="{Binding Player.AutoBuffs.Hailstorm}" />
 								<MenuItem IsCheckable="True" Header="Aurorastorm" IsChecked="{Binding Player.AutoBuffs.Aurorastorm}" />
 								<MenuItem IsCheckable="True" Header="Voidstorm" IsChecked="{Binding Player.AutoBuffs.Voidstorm}" />
+								<Separator/>
+								<MenuItem IsCheckable="True" Header="Geo Spell Target" IsChecked="{Binding Player.IsGeoTarget}" />
+								<MenuItem IsCheckable="True" Header="Entrust Indi Target" IsChecked="{Binding Player.IsEntrustTarget}" />
+								<MenuItem IsCheckable="True" Header="Corsair Roll Target" IsChecked="{Binding Player.IsRequiredForRolls}" />
 							</ContextMenu>
 						</Button.ContextMenu>
 					</Button>
@@ -55,25 +59,7 @@
 						HorizontalContentAlignment="Stretch" 
 						VerticalContentAlignment="Center"
 						IsChecked="{Binding Player.IsEnabled}">
-					</CheckBox>
-					<CheckBox 
-						Margin="0 0 4 0" 
-						DockPanel.Dock="Left" 
-						VerticalAlignment="Center" 
-						IsChecked="{Binding Player.IsGeoTarget}" 
-						ToolTip="Use this player as the target for geocolure spells."/>
-					<CheckBox 
-						Margin="0 0 4 0" 
-						DockPanel.Dock="Left" 
-						VerticalAlignment="Center" 
-						IsChecked="{Binding Player.IsEntrustTarget}" 
-						ToolTip="Use this player as the target for entrusted indocolure spells."/>
-					<CheckBox 
-						Margin="0 0 4 0" 
-						DockPanel.Dock="Left" 
-						VerticalAlignment="Center" 
-						IsChecked="{Binding Player.IsRequiredForRolls}" 
-						ToolTip="This player must be present for Corsair rolls."/>
+					</CheckBox>					
 					<DockPanel Margin="4 0 8 0" VerticalAlignment="Center">
 						<Label Name="PlayerName" Padding="0" Margin="0" VerticalAlignment="Center" DockPanel.Dock="Top">
 							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name, FallbackValue='Player Name'}"/>

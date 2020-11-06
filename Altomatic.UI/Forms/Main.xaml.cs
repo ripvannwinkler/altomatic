@@ -37,7 +37,7 @@ namespace Altomatic.UI.Forms
 
 		private void InitializeAppData()
 		{
-			Model = new AppViewModel();			
+			Model = new AppViewModel();
 			DataContext = Model;
 
 			Closing += async (sender, args) =>
@@ -83,32 +83,6 @@ namespace Altomatic.UI.Forms
 			}.Start();
 		}
 
-		private void PauseButton_Click(object sender, RoutedEventArgs e)
-		{
-			Model.TogglePaused();
-		}
-
-		private async void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
-		{
-			await Model.RefreshProcessList();
-		}
-
-		private void OptionsButton_Click(object sender, RoutedEventArgs e)
-		{
-			var window = new Options(Model.Options)
-			{
-				Owner = this,
-				WindowStartupLocation = WindowStartupLocation.CenterOwner
-			};
-
-			window.ShowDialog();
-		}
-
-		private async void ReloadAddonButton_Click(object sender, RoutedEventArgs e)
-		{
-			await Model.ReloadAddon();
-		}
-
 		private async void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (e.AddedItems.Count > 0)
@@ -127,9 +101,59 @@ namespace Altomatic.UI.Forms
 			}
 		}
 
-    private async void RefreshPlayersButton_Click(object sender, RoutedEventArgs e)
-    {
-			await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
-    }
-  }
+		private void PauseButton_Click(object sender, RoutedEventArgs e)
+		{
+			Model.TogglePaused();
+		}
+
+		private void OptionsButton_Click(object sender, RoutedEventArgs e)
+		{
+			var window = new Options(Model.Options)
+			{
+				Owner = this,
+				WindowStartupLocation = WindowStartupLocation.CenterOwner
+			};
+
+			window.ShowDialog();
+		}
+
+		private async void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (!Model.IsBusy)
+			{
+				Model.IsBusy = true;
+				Model.SetStatus("Refreshing processes...");
+				await Model.RefreshProcessList();
+				await Task.Delay(1000);
+				Model.SetStatus();
+				Model.IsBusy = false;
+			}
+		}
+
+		private async void ReloadAddonButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (!Model.IsBusy)
+			{
+				Model.IsBusy = true;
+				Model.SetStatus("Reloading addon...");
+				await Model.ReloadAddon();
+				await Task.Delay(1000);
+				Model.SetStatus();
+				Model.IsBusy = false;
+			}
+		}
+
+		private async void RefreshPlayersButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (!Model.IsBusy)
+			{
+				Model.IsBusy = true;
+				Model.SetStatus("Refreshing players...");
+				await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
+				await Task.Delay(1000);
+				Model.SetStatus();
+				Model.IsBusy = false;
+			}
+		}
+	}
 }

@@ -13,6 +13,16 @@
 				Width="1200"
 				Name="MainWindow1"
         Title="{Binding AppTitle}">
+	<Window.Style>
+		<Style TargetType="{x:Type Window}">
+			<Setter Property="Background" Value="#fff7f9"/>
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding IsPaused}" Value="False">
+					<Setter Property="Background" Value="#f5fff6"/>
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Style>
 	<Window.Resources>
 		<converters:StatusLabelConverter x:Key="statusLabelConverter"/>
 		<converters:StatusBackgroundConverter x:Key="statusBackgroundConverter"/>
@@ -27,15 +37,82 @@
 		</Storyboard>
 	</Window.Resources>
 	<DockPanel LastChildFill="False">
-		<StatusBar DockPanel.Dock="Bottom">
-			<StatusBarItem DockPanel.Dock="Right">
+		<StatusBar DockPanel.Dock="Bottom" BorderBrush="Gray" BorderThickness="0 1 0 0" Padding="0">
+			<StatusBar.ItemsPanel>
+				<ItemsPanelTemplate>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto"/>
+						</Grid.ColumnDefinitions>
+					</Grid>
+				</ItemsPanelTemplate>
+			</StatusBar.ItemsPanel>
+			<StatusBarItem Grid.Column="0">
+				<TextBlock Text="{Binding StatusMessage, FallbackValue='Ready'}"/>
+			</StatusBarItem>
+			<Separator Grid.Column="1"/>
+			<StatusBarItem Grid.Column="2" HorizontalAlignment="Center" Padding="12 0 12 0">
 				<StackPanel Orientation="Horizontal">
-					<TextBlock Margin="4 0 4 0">Moving:</TextBlock>
-					<TextBlock Margin="0 0 4 0" Text="{Binding IsPlayerMoving, FallbackValue=False	}"/>
+					<TextBlock Padding="0 0 4 0">Profile:</TextBlock>
+					<TextBlock>
+						<TextBlock.Style>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="Text" Value="{Binding Options.SettingsFilenameOnly, FallbackValue='None'}"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsPlayerMoving}" Value="">
+										<Setter Property="Text" Value="None"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
 				</StackPanel>
 			</StatusBarItem>
-			<StatusBarItem>
-				<TextBlock Text="{Binding StatusMessage}"/>
+			<Separator Grid.Column="3"/>
+			<StatusBarItem Grid.Column="4" HorizontalAlignment="Center" Padding="12 0 12 0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Padding="0 0 4 0">Addon:</TextBlock>
+					<TextBlock>
+						<TextBlock.Style>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="Text" Value="Unloaded"/>
+								<Setter Property="Foreground" Value="DarkRed"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="True">
+										<Setter Property="Text" Value="Loaded"/>
+										<Setter Property="Foreground" Value="DarkGreen"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+				</StackPanel>
+			</StatusBarItem>
+			<Separator Grid.Column="5"/>
+			<StatusBarItem Grid.Column="6" HorizontalAlignment="Center" Padding="12 0 12 0">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Padding="0 0 4 0">Moving:</TextBlock>
+					<TextBlock>
+						<TextBlock.Style>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="Text" Value="False"/>
+								<Setter Property="Foreground" Value="DarkGreen"/>
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding IsPlayerMoving}" Value="True">
+										<Setter Property="Text" Value="True"/>
+										<Setter Property="Foreground" Value="DarkRed"/>
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+				</StackPanel>
 			</StatusBarItem>
 		</StatusBar>
 		<Border Padding="12 16 8 8" DockPanel.Dock="Right" MinWidth="300">
@@ -47,15 +124,19 @@
 					MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DockPanel}, Path=ActualWidth}">
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="Player" Width="Auto" MinWidth="70" Binding="{Binding Player}"/>
-						<DataGridTextColumn Header="Buff ID" Width="Auto" MinWidth="60" Binding="{Binding Id}"/>
-						<DataGridTextColumn Header="Buff Name" Width="*" Binding="{Binding Name}"/>
+						<DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
+						<DataGridTextColumn Header="ID" Width="Auto" MinWidth="60" Binding="{Binding Id}"/>
 					</DataGrid.Columns>
 				</DataGrid>
 			</DockPanel>
 		</Border>
 		<Border Padding="10 15 10 5" DockPanel.Dock="Top">
 			<DockPanel>
-				<GroupBox Header="Select your game instances:" VerticalAlignment="Center" Padding="8 12 8 12">
+				<GroupBox 
+					Header="Select your game instances:" 
+					IsEnabled="{Binding IsNotBusy}"
+					VerticalAlignment="Center"
+					Padding="8 12 8 12">
 					<StackPanel VerticalAlignment="Center">
 						<DockPanel Margin="0 0 0 8">
 							<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Healer</Label>
@@ -86,7 +167,7 @@
 			</DockPanel>
 		</Border>
 		<Border Padding="10 0 10 10" DockPanel.Dock="Bottom">
-			<GroupBox Header="Party Members">
+			<GroupBox Header="Party Members" IsEnabled="{Binding IsNotBusy}">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="1*"/>
@@ -120,90 +201,34 @@
 				</Grid>
 			</GroupBox>
 		</Border>
-		<Border Padding="15 5 15 15" DockPanel.Dock="Top">
-			<StackPanel HorizontalAlignment="Center">
-				<Label 
-					FontSize="20"
-					FontWeight="DemiBold"
-					Margin="0 0 0 8"
-					HorizontalContentAlignment="Stretch" 
-					HorizontalAlignment="Center">
-					<TextBlock>
-						<TextBlock.Style>
-							<Style TargetType="{x:Type TextBlock}">
-								<Setter Property="Text" Value="Addon is NOT loaded."/>
-								<Setter Property="Foreground" Value="Red"/>
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="False">
-										<Setter Property="Text" Value="Addon is NOT loaded."/>
-										<Setter Property="Foreground" Value="Red"/>
-									</DataTrigger>
-									<DataTrigger Binding="{Binding IsAddonLoaded}" Value="True">
-										<Setter Property="Text" Value="Addon is loaded and ready."/>
-										<Setter Property="Foreground" Value="Green"/>
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</TextBlock.Style>
-					</TextBlock>
-				</Label>
+		<Border Padding="15 35 15 15" DockPanel.Dock="Top">
+			<StackPanel HorizontalAlignment="Center" IsEnabled="{Binding IsNotBusy}">
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 					<Button 
-					Name="PauseButton"
-					Cursor="Hand"
-					MaxWidth="300"
-					Margin="8 0 8 0"
-					IsEnabled="{Binding IsGameReady}"
-					Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
-					Background="{Binding IsPaused, Converter={StaticResource statusBackgroundConverter}}"
-					Click="PauseButton_Click">
-						<Button.Triggers>
-							<EventTrigger RoutedEvent="Button.Click">
-								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
-							</EventTrigger>
-						</Button.Triggers>
-					</Button>
+						Name="PauseButton"
+						Cursor="Hand"
+						MaxWidth="300"
+						Margin="8 0 8 0"
+						IsEnabled="{Binding IsGameReady}"
+						Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
+						Click="PauseButton_Click"/>
 					<Button 
-					Name="OptionsButton" 
-					Margin="8 0 8 0"
-					Click="OptionsButton_Click">
+						Name="OptionsButton" 
+						Margin="8 0 8 0"
+						Click="OptionsButton_Click">
 						<Button.Content>
 							<TextBlock>Options...</TextBlock>
 						</Button.Content>
 					</Button>
 					<Button Name="RefreshProcessesButton" Margin="8 0 8 0" Click="RefreshProcessesButton_Click">
-						<Button.Content>
-							<TextBlock>Refresh Processes</TextBlock>
-						</Button.Content>
-						<Button.Triggers>
-							<EventTrigger RoutedEvent="Button.Click">
-								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
-							</EventTrigger>
-						</Button.Triggers>
+						<TextBlock>Refresh Processes</TextBlock>
 					</Button>
-					<Button Name="RefreshPlayersButton" IsEnabled="{Binding IsPaused}" Margin="8 0 8 0" Click="RefreshPlayersButton_Click">
-						<Button.Content>
-							<TextBlock>Refresh Players</TextBlock>
-						</Button.Content>
-						<Button.Triggers>
-							<EventTrigger RoutedEvent="Button.Click">
-								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
-							</EventTrigger>
-						</Button.Triggers>
+					<Button Name="RefreshPlayersButton" Margin="8 0 8 0" Click="RefreshPlayersButton_Click">
+						<TextBlock>Refresh Players</TextBlock>
 					</Button>
 					<Button Name="ReloadAddonButton" Margin="8 0 8 0" Click="ReloadAddonButton_Click">
-						<Button.Content>
-							<TextBlock>Reload Addon</TextBlock>
-						</Button.Content>
+						<TextBlock>Reload Addon</TextBlock>
 					</Button>
-				</StackPanel>
-				<StackPanel Margin="0 8 0 0">
-					<Label HorizontalAlignment="Center">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Margin="0 0 4 0">Profile:</TextBlock>
-							<TextBlock Text="{Binding Options.SettingsFilenameOnly}"></TextBlock>
-						</StackPanel>
-					</Label>
 				</StackPanel>
 			</StackPanel>
 		</Border>
