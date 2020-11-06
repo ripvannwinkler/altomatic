@@ -172,7 +172,7 @@ namespace Altomatic.UI.Game.Strategies
 				: app.Healer.Entity.GetEntity((int)geoTargetPlayer.Member.TargetIndex);
 
 			var distance = PlayerUtilities.GetDistance(petEntity, geoEntity);
-			if (distance > 8 && await app.Actions.UseAbility("Full Circle"))
+			if (distance > 12 && await app.Actions.UseAbility("Full Circle"))
 			{
 				return true;
 			}
