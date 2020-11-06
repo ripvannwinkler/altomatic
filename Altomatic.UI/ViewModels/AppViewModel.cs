@@ -222,14 +222,15 @@ namespace Altomatic.UI.ViewModels
 			Strategies.Add(new ValidateProcessStrategy());
 			Strategies.Add(new RefreshPlayerInfoStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
+			Strategies.Add(new CuragaStrategy());
+			Strategies.Add(new CureStrategy());
+
 			Strategies.Add(new SleepCharmedPlayersStrategy());
-			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new RemoveDebuffStrategy());
+			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new AutoBuffsStrategy());
 			Strategies.Add(new CorsairRollStrategy());
 			Strategies.Add(new GeomancerStrategy());
-			Strategies.Add(new CuragaStrategy());
-			Strategies.Add(new CureStrategy());
 
 			Jobs = new Jobs(this);
 			Buffs = new Buffs(this);

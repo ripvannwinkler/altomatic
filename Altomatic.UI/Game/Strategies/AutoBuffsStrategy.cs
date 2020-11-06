@@ -9,12 +9,8 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (app.ActivePlayers.AreHealthy())
-			{
-				if (await BuffSelf(app)) return true;
-				if (await BuffOthers(app)) return true;
-			}
-
+			if (await BuffSelf(app)) return true;
+			if (await BuffOthers(app)) return true;
 			return false;
 		}
 

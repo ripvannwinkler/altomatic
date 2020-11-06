@@ -15,22 +15,41 @@ namespace Altomatic.UI.Game.Strategies
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (await RemoveSilenceFromHealer(app) ||
-					await RemoveDoomFromPlayers(app) ||
-					await RemoveSleepgaFromPlayers(app) ||
-					await RemoveParalyzeFromHealer(app) ||
-					await RemoveSilenceFromPlayers(app) ||
-					await RemovePetrifyFromPlayers(app))
+			if (app.Options.Config.EnableDivineCaress &&
+					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false &&
+					await app.Actions.UseAbility("Divine Caress"))
 			{
 				return true;
+			}
+
+			if (await RemoveSilenceFromHealer(app) ||
+					await RemoveDoomFromPlayers(app))
+			{
+				return true;
+			}
+
+			if (app.ActivePlayers.AreHealthy())
+			{
+				if (await RemoveDoomFromPlayers(app, true) ||
+						await RemoveSleepgaFromPlayers(app) ||
+						await RemoveParalyzeFromHealer(app) ||
+						await RemoveSilenceFromPlayers(app) ||
+						await RemovePetrifyFromPlayers(app))
+				{
+					return true;
+				}
 			}
 
 			return false;
 		}
 
-		private async Task<bool> RemoveDoomFromPlayers(AppViewModel app)
+		private async Task<bool> RemoveDoomFromPlayers(AppViewModel app, bool curseToo = false)
 		{
-			if (app.Healer.HasAnyBuff(Buffs.Doom, Buffs.Curse))
+			var buffsToCheck = curseToo
+				? new[] { Buffs.Doom, Buffs.Curse }
+				: new[] { Buffs.Doom };
+
+			if (app.Healer.HasAnyBuff(buffsToCheck))
 			{
 				if (app.Options.Config.PreferItemOverCursna)
 				{
@@ -49,7 +68,7 @@ namespace Altomatic.UI.Game.Strategies
 
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.HasAnyBuff(Buffs.Doom, Buffs.Curse))
+				if (player.HasAnyBuff(buffsToCheck))
 				{
 					if (await app.Actions.CastSpell("Cursna", player.Name))
 					{
@@ -104,7 +123,7 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			if (other.Any())
-      {
+			{
 				var target = other.First();
 				if (await app.Actions.CastSpell("Cure", target.Name))
 				{
@@ -139,7 +158,7 @@ namespace Altomatic.UI.Game.Strategies
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.HealersFirst))
 			{
 				if (app.Buffs.HasAny(player.Name, Buffs.Silence) &&
-						silenaJobs.Contains(app.Jobs.GetMainJob(player.Entity)) &&
+						silenaJobs.Contains(app.Jobs.GetMainJob(player.Member)) &&
 						await app.Actions.CastSpell("Silena", player.Name))
 				{
 					return true;

@@ -20,15 +20,7 @@ namespace Altomatic.UI.Game.Strategies
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (app.ActivePlayers.AreHealthy())
-			{
-				if (await DoGeomancyStuff(app))
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return await DoGeomancyStuff(app);
 		}
 
 		private async Task<bool> DoGeomancyStuff(AppViewModel app)

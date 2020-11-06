@@ -63,13 +63,6 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
-			if (app.Options.Config.EnableDivineCaress &&
-					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false &&
-					await app.Actions.UseAbility("Divine Caress"))
-			{
-				return true;
-			}
-
 			if (app.Options.Config.EnableDivineSeal &&
 					app.Healer.Player.MPP < 15 &&
 					app.Healer.HasAnyBuff(Buffs.DivineSeal) == false &&
@@ -124,8 +117,7 @@ namespace Altomatic.UI.Game.Strategies
 				if (player.Member.CurrentMPP < 50)
 				{
 					var index = (int)player.Member.TargetIndex;
-					var entity = app.Healer.Entity.GetEntity(index);
-					var job = app.Jobs.GetMainJob(entity);
+					var job = app.Jobs.GetMainJob(player.Member);
 
 					if (new[] { "PLD", "RUN", "WHM", "SCH" }.Contains(job))
 					{

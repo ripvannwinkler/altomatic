@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
+using EliteMMO.API;
 using static EliteMMO.API.EliteAPI;
 
 namespace Altomatic.UI.Game.Data
@@ -59,9 +60,8 @@ namespace Altomatic.UI.Game.Data
 
 		public int MapPriority(PartyMember member, JobSort sortStrategy = JobSort.TanksFirst)
 		{
-			var entity = App.Monitored.Entity.GetEntity((int)member.TargetIndex);
-			var main = App.Jobs.GetMainJob(entity);
-			var sub = App.Jobs.GetMainJob(entity);
+			var main = App.Jobs.GetMainJob(member);
+			var sub = App.Jobs.GetMainJob(member);
 
 			if (sortStrategy == JobSort.TanksFirst)
 			{
@@ -104,9 +104,19 @@ namespace Altomatic.UI.Game.Data
 			return false;
 		}
 
-		public string GetMainJob(XiEntity entity)
+		public string GetMainJob(EliteAPI instance)
+    {
+			return GetMainJob(instance.Player.MainJob);
+    }
+
+		public string GetMainJob(PartyMember member)
+    {
+			return GetMainJob(member.MainJob);
+    }
+
+		public string GetMainJob(ushort jobNumber)
 		{
-			if (TryGetValue(entity.Main, out var name))
+			if (TryGetValue(jobNumber, out var name))
 			{
 				return name;
 			}
@@ -114,9 +124,19 @@ namespace Altomatic.UI.Game.Data
 			return null;
 		}
 
-		public string GetSubJob(XiEntity entity)
+		public string GetSubob(EliteAPI instance)
 		{
-			if (TryGetValue(entity.Sub, out var name))
+			return GetSubJob(instance.Player.MainJob);
+		}
+
+		public string GetSubJob(PartyMember member)
+		{
+			return GetSubJob(member.MainJob);
+		}
+
+		public string GetSubJob(ushort jobNumber)
+		{
+			if (TryGetValue(jobNumber, out var name))
 			{
 				return name;
 			}

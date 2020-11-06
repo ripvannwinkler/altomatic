@@ -13,12 +13,7 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (app.ActivePlayers.AreHealthy())
-			{
-				return await RemoveDebuffs(app);
-			}
-
-			return false;
+			return await RemoveDebuffs(app);
 		}
 
 		private async Task<bool> RemoveDebuffs(AppViewModel app)
@@ -32,7 +27,7 @@ namespace Altomatic.UI.Game.Strategies
 					await RemoveParalysisFromPlayers(app) ||
 					await RemoveGravityBindFromPlayers(app) ||
 					await RemoveBlindPoisonFromPlayers(app) ||
-					await RemoveHelixBioDiaFromPlayers(app) || 
+					await RemoveHelixBioDiaFromPlayers(app) ||
 					await RemoveAmnesiaFromPlayers(app))
 			{
 				return true;
@@ -41,7 +36,7 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemoveMaxHpMpDownFromPlayers(AppViewModel app)
+		private async Task<bool> RemoveMaxHpMpDownFromPlayers(AppViewModel app)
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
