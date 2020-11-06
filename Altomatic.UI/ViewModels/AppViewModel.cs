@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -54,6 +55,7 @@ namespace Altomatic.UI.ViewModels
 			{
 				healer = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(AppTitle));
 				OnPropertyChanged(nameof(IsGameReady));
 			}
 		}
@@ -134,6 +136,21 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => activeBuffs;
 			set { /* ignore */ }
+		}
+
+		public string AppTitle
+		{
+			get
+			{
+				var assembly = Assembly.GetExecutingAssembly();
+				var version = FileVersionInfo.GetVersionInfo(assembly.Location);
+				var buildDate = new FileInfo(assembly.Location).LastWriteTime;
+				var healer = Healer?.Player?.Name;
+
+				return string.IsNullOrWhiteSpace(healer)
+					? $"Altomatic {version.ProductVersion} - {buildDate}"
+					: $"[{healer}] - Altomatic {version.ProductVersion} - {buildDate}";
+			}
 		}
 
 		/// <summary>
