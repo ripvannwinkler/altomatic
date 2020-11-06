@@ -290,8 +290,8 @@ namespace Altomatic.UI.ViewModels
 
 			Strategies.Add(new SleepCharmedPlayersStrategy());
 			Strategies.Add(new RemoveDebuffStrategy());
-			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new RaiseTheDeadStrategy());
+			Strategies.Add(new JobAbilitiesStrategy());
 			Strategies.Add(new AutoBuffsStrategy());
 			Strategies.Add(new CorsairRollStrategy());
 			Strategies.Add(new GeomancerStrategy());

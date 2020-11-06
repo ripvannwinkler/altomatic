@@ -11,21 +11,22 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RaiseTheDeadStrategy : IGameStrategy
 	{
-		private readonly List<string> raisedPlayers = new List<string>();
+		private readonly Dictionary<string, DateTime> raisedPlayers = new Dictionary<string, DateTime>();
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
+			ClearAgedRaises();
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.TanksFirst))
 			{
 				if (player.CurrentHp > 0)
 				{
 					raisedPlayers.Remove(player.Name);
 				}
-				else if (!raisedPlayers.Contains(player.Name))
+				else if (!raisedPlayers.ContainsKey(player.Name))
 				{
 					if (await RaisePlayer(player, app))
 					{
-						raisedPlayers.Add(player.Name);
+						raisedPlayers.Add(player.Name, DateTime.Now);
 						return true;
 					}
 				}
@@ -34,6 +35,28 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
+		/// <summary>
+    /// Clear raise timers older than 30 seconds.
+    /// </summary>
+    /// <remarks>
+    /// If raise was last attempted on a player more than 30 seconds ago,
+    /// clear the raise flag so that it can be attempted again.
+    /// </remarks>
+		private void ClearAgedRaises()
+		{
+			var now = DateTime.Now;
+			foreach (var entry in raisedPlayers.ToArray())
+			{
+				if (now.Subtract(entry.Value).TotalSeconds > 30)
+				{
+					raisedPlayers.Remove(entry.Key);
+				}
+			}
+		}
+
+		/// <summary>
+    /// Casts the highest available raise spell on the player.
+    /// </summary>
 		private async Task<bool> RaisePlayer(PlayerViewModel player, AppViewModel app)
 		{
 			if (await app.Actions.CastSpell("Arise", player.Name) ||
