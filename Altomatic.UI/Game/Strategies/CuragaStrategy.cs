@@ -15,7 +15,7 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!app.Spells.CanCast("Curaga")) return false;
+			if (!await app.Spells.CanCast("Curaga")) return false;
 			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var threshold = app.Options.Config.CuragaThreshold;
 			var required = app.Options.Config.CuragaRequiredTargets;

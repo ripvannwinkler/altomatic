@@ -20,13 +20,14 @@ namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
+		private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+		private readonly ObservableCollection<BuffStatus> activeBuffs = new ObservableCollection<BuffStatus>();
+
 		private EliteAPI healer;
 		private EliteAPI monitored;
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
-		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
-		private ObservableCollection<BuffStatus> activeBuffs = new ObservableCollection<BuffStatus>();
-		private SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+    private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
 		private Process healerProcess;
 		private string statusMessage;
 		private short lastKnownRoll;
@@ -36,7 +37,6 @@ namespace Altomatic.UI.ViewModels
 		private bool isPlayerMoving = false;
 		private bool autoResumePause = false;
 		private Point3D lastPosition;
-		private DateTime lastPosChange;
 
 		public Buffs Buffs { get; }
 		public Spells Spells { get; }
@@ -381,8 +381,6 @@ namespace Altomatic.UI.ViewModels
 			{
 				Options.Autoload(playerName, jobName);
 			}
-
-			await Healer.SendCommand(@"/echo \31\200testing", 100);
 		}
 
 		/// <summary>
@@ -487,7 +485,6 @@ namespace Altomatic.UI.ViewModels
 			if (position.X != lastPosition.X || position.Y != lastPosition.Y || position.Z != lastPosition.Z)
 			{
 				lastPosition = position;
-				lastPosChange = DateTime.Now;
 				IsPlayerMoving = true;
 			}
 			else

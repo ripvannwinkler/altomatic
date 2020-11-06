@@ -14,9 +14,11 @@ namespace Altomatic.UI.Game.Strategies
 	public class RefreshPlayerInfoStrategy : IGameStrategy
 	{
 		/// <inheritdoc/>
-		public async  Task<bool> ExecuteAsync(AppViewModel app)
+		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
 			if (app.Monitored == null) return false;
+
+			await Task.Yield();
 			foreach (var member in app.Monitored.Party.GetPartyMembers())
       {
 				UpdatePlayerInfo(app, member);

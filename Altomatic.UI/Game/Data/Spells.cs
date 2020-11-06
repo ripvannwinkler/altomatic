@@ -17,17 +17,30 @@ namespace Altomatic.UI.Game.Data
 			App = app ?? throw new ArgumentNullException(nameof(app));
 		}
 
-		public bool CanCast(string spellName)
+		public async Task<bool> CanCast(string spellName)
 		{
 			if (IsCasterDisabled()) return false;
 			if (string.IsNullOrWhiteSpace(spellName)) return false;
-			var spell = App.Healer.Resources.GetSpell(spellName, 0);
-			if (spell == null) return false;
+			var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
+			if (spellInfo == null) return false;
 
-			return
-				HasRequiredJob(spellName) && HasAccessTo(spellName) &&
-				App.Healer.Recast.GetSpellRecast(spell.Index) == 0 &&
-				spell.MPCost <= App.Healer.Player.MP;
+			if (HasRequiredJob(spellName) && HasAccessTo(spellName) &&
+					App.Healer.Recast.GetSpellRecast(spellInfo.Index) == 0)
+			{
+				if (spellInfo.MPCost <= App.Healer.Player.MP)
+				{
+					return true;
+				}
+				else
+				{
+					var spell = spellName ?? "???";
+					var player = App.Healer?.Player?.Name??"???";
+					await App.Monitored.SendCommand($"/echo \x1e\x5Tried to cast {spell} but {player}'s MP is too low.\x1f\x5", 200);
+					return false;
+				}
+			}
+
+			return false;
 		}
 
 		public bool HasAccessTo(string spellName)
@@ -78,7 +91,7 @@ namespace Altomatic.UI.Game.Data
 					{
 						if (ucSpellName == "REFRESH III" || ucSpellName == "TEMPER II") return true;
 					}
-					
+
 					if (jp.SpentJobPoints >= 550)
 					{
 						if (ucSpellName == "DISTRACT III" || ucSpellName == "FRAZZLE III") return true;
@@ -99,7 +112,7 @@ namespace Altomatic.UI.Game.Data
 					{
 						if (ucSpellName == "FULL CURE") return true;
 					}
-					
+
 					if (jp.SpentJobPoints >= 100)
 					{
 						if (ucSpellName == "RERAISE IV") return true;
