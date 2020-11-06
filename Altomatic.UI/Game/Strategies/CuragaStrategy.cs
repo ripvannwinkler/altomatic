@@ -23,19 +23,14 @@ namespace Altomatic.UI.Game.Strategies
 			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
 
-			for (var i = 0; i < 6; i++)
+			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				var member = members[i];
-				var memberIndex = (int)member.TargetIndex;
-				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
-				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
-
-				if (distance < 21 &&
-						member.Active > 0 &&
-						member.CurrentHP > 0 &&
-						member.CurrentHPP < threshold)
+				if (player.IsInHealerParty && player.DistanceFromHealer < 21)
 				{
-					candidates.Add(member);
+					if (player.CurrentHp > 0 && player.CurrentHpp <= threshold)
+					{
+						candidates.Add(player.Member);
+					}
 				}
 			}
 
@@ -45,7 +40,7 @@ namespace Altomatic.UI.Game.Strategies
 			if (candidates.Count() >= required)
 			{
 				foreach (var target in candidates)
-        {
+				{
 					var loss = target.CurrentHP * 100 / target.CurrentHPP - target.CurrentHP;
 
 					if (loss >= potencies.Curaga4)

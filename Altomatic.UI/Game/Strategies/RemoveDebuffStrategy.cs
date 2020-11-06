@@ -40,7 +40,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.MaxHPDown) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -55,7 +55,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.DefenseDown) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -70,7 +70,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.MagicDefDown) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -85,7 +85,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.Slow, Buffs.Elegy) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -128,7 +128,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.Weight, Buffs.Bind) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -163,7 +163,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Buffs.HasAny(player.Name, Buffs.Helix, Buffs.Bio, Buffs.Dia) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
@@ -178,7 +178,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.MemberNumber < 6 &&
+				if (player.IsInHealerParty &&
 						app.Healer.HasAnyBuff(Buffs.AfflatusMisery) &&
 						app.Buffs.HasAny(player.Name, Buffs.Amnesia) &&
 						await app.Actions.CastSpell("Esuna", player.Name))

@@ -109,19 +109,19 @@ namespace Altomatic.UI.Game.Strategies
 
 		private string GetDevotionTargetAsync(AppViewModel app)
 		{
-			var party = app.Healer.Party.GetPartyMembers().Where(x => x.MemberNumber < 6);
-			var players = app.ActivePlayers.Where(x => party.Any(y => y.Name == x.Name));
-
-			foreach (var player in players.SortByJob())
+			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (player.Member.CurrentMPP < 50)
+				if (player.IsInHealerParty)
 				{
-					var index = (int)player.Member.TargetIndex;
-					var job = app.Jobs.GetMainJob(player.Member);
-
-					if (new[] { "PLD", "RUN", "WHM", "SCH" }.Contains(job))
+					if (player.Member.CurrentMPP < 50)
 					{
-						return player.Name;
+						var index = (int)player.Member.TargetIndex;
+						var job = app.Jobs.GetMainJob(player.Member);
+
+						if (new[] { "PLD", "RUN", "WHM", "SCH" }.Contains(job))
+						{
+							return player.Name;
+						}
 					}
 				}
 			}

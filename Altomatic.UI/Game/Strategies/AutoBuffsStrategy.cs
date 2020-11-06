@@ -129,8 +129,7 @@ namespace Altomatic.UI.Game.Strategies
 							player.GetBuffAgeSeconds(Buffs.Shell) > app.Options.Config.AutoShellSeconds &&
 							await app.Actions.CastSpell(shellSpell, player.Name)) return true;
 
-					if (player.AutoBuffs.Refresh &&
-							player.Member.MemberNumber < 6 &&
+					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
 							player.GetBuffAgeSeconds(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
 							await app.Actions.CastSpell(refreshSpell, player.Name)) return true;
 
@@ -142,13 +141,11 @@ namespace Altomatic.UI.Game.Strategies
 							player.GetBuffAgeSeconds(Buffs.Regen) > app.Options.Config.AutoRegenSeconds &&
 							await app.Actions.CastSpell(regenSpell, player.Name)) return true;
 
-					if (player.AutoBuffs.Phalanx &&
-							player.Member.MemberNumber < 6 &&
+					if (player.AutoBuffs.Phalanx && player.IsInHealerParty &&
 							player.GetBuffAgeSeconds(Buffs.Phalanx) > app.Options.Config.AutoPhalanxSeconds &&
 							await app.Actions.CastSpell("Phalanx II", player.Name)) return true;
 
-					if (player.AutoBuffs.Firestorm &&
-							player.Member.MemberNumber < 6 &&
+					if (player.AutoBuffs.Firestorm && player.IsInHealerParty &&
 							player.GetBuffAgeSeconds(Buffs.Firestorm, Buffs.Firestorm2) > app.Options.Config.AutoStormSeconds &&
 							await app.Actions.CastSpell(app.Spells.FirstAvailable("Firestorm II", "Firestorm"), player.Name)) return true;
 				}
