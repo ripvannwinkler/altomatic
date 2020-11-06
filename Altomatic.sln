@@ -13,11 +13,14 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
+		Public|x86 = Public|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Debug|x86.ActiveCfg = Debug|x86
 		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Debug|x86.Build.0 = Debug|x86
+		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Public|x86.ActiveCfg = Public|x86
+		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Public|x86.Build.0 = Public|x86
 		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Release|x86.ActiveCfg = Release|x86
 		{E58B5DD1-8270-4A0D-A9BB-F5958FD8AF4C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
