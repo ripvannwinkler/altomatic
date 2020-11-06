@@ -65,6 +65,7 @@ namespace Altomatic.UI.ViewModels
 			get
 			{
 				return
+					IsEnabled &&
 					AppData.IsGameReady && Member != null && member.Active > 0 &&
 					DistanceFromHealer < Constants.DefaultCastRange && AppData.IsGameReady;
 			}
