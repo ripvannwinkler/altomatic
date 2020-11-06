@@ -21,9 +21,9 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					raisedPlayers.Remove(player.Name);
 				}
-				else if (await RaisePlayer(player, app))
+				else if (!raisedPlayers.Contains(player.Name))
 				{
-					if (!raisedPlayers.Contains(player.Name))
+					if (await RaisePlayer(player, app))
 					{
 						raisedPlayers.Add(player.Name);
 						return true;
