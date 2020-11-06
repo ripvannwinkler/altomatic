@@ -181,6 +181,16 @@
 							</EventTrigger>
 						</Button.Triggers>
 					</Button>
+					<Button Name="RefreshPlayersButton" IsEnabled="{Binding IsPaused}" Margin="8 0 8 0" Click="RefreshPlayersButton_Click">
+						<Button.Content>
+							<TextBlock>Refresh Players</TextBlock>
+						</Button.Content>
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard Storyboard="{StaticResource mainWindowAction}"/>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
 					<Button Name="ReloadAddonButton" Margin="8 0 8 0" Click="ReloadAddonButton_Click">
 						<Button.Content>
 							<TextBlock>Reload Addon</TextBlock>

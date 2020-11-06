@@ -168,7 +168,13 @@ namespace Altomatic.UI.ViewModels
 			{
 				isPaused = value;
 				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsRunning));
 			}
+		}
+
+		public bool IsRunning
+		{
+			get => IsPaused;
 		}
 
 		/// <summary>
@@ -317,6 +323,10 @@ namespace Altomatic.UI.ViewModels
 		public void SetMonitored(Process process)
 		{
 			Monitored = new EliteAPI(process.Id);
+			Task.Run(async () =>
+			{
+				await new RefreshPlayerInfoStrategy().ExecuteAsync(this);
+			});
 		}
 
 		/// <summary>
@@ -512,8 +522,8 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		private void PauseIfDead()
 		{
-			if (Healer.GetEntityStatus() == EntityStatus.Dead ||
-					Healer.GetEntityStatus() == EntityStatus.DeadEngaged)
+			if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
+					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
 			{
 				autoResumePause = true;
 				IsPaused = true;

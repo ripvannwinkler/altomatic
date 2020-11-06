@@ -124,5 +124,10 @@ namespace Altomatic.UI.Forms
 				Model.SetMonitored(e.AddedItems[0] as Process);
 			}
 		}
-	}
+
+    private async void RefreshPlayersButton_Click(object sender, RoutedEventArgs e)
+    {
+			await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
+    }
+  }
 }
