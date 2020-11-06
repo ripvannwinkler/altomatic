@@ -23,7 +23,7 @@ namespace Altomatic.UI.Game.Strategies
 						if (DateTime.Now.Subtract(lastWarning).TotalSeconds > 10)
 						{
 							lastWarning = DateTime.Now;
-							await app.Healer.SendCommand($"/echo {player.Name} is out of range and cannot be cured.", 200);
+							await app.Monitored.SendCommand($"/echo {player.Name} is out of range and cannot be cured.", 200);
 						}
 					}
 				}
