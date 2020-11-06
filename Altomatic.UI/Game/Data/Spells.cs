@@ -78,7 +78,8 @@ namespace Altomatic.UI.Game.Data
 					{
 						if (ucSpellName == "REFRESH III" || ucSpellName == "TEMPER II") return true;
 					}
-					else if (jp.SpentJobPoints >= 550)
+					
+					if (jp.SpentJobPoints >= 550)
 					{
 						if (ucSpellName == "DISTRACT III" || ucSpellName == "FRAZZLE III") return true;
 					}
@@ -98,7 +99,8 @@ namespace Altomatic.UI.Game.Data
 					{
 						if (ucSpellName == "FULL CURE") return true;
 					}
-					else if (jp.SpentJobPoints >= 100)
+					
+					if (jp.SpentJobPoints >= 100)
 					{
 						if (ucSpellName == "RERAISE IV") return true;
 					}
