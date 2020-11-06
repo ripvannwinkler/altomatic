@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +43,6 @@ namespace Altomatic.UI.ViewModels
 		public AddonInterface Addon { get; } = new AddonInterface();
 		public List<IGameStrategy> Strategies { get; } = new List<IGameStrategy>();
 		public event PropertyChangedEventHandler PropertyChanged;
-
 
 		/// <summary>
 		/// The healing player instance
@@ -172,6 +172,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Is the bot running
+    /// </summary>
 		public bool IsRunning
 		{
 			get => IsPaused;

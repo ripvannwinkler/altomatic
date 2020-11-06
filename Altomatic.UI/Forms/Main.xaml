@@ -12,7 +12,7 @@
 				Height="600"
 				Width="1200"
 				Name="MainWindow1"
-        Title="Altomatic 1.0">
+        Title="{Binding AppTitle, ElementName=MainWindow1, Mode=OneWay}">
 	<Window.Resources>
 		<converters:StatusLabelConverter x:Key="statusLabelConverter"/>
 		<converters:StatusBackgroundConverter x:Key="statusBackgroundConverter"/>

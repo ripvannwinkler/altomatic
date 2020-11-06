@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,11 @@ namespace Altomatic.UI.Forms
 		{
 			get { return (AppViewModel)GetValue(appDataProperty); }
 			set { SetValue(appDataProperty, value); }
+		}
+
+		public string AppTitle
+		{
+			get => $"Altomatic {Assembly.GetEntryAssembly().GetName().Version}";
 		}
 
 		public MainWindow()
