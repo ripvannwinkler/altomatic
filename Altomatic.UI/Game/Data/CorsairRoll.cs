@@ -22,5 +22,20 @@ namespace Altomatic.UI.Game.Data
 			Lucky = lucky;
 			Unlucky = unlucky;
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is CorsairRoll other)
+			{
+				return Name == other.Name && BuffId == BuffId;
+			}
+
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return (Name, BuffId).GetHashCode();
+		}
 	}
 }

@@ -87,6 +87,7 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> DoRoll(AppViewModel app, CorsairRoll roll)
 		{
+			if (!RequiredMembersInRange(app)) return false;
 			if (!string.IsNullOrWhiteSpace(roll?.Name) &&
 					!app.Healer.HasAnyBuff(roll.BuffId) &&
 					await app.Actions.UseAbility(roll?.Name))
@@ -98,6 +99,23 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			return false;
+		}
+
+		private bool RequiredMembersInRange(AppViewModel app)
+		{
+			var outOfRange = 0;
+			foreach (var player in app.Players)
+			{
+				if (player.IsRequiredForRolls)
+				{
+					if (player.DistanceFromHealer > 8)
+					{
+						outOfRange++;
+					}
+				}
+			}
+
+			return outOfRange == 0;
 		}
 	}
 }
