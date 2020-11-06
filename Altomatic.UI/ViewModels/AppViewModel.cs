@@ -173,8 +173,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Is the bot running
-    /// </summary>
+		/// Is the bot running
+		/// </summary>
 		public bool IsRunning
 		{
 			get => IsPaused;
@@ -222,6 +222,7 @@ namespace Altomatic.UI.ViewModels
 			Strategies.Add(new ValidateProcessStrategy());
 			Strategies.Add(new RefreshPlayerInfoStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
+			Strategies.Add(new CureWarningStrategy());
 			Strategies.Add(new CuragaStrategy());
 			Strategies.Add(new CureStrategy());
 
@@ -319,6 +320,8 @@ namespace Altomatic.UI.ViewModels
 			{
 				Options.Autoload(playerName, jobName);
 			}
+
+			await Healer.SendCommand(@"/echo \31\200testing", 100);
 		}
 
 		/// <summary>
