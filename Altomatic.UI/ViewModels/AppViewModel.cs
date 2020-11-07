@@ -343,15 +343,15 @@ namespace Altomatic.UI.ViewModels
 			});
 
 			new Thread(() =>
-			{
-				while (true)
-				{
-					PauseIfDead();
-					PauseIfZoning();
-					DetectMovement();
-					Thread.Sleep(100);
-				}
-			})
+      {
+        while (true)
+        {
+          PauseIfDead();
+          PauseIfZoning();
+          DetectMovement();
+          Thread.Sleep(500);
+        }
+      })
 			{
 				IsBackground = true
 			}.Start();
@@ -584,28 +584,28 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-		/// <summary>
-		/// Pauses the bot if the player is dead
-		/// </summary>
-		private void PauseIfDead()
-		{
-			if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
-					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
-			{
-				SetStatus("Paused due to death...");
-				ActiveBuffs.Clear();
-				autoResumePause = true;
-				IsPaused = true;
-			}
-			else
-			{
-				if (autoResumePause)
-				{
-					SetStatus();
-					autoResumePause = false;
-					IsPaused = false;
-				}
-			}
-		}
-	}
+    /// <summary>
+    /// Pauses the bot if the player is dead
+    /// </summary>
+    private void PauseIfDead()
+    {
+      if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
+          Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
+      {
+        SetStatus("Paused due to death...");
+        ActiveBuffs.Clear();
+        autoResumePause = true;
+        IsPaused = true;
+      }
+      else
+      {
+        if (autoResumePause)
+        {
+          SetStatus();
+          autoResumePause = false;
+          IsPaused = false;
+        }
+      }
+    }
+  }
 }
