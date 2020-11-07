@@ -144,7 +144,8 @@
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="Player" Width="Auto" MinWidth="70" Binding="{Binding Player}"/>
 						<DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
-						<DataGridTextColumn Header="ID" Width="Auto" MinWidth="60" Binding="{Binding Id}"/>
+						<DataGridTextColumn Header="ID" Width="Auto" MinWidth="45" Binding="{Binding Id}"/>
+						<DataGridTextColumn Header="Age" Width="Auto" MinWidth="50" Binding="{Binding AgeInSeconds}"/>
 					</DataGrid.Columns>
 				</DataGrid>
 			</DockPanel>
