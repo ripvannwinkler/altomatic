@@ -139,6 +139,7 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public void Autoload(string playerName, string jobName)
 		{
+			SettingsFile = null;
 			if (!string.IsNullOrWhiteSpace(playerName))
 			{
 				var filesToTry = new[]

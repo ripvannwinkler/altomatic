@@ -36,6 +36,7 @@ namespace Altomatic.UI.ViewModels
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
 		private bool autoResumePause = false;
+		private ulong loopCount = 0;
 		private Point3D lastPosition;
 
 		public Buffs Buffs { get; }
@@ -139,6 +140,18 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => activeBuffs;
 			set { /* ignore */ }
+		}
+
+		/// <summary>
+    /// How many times as the action loop executed?
+    /// </summary>
+    /// <remarks>
+    /// This is useful for determining if the bot is hung up or just idle.
+    /// </remarks>
+		public ulong LoopCount
+		{
+			get => loopCount;
+			set { loopCount = value; OnPropertyChanged(); }
 		}
 
 		/// <summary>
@@ -508,12 +521,13 @@ namespace Altomatic.UI.ViewModels
 		public async Task ExecuteActionsAsync()
 		{
 			if (isPaused) return;
-			if (await semaphore.WaitAsync(100))
+			if (await semaphore.WaitAsync(250))
 			{
 				try
 				{
 					if (IsGameReady && CanExecuteActions())
 					{
+						LoopCount++;
 						foreach (var strategy in Strategies)
 						{
 							if (await strategy.ExecuteAsync(this)) return;
