@@ -15,10 +15,10 @@
         Title="{Binding AppTitle}">
 	<Window.Style>
 		<Style TargetType="{x:Type Window}">
-			<Setter Property="Background" Value="#fff7f9"/>
+			<Setter Property="Background" Value="#d1ffd3"/>
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding IsPaused}" Value="False">
-					<Setter Property="Background" Value="#f5fff6"/>
+					<Setter Property="Background" Value="#ffd4d4"/>
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
