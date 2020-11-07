@@ -104,14 +104,10 @@ function HandleIncomingPacket(id, size, data)
   return false
 end
 
--- ashita.register_event('incoming_text', function(mode, chat)
---   for k, v in pairs(onevent.events) do
---       if (chat:contains(v[1])) then
---           AshitaCore:GetChatManager():QueueCommand(v[2], 1);
---       end
---   end
---   return false;
--- end);
+ashita.register_event('incoming_text', function(mode, chat)
+  SendToAltomatic("heartbeat");
+  return false;
+end);
 
 function HandleAddonCommand(command, ntype)
   local args = command:args();

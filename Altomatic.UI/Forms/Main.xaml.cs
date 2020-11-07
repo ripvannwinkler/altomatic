@@ -63,7 +63,7 @@ namespace Altomatic.UI.Forms
 				{
 					try
 					{
-						await Task.Delay(200);
+						await Task.Delay(500);
 						if (Application.Current?.Dispatcher != null)
 						{
 							await Application.Current.Dispatcher.InvokeAsync(async () =>
@@ -92,12 +92,12 @@ namespace Altomatic.UI.Forms
 			}
 		}
 
-		private void MonitoredInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private async void MonitoredInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			if (e.AddedItems.Count > 0)
 			{
 				ProcessUtilities.EnsureDlls();
-				Model.SetMonitored(e.AddedItems[0] as Process);
+				await Model.SetMonitored(e.AddedItems[0] as Process);
 			}
 		}
 

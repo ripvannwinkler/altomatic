@@ -20,7 +20,7 @@ namespace Altomatic.UI.ViewModels
 {
 	public class AppViewModel : INotifyPropertyChanged
 	{
-		private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+		private readonly AsyncLock guard = new AsyncLock();
 		private readonly ObservableCollection<BuffStatus> activeBuffs = new ObservableCollection<BuffStatus>();
 
 		private EliteAPI healer;
@@ -143,11 +143,11 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// How many times as the action loop executed?
-    /// </summary>
-    /// <remarks>
-    /// This is useful for determining if the bot is hung up or just idle.
-    /// </remarks>
+		/// How many times as the action loop executed?
+		/// </summary>
+		/// <remarks>
+		/// This is useful for determining if the bot is hung up or just idle.
+		/// </remarks>
 		public ulong LoopCount
 		{
 			get => loopCount;
@@ -362,21 +362,18 @@ namespace Altomatic.UI.ViewModels
 			Task.Run(async () =>
 			{
 				await RefreshProcessList();
-			});
 
-			new Thread(() =>
-			{
 				while (true)
 				{
-					PauseIfDead();
-					PauseIfZoning();
-					DetectMovement();
-					Thread.Sleep(500);
+					await guard.Do(async () =>
+					{
+						PauseIfDead();
+						PauseIfZoning();
+						DetectMovement();
+						await Task.Delay(500);
+					});
 				}
-			})
-			{
-				IsBackground = true
-			}.Start();
+			});
 		}
 
 		/// <summary>
@@ -384,9 +381,12 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task RefreshProcessList()
 		{
-			await UnloadAddon();
-			Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
-			ResetPlayerData();
+			await guard.Do(async () =>
+			{
+				await UnloadAddon();
+				Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
+				ResetPlayerData();
+			});
 		}
 
 		/// <summary>
@@ -394,26 +394,29 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task SetHealer(Process process)
 		{
-			healerProcess = process;
-			Healer = new EliteAPI(process.Id);
-			await ReloadAddon();
-
-			var playerName = Healer?.Player?.Name ?? "";
-			var jobNumber = (ushort)(Healer?.Player?.MainJob ?? -1);
-			if (Jobs.TryGetValue(jobNumber, out var jobName))
+			await guard.Do(async () =>
 			{
-				Options.Autoload(playerName, jobName);
-			}
+				healerProcess = process;
+				Healer = new EliteAPI(process.Id);
+				await ReloadAddon();
+
+				var playerName = Healer?.Player?.Name ?? "";
+				var jobNumber = (ushort)(Healer?.Player?.MainJob ?? -1);
+				if (Jobs.TryGetValue(jobNumber, out var jobName))
+				{
+					Options.Autoload(playerName, jobName);
+				}
+			});
 		}
 
 		/// <summary>
 		/// Set the monitored instance
 		/// </summary>
-		public void SetMonitored(Process process)
+		public async Task SetMonitored(Process process)
 		{
-			Monitored = new EliteAPI(process.Id);
-			Task.Run(async () =>
+			await guard.Do(async () =>
 			{
+				Monitored = new EliteAPI(process.Id);
 				await new RefreshPlayerInfoStrategy().ExecuteAsync(this);
 			});
 		}
@@ -521,24 +524,16 @@ namespace Altomatic.UI.ViewModels
 		public async Task ExecuteActionsAsync()
 		{
 			if (isPaused) return;
-			if (await semaphore.WaitAsync(250))
+			if (IsGameReady && CanExecuteActions())
 			{
-				try
+				await guard.Do(async () =>
 				{
-					if (IsGameReady && CanExecuteActions())
+					LoopCount++;
+					foreach (var strategy in Strategies)
 					{
-						LoopCount++;
-						foreach (var strategy in Strategies)
-						{
-							if (await strategy.ExecuteAsync(this)) return;
-						}
+						if (await strategy.ExecuteAsync(this)) return;
 					}
-				}
-				finally
-				{
-					semaphore.Release();
-					SetStatus();
-				}
+				});
 			}
 		}
 

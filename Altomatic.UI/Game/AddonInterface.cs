@@ -37,9 +37,12 @@ namespace Altomatic.UI.Game
 
 		private void StartListening()
 		{
-			var listener = new Thread(ListenForData);
-			listener.IsBackground = true;
-			listener.Start();
+      var listener = new Thread(ListenForData)
+      {
+        IsBackground = true
+      };
+
+      listener.Start();
 		}
 
 		private void ListenForData()
@@ -97,8 +100,7 @@ namespace Altomatic.UI.Game
       }
 			else
 			{
-				Debug.WriteLine("Unexpected data from addon:");
-				Debug.WriteLine(data);
+				Events.OnNext(new AddonEvent(AddonEventType.Unknown, data));
 			}
 		}
 	}
@@ -106,6 +108,7 @@ namespace Altomatic.UI.Game
 	public enum AddonEventType
 	{
 		None,
+		Unknown,
 		Loaded,
 		CastingStarted,
 		CastingCompleted,
