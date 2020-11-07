@@ -114,7 +114,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
-				if (app.Buffs.HasAny(player.Name, Buffs.Paralysis) &&
+				if (app.Buffs.HasAny(player.Name, Buffs.Paralysis, Buffs.Paralysis2) &&
 						await app.Actions.CastSpell("Paralyna", player.Name))
 				{
 					return true;

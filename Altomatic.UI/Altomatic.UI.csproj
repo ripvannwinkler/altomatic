@@ -169,6 +169,7 @@
     <Compile Include="Game\Strategies\GeomancerStrategy.cs" />
     <Compile Include="Game\Strategies\JobAbilitiesStrategy.cs" />
     <Compile Include="Game\Strategies\RaiseTheDeadStrategy.cs" />
+    <Compile Include="Game\Strategies\ReloadAddonStrategy.cs" />
     <Compile Include="Game\Strategies\RemoveCriticalDebuffStrategy.cs" />
     <Compile Include="Game\Strategies\RemoveDebuffStrategy.cs" />
     <Compile Include="Game\Strategies\IGameStrategy.cs" />

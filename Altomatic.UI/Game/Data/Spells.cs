@@ -10,6 +10,8 @@ namespace Altomatic.UI.Game.Data
 {
 	public class Spells
 	{
+		private DateTime lastWarning;
+
 		public AppViewModel App { get; }
 
 		public Spells(AppViewModel app)
@@ -33,9 +35,14 @@ namespace Altomatic.UI.Game.Data
 				}
 				else
 				{
-					var spell = spellName ?? "???";
-					var player = App.Healer?.Player?.Name??"???";
-					await App.Monitored.SendCommand($"/echo \x1e\x5Tried to cast {spell} but {player}'s MP is too low.\x1f\x5", 200);
+					if (DateTime.Now.Subtract(lastWarning).TotalSeconds > 30)
+					{
+						var spell = spellName ?? "???";
+						var player = App.Healer?.Player?.Name ?? "???";
+						await App.Monitored.SendCommand($"/echo \x1e\x5Tried to cast {spell} but {player}'s MP is too low.\x1f\x5", 200);
+						lastWarning = DateTime.Now;
+					}
+
 					return false;
 				}
 			}
