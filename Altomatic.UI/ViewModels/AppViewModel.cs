@@ -27,7 +27,7 @@ namespace Altomatic.UI.ViewModels
 		private EliteAPI monitored;
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
-    private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
+		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
 		private Process healerProcess;
 		private string statusMessage;
 		private short lastKnownRoll;
@@ -142,16 +142,16 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// The healer's main job
-    /// </summary>
+		/// The healer's main job
+		/// </summary>
 		public string HealerMainJob
 		{
 			get => Jobs.GetMainJob(Healer?.Player?.MainJob ?? 99);
 		}
 
 		/// <summary>
-    /// The healer's sub job
-    /// </summary>
+		/// The healer's sub job
+		/// </summary>
 		public string HealerSubJob
 		{
 			get => Jobs.GetMainJob(Healer?.Player?.SubJob ?? 99);
@@ -272,6 +272,15 @@ namespace Altomatic.UI.ViewModels
 			set { isPlayerMoving = value; OnPropertyChanged(); }
 		}
 
+		public string RollTargets
+		{
+			get
+			{
+				var players = ActivePlayers.Where(x => x.IsRequiredForRolls);
+				return players.Any() ? string.Join(", ", players.Select(x => x.Name)) : "Any";
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a new instance of <see cref="AppViewModel"/>
@@ -343,15 +352,15 @@ namespace Altomatic.UI.ViewModels
 			});
 
 			new Thread(() =>
-      {
-        while (true)
-        {
-          PauseIfDead();
-          PauseIfZoning();
-          DetectMovement();
-          Thread.Sleep(500);
-        }
-      })
+			{
+				while (true)
+				{
+					PauseIfDead();
+					PauseIfZoning();
+					DetectMovement();
+					Thread.Sleep(500);
+				}
+			})
 			{
 				IsBackground = true
 			}.Start();
@@ -554,7 +563,16 @@ namespace Altomatic.UI.ViewModels
 			Players.Clear();
 			for (var i = 0; i < 18; i++)
 			{
-				Players.Add(new PlayerViewModel(this));
+				var player = new PlayerViewModel(this);
+				player.PropertyChanged += (s, e) =>
+				{
+					if (e.PropertyName == nameof(player.IsRequiredForRolls))
+					{
+						OnPropertyChanged(nameof(RollTargets));
+					}
+				};
+
+				Players.Add(player);
 			}
 		}
 
@@ -584,28 +602,28 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
-    /// <summary>
-    /// Pauses the bot if the player is dead
-    /// </summary>
-    private void PauseIfDead()
-    {
-      if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
-          Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
-      {
-        SetStatus("Paused due to death...");
-        ActiveBuffs.Clear();
-        autoResumePause = true;
-        IsPaused = true;
-      }
-      else
-      {
-        if (autoResumePause)
-        {
-          SetStatus();
-          autoResumePause = false;
-          IsPaused = false;
-        }
-      }
-    }
-  }
+		/// <summary>
+		/// Pauses the bot if the player is dead
+		/// </summary>
+		private void PauseIfDead()
+		{
+			if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
+					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
+			{
+				SetStatus("Paused due to death...");
+				ActiveBuffs.Clear();
+				autoResumePause = true;
+				IsPaused = true;
+			}
+			else
+			{
+				if (autoResumePause)
+				{
+					SetStatus();
+					autoResumePause = false;
+					IsPaused = false;
+				}
+			}
+		}
+	}
 }

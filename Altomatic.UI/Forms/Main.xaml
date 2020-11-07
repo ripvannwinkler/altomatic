@@ -17,7 +17,7 @@
 		<Style TargetType="{x:Type Window}">
 			<Setter Property="Background" Value="#d1ffd3"/>
 			<Style.Triggers>
-				<DataTrigger Binding="{Binding IsPaused}" Value="False">
+				<DataTrigger Binding="{Binding IsPaused}" Value="True">
 					<Setter Property="Background" Value="#ffd4d4"/>
 				</DataTrigger>
 			</Style.Triggers>
@@ -83,7 +83,7 @@
 						</TextBlock.Style>
 					</TextBlock>
 				</StackPanel>
-			</StatusBarItem>			
+			</StatusBarItem>
 			<Separator Grid.Column="5"/>
 			<StatusBarItem Grid.Column="6" HorizontalAlignment="Center" Padding="12 0 12 0">
 				<StackPanel Orientation="Horizontal">
@@ -211,7 +211,7 @@
 				</Grid>
 			</GroupBox>
 		</Border>
-		<Border Padding="15 35 15 15" DockPanel.Dock="Top">
+		<Border Padding="15 35 15 10" DockPanel.Dock="Top">
 			<StackPanel HorizontalAlignment="Center" IsEnabled="{Binding IsNotBusy}">
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 					<Button 
@@ -239,6 +239,50 @@
 					<Button Name="ReloadAddonButton" Margin="8 0 8 0" Click="ReloadAddonButton_Click">
 						<TextBlock>Reload Addon</TextBlock>
 					</Button>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+		<Border Padding="12" DockPanel.Dock="Top">
+			<StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<StackPanel.Style>
+						<Style TargetType="{x:Type StackPanel}">
+							<Setter Property="Visibility" Value="Collapsed"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding HealerMainJob}" Value="GEO">
+									<Setter Property="Visibility" Value="Visible"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</StackPanel.Style>
+					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
+						<TextBlock FontSize="16" Margin="0 0 12 0">Indi Spell:</TextBlock>
+						<TextBlock FontSize="16" Text="{Binding Options.Config.IndiSpellName}"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
+						<TextBlock FontSize="16" Margin="0 0 8 0">Geo Spell:</TextBlock>
+						<TextBlock FontSize="16" Text="{Binding Options.Config.GeoSpellName}"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
+						<TextBlock FontSize="16" Margin="0 0 12 0">Entrust Indi Spell:</TextBlock>
+						<TextBlock FontSize="16" Text="{Binding Options.Config.EntrustIndiSpellName}"/>
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<StackPanel.Style>
+						<Style TargetType="{x:Type StackPanel}">
+							<Setter Property="Visibility" Value="Collapsed"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding HealerMainJob}" Value="COR">
+									<Setter Property="Visibility" Value="Visible"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</StackPanel.Style>
+					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
+						<TextBlock FontSize="16" Margin="0 0 8 0">Roll Targets:</TextBlock>
+						<TextBlock FontSize="16" Text="{Binding RollTargets, FallbackValue='None'}"/>
+					</StackPanel>
 				</StackPanel>
 			</StackPanel>
 		</Border>
