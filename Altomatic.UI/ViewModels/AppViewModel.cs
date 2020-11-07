@@ -534,6 +534,8 @@ namespace Altomatic.UI.ViewModels
 						if (await strategy.ExecuteAsync(this)) return;
 					}
 				});
+
+				SetStatus();
 			}
 		}
 
