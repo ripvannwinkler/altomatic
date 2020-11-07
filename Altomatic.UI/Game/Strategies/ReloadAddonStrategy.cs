@@ -23,9 +23,12 @@ namespace Altomatic.UI.Game.Strategies
 				});
 			}
 
-			if (DateTime.Now.Subtract(lastEvent).TotalSeconds > 30)
+			if (!string.IsNullOrWhiteSpace(app.Healer?.Player?.Name))
 			{
-				await app.ReloadAddon();
+				if (DateTime.Now.Subtract(lastEvent).TotalSeconds > 30)
+				{
+					await app.ReloadAddon();
+				}
 			}
 
 			return false;

@@ -20,7 +20,7 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					if (player.DistanceFromHealer >= 21)
 					{
-						if (DateTime.Now.Subtract(lastWarning).TotalSeconds > 10)
+						if (DateTime.Now.Subtract(lastWarning).TotalSeconds > 30)
 						{
 							lastWarning = DateTime.Now;
 							await app.Monitored.SendCommand($"/echo \x1e\x5{player.Name} is out of range and cannot be cured.\x1f\x5", 200);
