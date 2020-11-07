@@ -412,13 +412,12 @@ namespace Altomatic.UI.ViewModels
 		{
 			if (IsPaused)
 			{
-				// handle stuff
 				IsPaused = false;
 			}
 			else
 			{
-				// handle stuff
 				IsPaused = true;
+				ActiveBuffs.Clear();
 			}
 		}
 
@@ -580,6 +579,7 @@ namespace Altomatic.UI.ViewModels
 					Healer?.Player?.LoginStatus == (int)LoginStatus.Loading)
 			{
 				SetStatus("Paused due to zoning...");
+				ActiveBuffs.Clear();
 				IsPaused = true;
 			}
 		}
@@ -593,6 +593,7 @@ namespace Altomatic.UI.ViewModels
 					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
 			{
 				SetStatus("Paused due to death...");
+				ActiveBuffs.Clear();
 				autoResumePause = true;
 				IsPaused = true;
 			}
