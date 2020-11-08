@@ -63,14 +63,6 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
-			if (app.Options.Config.EnableDivineSeal &&
-					app.Healer.Player.MPP < 15 &&
-					app.Healer.HasAnyBuff(Buffs.DivineSeal) == false &&
-					await app.Actions.UseAbility("Divine Seal"))
-			{
-				return true;
-			}
-
 			if (app.Options.Config.EnableLightArts &&
 					app.Healer.HasAnyBuff(Buffs.LightArts, Buffs.AddendumWhite) == false &&
 					await app.Actions.UseAbility("Light Arts"))
@@ -103,6 +95,13 @@ namespace Altomatic.UI.Game.Strategies
 					}
 				}
 			}
+
+			if (app.Options.Config.EnableDivineSeal &&
+					(app.Healer.Player.MPP < 20 || app.Healer.Player.MP < 200) &&
+					await app.Actions.UseAbility("Divine Seal"))
+      {
+				return true;
+      }
 
 			return false;
 		}
