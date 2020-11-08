@@ -7,10 +7,10 @@
 				xmlns:uc="clr-namespace:Altomatic.UI.Controls"
 				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
-				MinWidth="1200"
-				MinHeight="600"
-				Height="600"
-				Width="1200"
+				MinWidth="900"
+				MinHeight="100"
+				Height="580"
+				Width="900"
 				Name="MainWindow1"
         Title="{Binding AppTitle}">
 	<Window.Style>
@@ -36,7 +36,7 @@
         Duration="0:0:0.300"/>
 		</Storyboard>
 	</Window.Resources>
-	<DockPanel LastChildFill="False">
+	<DockPanel LastChildFill="True">
 		<StatusBar DockPanel.Dock="Bottom" BorderBrush="Gray" BorderThickness="0 1 0 0" Padding="0">
 			<StatusBar.ItemsPanel>
 				<ItemsPanelTemplate>
@@ -134,9 +134,12 @@
 				</StackPanel>
 			</StatusBarItem>
 		</StatusBar>
-		<Border Padding="12 16 8 8" DockPanel.Dock="Right" MinWidth="300">
+		<Border Padding="10" DockPanel.Dock="Right" Width="300">
 			<DockPanel>
 				<Label DockPanel.Dock="Top">Active Party Buffs</Label>
+				<TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" FontSize="10" Margin="0 5 0 10">
+					Note: The list above will only be able to show buffs for the primary and monitored players, and any players in the monitored player's party. This is due to the way the game stores status effects in memory. Alliance status info is simply not available.
+				</TextBlock>
 				<DataGrid 
 					AutoGenerateColumns="False" 
 					ItemsSource="{Binding ActiveBuffs}" 
@@ -144,157 +147,190 @@
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="Player" Width="Auto" MinWidth="70" Binding="{Binding Player}"/>
 						<DataGridTextColumn Header="Name" Width="*" Binding="{Binding Name}"/>
-						<DataGridTextColumn Header="ID" Width="Auto" MinWidth="45" Binding="{Binding Id}"/>
 						<DataGridTextColumn Header="Age" Width="Auto" MinWidth="50" Binding="{Binding AgeInSeconds}"/>
+						<DataGridTextColumn Header="ID" Width="Auto" MinWidth="45" Binding="{Binding Id}"/>
 					</DataGrid.Columns>
 				</DataGrid>
 			</DockPanel>
 		</Border>
-		<Border Padding="10 15 10 5" DockPanel.Dock="Top">
+		<Border Padding="10 10 10 10" DockPanel.Dock="Top">
 			<DockPanel>
-				<GroupBox 
-					Header="Select your game instances:" 
-					IsEnabled="{Binding IsNotBusy}"
-					VerticalAlignment="Center"
-					Padding="8 12 8 12">
-					<StackPanel VerticalAlignment="Center">
-						<DockPanel Margin="0 0 0 8">
-							<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Primary</Label>
-							<ComboBox Name="HealerInstance" ItemsSource="{Binding Processes}" HorizontalContentAlignment="Stretch" SelectionChanged="HealerInstance_SelectionChanged">
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<StackPanel Orientation="Horizontal">
-											<TextBlock Text="{Binding MainWindowTitle}" />
-										</StackPanel>
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-							</ComboBox>
-						</DockPanel>
-						<DockPanel>
-							<Label Padding="3" Margin="0 0 5 0" Width="100">Monitored</Label>
-							<ComboBox Name="MonitoredInstance" ItemsSource="{Binding Processes}" SelectionChanged="MonitoredInstance_SelectionChanged">
-								<ComboBox.ItemTemplate>
-									<DataTemplate>
-										<StackPanel Orientation="Horizontal">
-											<TextBlock Text="{Binding MainWindowTitle}" />
-										</StackPanel>
-									</DataTemplate>
-								</ComboBox.ItemTemplate>
-							</ComboBox>
-						</DockPanel>
+				<GroupBox Header="Functions" DockPanel.Dock="Right" VerticalAlignment="Top" Padding="8" Margin="16 0 0 0">
+					<StackPanel>
+						<Button 
+							Margin="4"
+							Name="PauseButton"
+							Cursor="Hand"
+							MaxWidth="300"
+							IsEnabled="{Binding IsGameReady}"
+							Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
+							Click="PauseButton_Click"/>
+						<Button 
+							Margin="4"
+							Name="OptionsButton" 
+							Click="OptionsButton_Click">
+							<Button.Content>
+								<TextBlock>Options...</TextBlock>
+							</Button.Content>
+						</Button>
+						<Button Name="RefreshProcessesButton" Margin="4" Click="RefreshProcessesButton_Click">
+							<TextBlock>Refresh Processes</TextBlock>
+						</Button>
+						<Button Name="RefreshPlayersButton" Margin="4" Click="RefreshPlayersButton_Click">
+							<TextBlock>Refresh Players</TextBlock>
+						</Button>
+						<Button Name="ReloadAddonButton" Margin="4" Click="ReloadAddonButton_Click">
+							<TextBlock>Reload Addon</TextBlock>
+						</Button>
 					</StackPanel>
+
 				</GroupBox>
+				<DockPanel>
+					<GroupBox 
+						DockPanel.Dock="Top"
+						Header="Select your game instances:" 
+						IsEnabled="{Binding IsNotBusy}"
+						VerticalAlignment="Top"
+						Padding="8 12 8 12">
+						<StackPanel VerticalAlignment="Center">
+							<DockPanel Margin="0 0 0 8">
+								<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Primary</Label>
+								<ComboBox Name="HealerInstance" ItemsSource="{Binding Processes}" HorizontalContentAlignment="Stretch" SelectionChanged="HealerInstance_SelectionChanged">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding MainWindowTitle}" />
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</DockPanel>
+							<DockPanel>
+								<Label Padding="3" Margin="0 0 5 0" Width="100">Monitored</Label>
+								<ComboBox Name="MonitoredInstance" ItemsSource="{Binding Processes}" SelectionChanged="MonitoredInstance_SelectionChanged">
+									<ComboBox.ItemTemplate>
+										<DataTemplate>
+											<StackPanel Orientation="Horizontal">
+												<TextBlock Text="{Binding MainWindowTitle}" />
+											</StackPanel>
+										</DataTemplate>
+									</ComboBox.ItemTemplate>
+								</ComboBox>
+							</DockPanel>
+						</StackPanel>
+					</GroupBox>
+					<GroupBox Header="Miscellaenous" Padding="12" DockPanel.Dock="Top" Margin="0 8 0 0">
+						<StackPanel VerticalAlignment="Center">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<StackPanel.Style>
+									<Style TargetType="{x:Type StackPanel}">
+										<Setter Property="Visibility" Value="Collapsed"/>
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding HealerMainJob}" Value="GEO">
+												<Setter Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</StackPanel.Style>
+								<StackPanel Orientation="Horizontal" Margin="8 0 8 0">
+									<TextBlock Margin="0 0 4 0">Indi:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis">
+										<TextBlock.Style>
+											<Style TargetType="{x:Type TextBlock}">
+												<Setter Property="Text" Value="{Binding Options.Config.IndiSpellName, FallbackValue='None'}"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Options.Config.IndiSpellName.Length, FallbackValue=0}" Value="0">
+														<Setter Property="Text" Value="None"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Margin="8 0 8 0">
+									<TextBlock Margin="0 0 4 0">Geo:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis">
+										<TextBlock.Style>
+											<Style TargetType="{x:Type TextBlock}">
+												<Setter Property="Text" Value="{Binding Options.Config.GeoSpellName, FallbackValue='None'}"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Options.Config.GeoSpellName.Length, FallbackValue=0}" Value="0">
+														<Setter Property="Text" Value="None"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Margin="8 0 8 0">
+									<TextBlock Margin="0 0 4 0">Entrust Indi:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis">
+										<TextBlock.Style>
+											<Style TargetType="{x:Type TextBlock}">
+												<Setter Property="Text" Value="{Binding Options.Config.EntrustIndiSpellName, FallbackValue='None'}"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Options.Config.EntrustIndiSpellName.Length, FallbackValue=0}" Value="0">
+														<Setter Property="Text" Value="None"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<StackPanel.Style>
+									<Style TargetType="{x:Type StackPanel}">
+										<Setter Property="Visibility" Value="Collapsed"/>
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding HealerMainJob}" Value="COR">
+												<Setter Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</StackPanel.Style>
+								<StackPanel Orientation="Horizontal" Margin="8 0 8 0">
+									<TextBlock Margin="0 0 4 0">Roll Targets:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis" Text="{Binding RollTargets, FallbackValue='None'}"/>
+								</StackPanel>
+							</StackPanel>
+						</StackPanel>
+					</GroupBox>
+				</DockPanel>
 			</DockPanel>
 		</Border>
-		<Border Padding="10 0 10 10" DockPanel.Dock="Bottom">
-			<GroupBox Header="Party Members" IsEnabled="{Binding IsNotBusy}">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="1*"/>
-						<ColumnDefinition Width="1*"/>
-					</Grid.ColumnDefinitions>
-					<StackPanel Grid.Column="0" Margin="5">
-						<uc:PlayerStatus Player="{Binding Players[0]}"/>
-						<uc:PlayerStatus Player="{Binding Players[1]}"/>
-						<uc:PlayerStatus Player="{Binding Players[2]}"/>
-						<uc:PlayerStatus Player="{Binding Players[3]}"/>
-						<uc:PlayerStatus Player="{Binding Players[4]}"/>
-						<uc:PlayerStatus Player="{Binding Players[5]}"/>
-					</StackPanel>
-					<StackPanel Grid.Column="1" Margin="5">
-						<uc:PlayerStatus Player="{Binding Players[6]}"/>
-						<uc:PlayerStatus Player="{Binding Players[7]}"/>
-						<uc:PlayerStatus Player="{Binding Players[8]}"/>
-						<uc:PlayerStatus Player="{Binding Players[9]}"/>
-						<uc:PlayerStatus Player="{Binding Players[10]}"/>
-						<uc:PlayerStatus Player="{Binding Players[11]}"/>
-					</StackPanel>
-					<StackPanel Grid.Column="2" Margin="5">
-						<uc:PlayerStatus Player="{Binding Players[12]}"/>
-						<uc:PlayerStatus Player="{Binding Players[13]}"/>
-						<uc:PlayerStatus Player="{Binding Players[14]}"/>
-						<uc:PlayerStatus Player="{Binding Players[15]}"/>
-						<uc:PlayerStatus Player="{Binding Players[16]}"/>
-						<uc:PlayerStatus Player="{Binding Players[17]}"/>
-					</StackPanel>
-				</Grid>
-			</GroupBox>
-		</Border>
-		<Border Padding="15 35 15 10" DockPanel.Dock="Top">
-			<StackPanel HorizontalAlignment="Center" IsEnabled="{Binding IsNotBusy}">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-					<Button 
-						Name="PauseButton"
-						Cursor="Hand"
-						MaxWidth="300"
-						Margin="8 0 8 0"
-						IsEnabled="{Binding IsGameReady}"
-						Content="{Binding IsPaused, Converter={StaticResource statusLabelConverter}, FallbackValue='Pause'}"
-						Click="PauseButton_Click"/>
-					<Button 
-						Name="OptionsButton" 
-						Margin="8 0 8 0"
-						Click="OptionsButton_Click">
-						<Button.Content>
-							<TextBlock>Options...</TextBlock>
-						</Button.Content>
-					</Button>
-					<Button Name="RefreshProcessesButton" Margin="8 0 8 0" Click="RefreshProcessesButton_Click">
-						<TextBlock>Refresh Processes</TextBlock>
-					</Button>
-					<Button Name="RefreshPlayersButton" Margin="8 0 8 0" Click="RefreshPlayersButton_Click">
-						<TextBlock>Refresh Players</TextBlock>
-					</Button>
-					<Button Name="ReloadAddonButton" Margin="8 0 8 0" Click="ReloadAddonButton_Click">
-						<TextBlock>Reload Addon</TextBlock>
-					</Button>
+		<GroupBox Header="Party Members" Margin="10 0 10 10" IsEnabled="{Binding IsNotBusy}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Grid.Column="0" Margin="5">
+					<uc:PlayerStatus Player="{Binding Players[0]}"/>
+					<uc:PlayerStatus Player="{Binding Players[1]}"/>
+					<uc:PlayerStatus Player="{Binding Players[2]}"/>
+					<uc:PlayerStatus Player="{Binding Players[3]}"/>
+					<uc:PlayerStatus Player="{Binding Players[4]}"/>
+					<uc:PlayerStatus Player="{Binding Players[5]}"/>
 				</StackPanel>
-			</StackPanel>
-		</Border>
-		<Border Padding="12" DockPanel.Dock="Top">
-			<StackPanel>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-					<StackPanel.Style>
-						<Style TargetType="{x:Type StackPanel}">
-							<Setter Property="Visibility" Value="Collapsed"/>
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding HealerMainJob}" Value="GEO">
-									<Setter Property="Visibility" Value="Visible"/>
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</StackPanel.Style>
-					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
-						<TextBlock FontSize="16" Margin="0 0 12 0">Indi Spell:</TextBlock>
-						<TextBlock FontSize="16" Text="{Binding Options.Config.IndiSpellName}"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
-						<TextBlock FontSize="16" Margin="0 0 8 0">Geo Spell:</TextBlock>
-						<TextBlock FontSize="16" Text="{Binding Options.Config.GeoSpellName}"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
-						<TextBlock FontSize="16" Margin="0 0 12 0">Entrust Indi Spell:</TextBlock>
-						<TextBlock FontSize="16" Text="{Binding Options.Config.EntrustIndiSpellName}"/>
-					</StackPanel>
+				<StackPanel Grid.Column="1" Margin="5">
+					<uc:PlayerStatus Player="{Binding Players[6]}"/>
+					<uc:PlayerStatus Player="{Binding Players[7]}"/>
+					<uc:PlayerStatus Player="{Binding Players[8]}"/>
+					<uc:PlayerStatus Player="{Binding Players[9]}"/>
+					<uc:PlayerStatus Player="{Binding Players[10]}"/>
+					<uc:PlayerStatus Player="{Binding Players[11]}"/>
 				</StackPanel>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-					<StackPanel.Style>
-						<Style TargetType="{x:Type StackPanel}">
-							<Setter Property="Visibility" Value="Collapsed"/>
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding HealerMainJob}" Value="COR">
-									<Setter Property="Visibility" Value="Visible"/>
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</StackPanel.Style>
-					<StackPanel Orientation="Horizontal" Margin="24 0 24 0">
-						<TextBlock FontSize="16" Margin="0 0 8 0">Roll Targets:</TextBlock>
-						<TextBlock FontSize="16" Text="{Binding RollTargets, FallbackValue='None'}"/>
-					</StackPanel>
+				<StackPanel Grid.Column="2" Margin="5">
+					<uc:PlayerStatus Player="{Binding Players[12]}"/>
+					<uc:PlayerStatus Player="{Binding Players[13]}"/>
+					<uc:PlayerStatus Player="{Binding Players[14]}"/>
+					<uc:PlayerStatus Player="{Binding Players[15]}"/>
+					<uc:PlayerStatus Player="{Binding Players[16]}"/>
+					<uc:PlayerStatus Player="{Binding Players[17]}"/>
 				</StackPanel>
-			</StackPanel>
-		</Border>
+			</Grid>
+		</GroupBox>
 	</DockPanel>
 </Window>

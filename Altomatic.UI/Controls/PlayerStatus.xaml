@@ -53,14 +53,14 @@
 					</Button>
 					<CheckBox 
 						Cursor="Hand" 
-						Margin="0 0 5 0" 
+						Margin="0 0 4 0" 
 						VerticalAlignment="Center" 
 						ToolTip="Enable actions on this player" 
 						HorizontalContentAlignment="Stretch" 
 						VerticalContentAlignment="Center"
 						IsChecked="{Binding Player.IsEnabled}">
 					</CheckBox>					
-					<DockPanel Margin="4 0 8 0" VerticalAlignment="Center">
+					<DockPanel Margin="0 0 4 0" VerticalAlignment="Center">
 						<Label Name="PlayerName" Padding="0" Margin="0" VerticalAlignment="Center" DockPanel.Dock="Top">
 							<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Player.Name, FallbackValue='Player Name'}"/>
 						</Label>
