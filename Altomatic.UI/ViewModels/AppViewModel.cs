@@ -400,19 +400,16 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task SetHealer(Process process)
 		{
-			await guard.Do(async () =>
-			{
-				healerProcess = process;
-				Healer = new EliteAPI(process.Id);
-				await ReloadAddon();
+			healerProcess = process;
+			Healer = new EliteAPI(process.Id);
+			await ReloadAddon();
 
-				var playerName = Healer?.Player?.Name ?? "";
-				var jobNumber = (ushort)(Healer?.Player?.MainJob ?? -1);
-				if (Jobs.TryGetValue(jobNumber, out var jobName))
-				{
-					Options.Autoload(playerName, jobName);
-				}
-			});
+			var playerName = Healer?.Player?.Name ?? "";
+			var jobNumber = (ushort)(Healer?.Player?.MainJob ?? -1);
+			if (Jobs.TryGetValue(jobNumber, out var jobName))
+			{
+				Options.Autoload(playerName, jobName);
+			}
 		}
 
 		/// <summary>
@@ -420,11 +417,8 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task SetMonitored(Process process)
 		{
-			await guard.Do(async () =>
-			{
-				Monitored = new EliteAPI(process.Id);
-				await new RefreshPlayerInfoStrategy().ExecuteAsync(this);
-			});
+			Monitored = new EliteAPI(process.Id);
+			await new RefreshPlayerInfoStrategy().ExecuteAsync(this);
 		}
 
 		/// <summary>
