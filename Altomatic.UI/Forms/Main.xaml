@@ -155,7 +155,7 @@
 		</Border>
 		<Border Padding="10 10 10 10" DockPanel.Dock="Top">
 			<DockPanel>
-				<GroupBox Header="Functions" DockPanel.Dock="Right" VerticalAlignment="Top" Padding="8" Margin="16 0 0 0">
+				<GroupBox Header="Functions" IsEnabled="{Binding IsNotBusy}" DockPanel.Dock="Right" VerticalAlignment="Top" Padding="8" Margin="16 0 0 0">
 					<StackPanel>
 						<Button 
 							Margin="4"
