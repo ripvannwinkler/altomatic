@@ -35,7 +35,7 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
-		private bool autoResumePause = false;
+		private int lastZone;
 		private ulong loopCount = 0;
 		private Point3D lastPosition;
 
@@ -367,7 +367,6 @@ namespace Altomatic.UI.ViewModels
 				{
 					await guard.Do(async () =>
 					{
-						PauseIfDead();
 						PauseIfZoning();
 						DetectMovement();
 						await Task.Delay(500);
@@ -604,36 +603,13 @@ namespace Altomatic.UI.ViewModels
 		private void PauseIfZoning()
 		{
 			if (IsPaused) return;
-			if (Healer?.Player?.LoginStatus == (int)LoginStatus.Loading ||
-					Healer?.Player?.LoginStatus == (int)LoginStatus.Loading)
-			{
+			var zoneId = Healer.Player.ZoneId;
+			if (zoneId != lastZone)
+      {
 				SetStatus("Paused due to zoning...");
 				ActiveBuffs.Clear();
+				lastZone = zoneId;
 				IsPaused = true;
-			}
-		}
-
-		/// <summary>
-		/// Pauses the bot if the player is dead
-		/// </summary>
-		private void PauseIfDead()
-		{
-			if (Healer?.GetEntityStatus() == EntityStatus.Dead ||
-					Healer?.GetEntityStatus() == EntityStatus.DeadEngaged)
-			{
-				SetStatus("Paused due to death...");
-				ActiveBuffs.Clear();
-				autoResumePause = true;
-				IsPaused = true;
-			}
-			else
-			{
-				if (autoResumePause)
-				{
-					SetStatus();
-					autoResumePause = false;
-					IsPaused = false;
-				}
 			}
 		}
 	}
