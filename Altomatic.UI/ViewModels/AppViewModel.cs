@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Media3D;
 using Altomatic.UI.Game;
 using Altomatic.UI.Game.Data;
@@ -362,7 +363,10 @@ namespace Altomatic.UI.ViewModels
 			Task.Run(async () =>
 			{
 				await RefreshProcessList();
+			});
 
+			new Thread(async () =>
+			{
 				while (true)
 				{
 					await guard.Do(async () =>
@@ -372,7 +376,10 @@ namespace Altomatic.UI.ViewModels
 						await Task.Delay(500);
 					});
 				}
-			});
+			})
+			{
+				IsBackground = true
+			}.Start();
 		}
 
 		/// <summary>
@@ -602,12 +609,15 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		private void PauseIfZoning()
 		{
-			if (IsPaused) return;
-			var zoneId = Healer.Player.ZoneId;
+			var zoneId = Healer?.Player?.ZoneId ?? -1;
 			if (zoneId != lastZone)
-      {
+			{
 				SetStatus("Paused due to zoning...");
-				ActiveBuffs.Clear();
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					ActiveBuffs.Clear();
+				});
+
 				lastZone = zoneId;
 				IsPaused = true;
 			}
