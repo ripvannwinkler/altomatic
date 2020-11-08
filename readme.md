@@ -2,6 +2,14 @@
 
 Altomatic is an FFXI alt bot inspired by the hard work of atom0s and Daniel Hazzard over at [Cure Please](https://github.com/DanielHazzard/Cure-Please). It offers mostly the same features, but with a simplified UI and smarter player management. I originally attempted to fork the original project and apply any fixes I found necessary, but it eventually became too cumbersome to work with the legacy code base.
 
+<div style="text-align:center; margin-bottom: 2rem;">
+
+![Main Window](./Screenshots/main_window.png)
+
+![Options Window](./Screenshots/options_window.png)
+
+</div>
+
 ## Major Changes From Cure Please
 
 Aside from many bug fixes and optimizations, the primary differences in Altomatic are:
