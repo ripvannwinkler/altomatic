@@ -159,7 +159,7 @@
 					Padding="8 12 8 12">
 					<StackPanel VerticalAlignment="Center">
 						<DockPanel Margin="0 0 0 8">
-							<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Healer</Label>
+							<Label Padding="3" Margin="0 0 5 0" Width="100" DockPanel.Dock="Left">Primary</Label>
 							<ComboBox Name="HealerInstance" ItemsSource="{Binding Processes}" HorizontalContentAlignment="Stretch" SelectionChanged="HealerInstance_SelectionChanged">
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
