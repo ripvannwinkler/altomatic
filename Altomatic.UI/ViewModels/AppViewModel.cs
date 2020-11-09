@@ -36,7 +36,7 @@ namespace Altomatic.UI.ViewModels
 		private bool isPaused = true;
 		private bool isAddonLoaded = false;
 		private bool isPlayerMoving = false;
-		private int lastZone;
+		private int lastZone = -1;
 		private ulong loopCount = 0;
 		private Point3D lastPosition;
 
@@ -431,19 +431,23 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-		/// Pauses or unpauses the bot
+		/// Pauses the bot
 		/// </summary>
-		public void TogglePaused()
+		public void Pause()
 		{
-			if (IsPaused)
+			IsPaused = true;
+			Application.Current.Dispatcher.Invoke(() =>
 			{
-				IsPaused = false;
-			}
-			else
-			{
-				IsPaused = true;
 				ActiveBuffs.Clear();
-			}
+			});
+		}
+
+		/// <summary>
+		/// Unpauses the bot
+		/// </summary>
+		public void Unpause()
+		{
+			IsPaused = false;
 		}
 
 		/// <summary>
@@ -523,14 +527,14 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task ExecuteActionsAsync()
 		{
-			if (isPaused) return;
-			if (IsGameReady && CanExecuteActions())
+			if (!IsPaused && IsGameReady && CanExecuteActions())
 			{
 				await guard.Do(async () =>
 				{
 					LoopCount++;
 					foreach (var strategy in Strategies)
 					{
+						if (IsPaused) break;
 						if (await strategy.ExecuteAsync(this)) return;
 					}
 				});
@@ -604,16 +608,19 @@ namespace Altomatic.UI.ViewModels
 		private void PauseIfZoning()
 		{
 			var zoneId = Healer?.Player?.ZoneId ?? -1;
-			if (zoneId != lastZone)
-			{
-				SetStatus("Paused due to zoning...");
-				Application.Current.Dispatcher.Invoke(() =>
-				{
-					ActiveBuffs.Clear();
-				});
 
-				lastZone = zoneId;
-				IsPaused = true;
+			if (zoneId >= 0)
+			{
+				if (lastZone < 0)
+				{
+					lastZone = zoneId;
+				}
+				else if (zoneId != lastZone)
+				{
+					Pause();
+					lastZone = zoneId;
+					SetStatus("Paused due to zoning...");
+				}
 			}
 		}
 	}

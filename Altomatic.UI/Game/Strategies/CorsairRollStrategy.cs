@@ -66,6 +66,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			if (app.Healer.HasAnyBuff(Buffs.DoubleUpChance))
 			{
+				if (app.LastKnownRoll < 0) return false;
 				if (app.LastKnownRoll == lastRollUsed.Lucky) return false;
 
 				var goingFor11 = app.LastKnownRoll == 357;
@@ -76,7 +77,7 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					if (await app.Actions.UseAbility("Double-Up"))
 					{
-						await Task.Delay(3000);
+						await Task.Delay(4000);
 						return true;
 					}
 				}
@@ -87,14 +88,14 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> DoRoll(AppViewModel app, CorsairRoll roll)
 		{
+			app.LastKnownRoll = -1;
 			if (!RequiredMembersInRange(app)) return false;
 			if (!string.IsNullOrWhiteSpace(roll?.Name) &&
 					!app.Healer.HasAnyBuff(roll.BuffId) &&
 					await app.Actions.UseAbility(roll?.Name))
 			{
 				lastRollUsed = roll;
-				app.LastKnownRoll = 0;
-				await Task.Delay(3000);
+				await Task.Delay(4000);
 				return true;
 			}
 

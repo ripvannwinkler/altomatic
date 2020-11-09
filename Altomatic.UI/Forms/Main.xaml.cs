@@ -103,7 +103,13 @@ namespace Altomatic.UI.Forms
 
 		private void PauseButton_Click(object sender, RoutedEventArgs e)
 		{
-			Model.TogglePaused();
+			if (Model.IsPaused)
+      {
+				Model.Unpause();
+      } else
+      {
+				Model.Pause();
+      }
 		}
 
 		private void OptionsButton_Click(object sender, RoutedEventArgs e)
@@ -121,12 +127,13 @@ namespace Altomatic.UI.Forms
 		{
 			if (!Model.IsBusy)
 			{
-				Model.IsBusy = true;
 				Model.SetStatus("Refreshing processes...");
+				Model.Pause();
+				Model.IsBusy = true;
 				await Model.RefreshProcessList();
 				await Task.Delay(1000);
-				Model.SetStatus();
 				Model.IsBusy = false;
+				Model.SetStatus();
 			}
 		}
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Media3D;
 using Altomatic.UI.Game.Data;
 using Altomatic.UI.Utilities;
@@ -20,9 +21,9 @@ namespace Altomatic.UI.Game.Strategies
 
 			await Task.Yield();
 			foreach (var member in app.Monitored.Party.GetPartyMembers())
-      {
+			{
 				UpdatePlayerInfo(app, member);
-      }
+			}
 
 			UpdateActiveBuffs(app);
 			return false;
@@ -33,7 +34,11 @@ namespace Altomatic.UI.Game.Strategies
 		/// </summary>
 		private void UpdateActiveBuffs(AppViewModel app)
 		{
-			app.ActiveBuffs.Clear();
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				app.ActiveBuffs.Clear();
+			});
+
 			var myName = app.Healer.Player.Name;
 			foreach (var buff in app.Healer.Player.Buffs)
 			{
