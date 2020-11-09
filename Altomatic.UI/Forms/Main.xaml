@@ -277,7 +277,7 @@
 										</TextBlock.Style>
 									</TextBlock>
 								</StackPanel>
-							</StackPanel>
+							</StackPanel>							
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 								<StackPanel.Style>
 									<Style TargetType="{x:Type StackPanel}">
@@ -310,6 +310,22 @@
 									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis" Text="{Binding Options.Config.Roll1.Name, FallbackValue='None'}"/>
 									<TextBlock Margin="16 0 4 0">Roll #2:</TextBlock>
 									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis" Text="{Binding Options.Config.Roll2.Name, FallbackValue='None'}"/>
+								</StackPanel>
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<StackPanel.Style>
+									<Style TargetType="{x:Type StackPanel}">
+										<Setter Property="Visibility" Value="Collapsed"/>
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding HealerMainJob}" Value="COR">
+												<Setter Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</StackPanel.Style>
+								<StackPanel Orientation="Horizontal" Margin="8 8 8 0">
+									<TextBlock Margin="0 0 4 0">Last Known Roll:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis" Text="{Binding LastKnownRoll, FallbackValue='None'}"/>
 								</StackPanel>
 							</StackPanel>
 						</StackPanel>

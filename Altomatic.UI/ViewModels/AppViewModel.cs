@@ -208,7 +208,7 @@ namespace Altomatic.UI.ViewModels
 		public short LastKnownRoll
 		{
 			get => lastKnownRoll;
-			set { lastKnownRoll = value; }
+			set { lastKnownRoll = value; OnPropertyChanged(); }
 		}
 
 		/// <summary>
