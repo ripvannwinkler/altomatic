@@ -450,6 +450,17 @@ namespace Altomatic.UI.ViewModels
 			IsPaused = false;
 		}
 
+		public async Task Heartbeat()
+		{
+			var mode = ProcessUtilities.GetHookMode(healerProcess);
+
+			switch (mode)
+			{
+				case HookMode.Ashita: await Healer.SendCommand("/alto heartbeat", 200); break;
+				case HookMode.Windower: await Healer.SendCommand("//alto heartbeat", 200); break;
+			}
+		}
+
 		/// <summary>
 		/// Unloads the game addon
 		/// </summary>

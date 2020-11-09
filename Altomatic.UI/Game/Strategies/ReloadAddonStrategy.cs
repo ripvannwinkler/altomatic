@@ -31,6 +31,7 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
+			await app.Heartbeat();
 			return false;
 		}
 	}

@@ -120,6 +120,8 @@ function HandleAddonCommand(command, ntype)
     port = args[4]
     print('Altomatic configured; ip=' .. ip .. '; port=' .. port)
     ConfirmAddonLoaded()
+  elseif #args >= 2 and args[2] == 'heartbeat' then
+    SendToAltomatic("heartbeat");
   end
 
   return true;
