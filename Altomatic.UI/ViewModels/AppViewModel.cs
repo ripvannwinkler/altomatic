@@ -563,11 +563,7 @@ namespace Altomatic.UI.ViewModels
 				healer.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
 				healer.Player.LoginStatus != (int)LoginStatus.Loading &&
 				monitored.Player.LoginStatus != (int)LoginStatus.LoginScreen &&
-				monitored.Player.LoginStatus != (int)LoginStatus.Loading &&
-				(
-					healer.Player.Status == (int)EntityStatus.Idle ||
-					healer.Player.Status == (int)EntityStatus.Engaged
-				);
+				monitored.Player.LoginStatus != (int)LoginStatus.Loading;
 		}
 
 		/// <summary>

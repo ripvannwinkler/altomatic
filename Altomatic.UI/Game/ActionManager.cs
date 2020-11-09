@@ -22,36 +22,34 @@ namespace Altomatic.UI.Game
 
 		public async Task<bool> UseItem(string itemName, string targetName = "<me>")
 		{
-			return await Task.Run<bool>(async () =>
+			if (AppData.Healer.IsDead()) return false;
+			if (AppData.IsPlayerMoving) return false;
+			if (!AppData.Healer.HasItem(itemName)) return false;
+			if (targetName == "<me>" && AppData.Healer.Player.Buffs.Contains(Buffs.Medicine))
 			{
-				if (AppData.IsPlayerMoving) return false;
-				if (!AppData.Healer.HasItem(itemName)) return false;
-				if (targetName == "<me>" && AppData.Healer.Player.Buffs.Contains(Buffs.Medicine))
-				{
-					if (Items.Medicines.Contains(itemName)) return false;
-				}
+				if (Items.Medicines.Contains(itemName)) return false;
+			}
 
-				AppData.SetStatus($"Using item {itemName} on {targetName}");
-				await AppData.Healer.SendCommand($"/ja \"{itemName}\" {targetName}", 3000);
-				return true;
-			});
+			AppData.SetStatus($"Using item {itemName} on {targetName}");
+			await AppData.Healer.SendCommand($"/ja \"{itemName}\" {targetName}", 3000);
+			return true;
 		}
 
 		public async Task<bool> UseAbility(string abilityName, string targetName = "<me>")
 		{
-			return await Task.Run<bool>(async () =>
-			{
-				if (AppData.IsPlayerMoving) return false;
-				if (!AppData.Jobs.CanUseAbility(abilityName)) return false;
-				AppData.SetStatus($"Using ability {abilityName} on {targetName}");
-				await AppData.Healer.SendCommand($"/ja \"{abilityName}\" {targetName}", 2000);
-				return true;
-			});
+			if (AppData.Healer.IsDead()) return false;
+			if (AppData.IsPlayerMoving) return false;
+			if (!AppData.Jobs.CanUseAbility(abilityName)) return false;
+
+			AppData.SetStatus($"Using ability {abilityName} on {targetName}");
+			await AppData.Healer.SendCommand($"/ja \"{abilityName}\" {targetName}", 2000);
+			return true;
 		}
 
 		public async Task<bool> CastSpell(string spellName, string targetName = "<me>")
 		{
 			if (AppData.IsPlayerMoving) return false;
+			if (AppData.Healer.IsDead()) return false;
 			if (!await AppData.Spells.CanCast(spellName)) return false;
 			AppData.SetStatus($"Casting {spellName} on {targetName}");
 

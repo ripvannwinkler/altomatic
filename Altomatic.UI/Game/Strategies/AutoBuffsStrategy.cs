@@ -19,7 +19,6 @@ namespace Altomatic.UI.Game.Strategies
 			var hasteSpell = app.Spells.FirstAvailable("Haste II", "Haste");
 			var temperSpell = app.Spells.FirstAvailable("Temper II", "Temper");
 			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
-			var reraiseSpell = app.Spells.FirstAvailable("Reraise IV", "Reraise III", "Reraise II", "Reraise");
 			var regenSpell = app.Spells.FirstAvailable("Regen V", "Regen IV", "Regen III", "Regen II", "Regen");
 			var protectSpell = app.Spells.FirstAvailable("Protectra V", "Protectra IV", "Protectra III", "Protectra II", "Protectra", "Protect V", "Protect IV", "Protect III", "Protect II", "Protect");
 			var shellSpell = app.Spells.FirstAvailable("Shellra V", "Shellra IV", "Shellra III", "Shellra II", "Shellra", "Shell V", "Shell IV", "Shell III", "Shell II", "Shell");
@@ -29,7 +28,13 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (app.Options.Config.SelfReraise &&
 					!app.Healer.HasAnyBuff(Buffs.Reraise) &&
-					await app.Actions.CastSpell(reraiseSpell)) return true;
+					(await app.Actions.CastSpell("Reraise IV") ||
+					 await app.Actions.CastSpell("Reraise III") ||
+					 await app.Actions.CastSpell("Reraise II") ||
+					 await app.Actions.CastSpell("Reraise")))
+			{
+				return true;
+			}
 
 			if (app.Options.Config.SelfProtect &&
 					!app.Healer.HasAnyBuff(Buffs.Protect) &&

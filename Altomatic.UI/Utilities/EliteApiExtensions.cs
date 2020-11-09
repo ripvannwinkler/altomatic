@@ -29,6 +29,12 @@ namespace Altomatic.UI.Utilities
 			return id > 0 ? instance.Entity.GetEntity((int)id) : null;
 		}
 
+		public static bool IsDead(this EliteAPI instance)
+    {
+			var status = instance.GetEntityStatus();
+			return status == EntityStatus.Dead || status == EntityStatus.DeadEngaged;
+    }
+
 		public static bool HasItem(this EliteAPI instance, string itemName)
 		{
 			var count = 0U;

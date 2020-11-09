@@ -8,7 +8,7 @@
 				xmlns:converters="clr-namespace:Altomatic.UI.ValueConverters"
         mc:Ignorable="d"
 				MinWidth="900"
-				MinHeight="100"
+				MinHeight="580"
 				Height="580"
 				Width="900"
 				Name="MainWindow1"
