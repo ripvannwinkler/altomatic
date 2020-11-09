@@ -88,15 +88,17 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> DoRoll(AppViewModel app, CorsairRoll roll)
 		{
-			app.LastKnownRoll = -1;
 			if (!RequiredMembersInRange(app)) return false;
 			if (!string.IsNullOrWhiteSpace(roll?.Name) &&
-					!app.Healer.HasAnyBuff(roll.BuffId) &&
-					await app.Actions.UseAbility(roll?.Name))
+					!app.Healer.HasAnyBuff(roll.BuffId))
 			{
-				lastRollUsed = roll;
-				await Task.Delay(4000);
-				return true;
+				app.LastKnownRoll = -1;
+				if (await app.Actions.UseAbility(roll?.Name))
+				{
+					lastRollUsed = roll;
+					await Task.Delay(4000);
+					return true;
+				}
 			}
 
 			return false;
