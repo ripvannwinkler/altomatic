@@ -104,12 +104,13 @@ namespace Altomatic.UI.Forms
 		private void PauseButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (Model.IsPaused)
-      {
+			{
 				Model.Unpause();
-      } else
-      {
+			}
+			else
+			{
 				Model.Pause();
-      }
+			}
 		}
 
 		private void OptionsButton_Click(object sender, RoutedEventArgs e)

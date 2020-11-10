@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Altomatic.UI.Utilities;
 
 namespace Altomatic.UI
 {
@@ -15,6 +16,15 @@ namespace Altomatic.UI
 	{
 		public App()
 		{
+			try
+			{
+				ProcessUtilities.EnsureDlls();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+
 			DispatcherUnhandledException += HandleExceptions;
 		}
 
