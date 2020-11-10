@@ -10,13 +10,9 @@ namespace Altomatic.UI.Utilities
 	{
 		public static void EnsureDlls()
 		{
-			if (!File.Exists("EliteMMO.Api.dll"))
+			if (!File.Exists("EliteMMO.Api.dll") || !File.Exists("EliteApi.dll"))
 			{
 				new WebClient().DownloadFile("http://ext.elitemmonetwork.com/downloads/elitemmo_api/EliteMMO.API.dll", "EliteMMO.API.dll");
-			}
-
-			if (!File.Exists("EliteApi.dll"))
-			{
 				new WebClient().DownloadFile("http://ext.elitemmonetwork.com/downloads/eliteapi/EliteAPI.dll", "EliteAPI.dll");
 			}
 		}
