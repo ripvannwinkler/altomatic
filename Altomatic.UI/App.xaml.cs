@@ -16,21 +16,13 @@ namespace Altomatic.UI
 	{
 		public App()
 		{
-			try
-			{
-				ProcessUtilities.EnsureDlls();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-			}
-
 			DispatcherUnhandledException += HandleExceptions;
+			ProcessUtilities.EnsureDlls();
 		}
 
 		private void HandleExceptions(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
 		{
 			MessageBox.Show(e.Exception.Message, "Unhandled Exception", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
-  }
+	}
 }
