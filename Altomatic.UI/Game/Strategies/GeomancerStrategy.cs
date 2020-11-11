@@ -123,7 +123,6 @@ namespace Altomatic.UI.Game.Strategies
 				}
 
 				if (app.Options.Config.EnableDematerialize &&
-
 						await app.Actions.UseAbility("Dematerialize"))
 				{
 					return true;
