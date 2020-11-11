@@ -15,12 +15,8 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!await app.Spells.CanCast("Cure")) return false;
-			var healerEntity = app.Healer.Entity.GetLocalPlayer();
-			var members = app.Monitored.Party.GetPartyMembers();
-			var candidates = new List<PartyMember>();
-
 			var threshold = app.Options.Config.CureThreshold;
+			var candidates = new List<PartyMember>();
 			var potencies = new CurePotency(app);
 
 			foreach (var player in app.ActivePlayers)
