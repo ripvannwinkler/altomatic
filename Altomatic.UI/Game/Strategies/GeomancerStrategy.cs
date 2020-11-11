@@ -136,9 +136,10 @@ namespace Altomatic.UI.Game.Strategies
 					return true;
 				}
 
-				if (app.Healer.Player.MP < 100 &&
+				if (!eclipticActive && 
+						app.Healer.Player.MP < 100 &&
 						app.Options.Config.EnableRadialArcana &&
-						app.Healer.Player.Pet.HealthPercent > 50 &&
+						app.Healer.Player.Pet.HealthPercent > 50 &&						
 						await app.Actions.UseAbility("Radial Arcana"))
 				{
 					return true;

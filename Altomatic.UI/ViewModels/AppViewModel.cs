@@ -373,7 +373,7 @@ namespace Altomatic.UI.ViewModels
 					{
 						PauseIfZoning();
 						DetectMovement();
-						await Task.Delay(500);
+						await Task.Delay(200);
 					});
 				}
 			})
