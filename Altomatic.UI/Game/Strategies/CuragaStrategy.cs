@@ -15,13 +15,10 @@ namespace Altomatic.UI.Game.Strategies
 	{
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			if (!await app.Spells.CanCast("Curaga")) return false;
-			var healerEntity = app.Healer.Entity.GetLocalPlayer();
 			var threshold = app.Options.Config.CuragaThreshold;
 			var required = app.Options.Config.CuragaRequiredTargets;
-			var potencies = new CurePotency(app);
-			var members = app.Monitored.Party.GetPartyMembers();
 			var candidates = new List<PartyMember>();
+			var potencies = new CurePotency(app);
 
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
