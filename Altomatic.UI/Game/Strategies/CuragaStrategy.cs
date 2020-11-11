@@ -27,10 +27,10 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.IsInHealerParty && player.DistanceFromHealer < 21)
 				{
-					if (player.CurrentHp > 0 && player.CurrentHpp <= threshold)
-					{
-						candidates.Add(player.Member);
-					}
+					if (player.CurrentHp < 1) continue;
+					if (player.CurrentHpp > threshold) continue;
+					if (player.HasAnyBuff(Buffs.Charm, Buffs.Charm2)) continue;
+					candidates.Add(player.Member);
 				}
 			}
 

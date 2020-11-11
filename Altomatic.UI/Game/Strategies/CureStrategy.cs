@@ -23,21 +23,12 @@ namespace Altomatic.UI.Game.Strategies
 			var threshold = app.Options.Config.CureThreshold;
 			var potencies = new CurePotency(app);
 
-			for (var i = 0; i < 18; i++)
+			foreach (var player in app.ActivePlayers)
 			{
-				var member = members[i];
-				var memberIndex = (int)member.TargetIndex;
-				var memberEntity = app.Healer.Entity.GetEntity(memberIndex);
-				var distance = PlayerUtilities.GetDistance(healerEntity, memberEntity);
-
-				if (distance < 21 &&
-						member.Active > 0 &&
-						member.CurrentHP > 0 &&
-						member.CurrentHPP < threshold)
-				{
-					var player = app.Players.SingleOrDefault(x => x.Name == member.Name);
-					if (player?.IsEnabled ?? false) candidates.Add(member);
-				}
+				if (player.CurrentHp < 1) continue;
+				if (player.CurrentHpp > threshold) continue;
+				if (player.HasAnyBuff(Buffs.Charm, Buffs.Charm2)) continue;
+				candidates.Add(player.Member);
 			}
 
 			// sort HPP (low to high)
