@@ -369,12 +369,9 @@ namespace Altomatic.UI.ViewModels
 			{
 				while (true)
 				{
-					await guard.Do(async () =>
-					{
-						PauseIfZoning();
-						DetectMovement();
-						await Task.Delay(200);
-					});
+					PauseIfZoning();
+					DetectMovement();
+					await Task.Delay(200);
 				}
 			})
 			{
