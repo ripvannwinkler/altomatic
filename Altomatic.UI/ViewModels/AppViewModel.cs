@@ -390,6 +390,7 @@ namespace Altomatic.UI.ViewModels
 			await guard.Do(async () =>
 			{
 				await UnloadAddon();
+				Options.SettingsFile = null;
 				Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
 				ResetPlayerData();
 			});
