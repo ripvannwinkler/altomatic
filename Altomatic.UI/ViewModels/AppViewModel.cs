@@ -290,7 +290,7 @@ namespace Altomatic.UI.ViewModels
 		{
 			get
 			{
-				var players = ActivePlayers.Where(x => x.IsRequiredForRolls);
+				var players = Players.Where(x => x.IsRequiredForRolls);
 				return players.Any() ? string.Join(", ", players.Select(x => x.Name)) : "Any";
 			}
 		}
