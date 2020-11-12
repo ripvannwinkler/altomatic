@@ -321,7 +321,7 @@ namespace Altomatic.UI.ViewModels
 		{
 			InitializePlayerData();
 
-			Strategies.Add(new ValidateProcessStrategy());
+			//Strategies.Add(new ValidateProcessStrategy());
 			Strategies.Add(new RefreshPlayerInfoStrategy());
 			Strategies.Add(new ReloadAddonStrategy());
 			Strategies.Add(new AcceptRaiseStrategy());
