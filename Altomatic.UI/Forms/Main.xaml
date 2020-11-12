@@ -277,7 +277,49 @@
 										</TextBlock.Style>
 									</TextBlock>
 								</StackPanel>
-							</StackPanel>							
+							</StackPanel>
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+								<StackPanel.Style>
+									<Style TargetType="{x:Type StackPanel}">
+										<Setter Property="Visibility" Value="Collapsed"/>
+										<Style.Triggers>
+											<DataTrigger Binding="{Binding HealerMainJob}" Value="GEO">
+												<Setter Property="Visibility" Value="Visible"/>
+											</DataTrigger>
+										</Style.Triggers>
+									</Style>
+								</StackPanel.Style>
+								<StackPanel Orientation="Horizontal" Margin="8 8 8 0">
+									<TextBlock Margin="0 0 4 0">Geo Target:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis">
+										<TextBlock.Style>
+											<Style TargetType="{x:Type TextBlock}">
+												<Setter Property="Text" Value="{Binding GeoTarget, FallbackValue='None'}"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding GeoTarget, FallbackValue=0}" Value="0">
+														<Setter Property="Text" Value="None"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Margin="8 8 8 0">
+									<TextBlock Margin="0 0 4 0">Entrust Target:</TextBlock>
+									<TextBlock FontWeight="DemiBold" TextTrimming="CharacterEllipsis">
+										<TextBlock.Style>
+											<Style TargetType="{x:Type TextBlock}">
+												<Setter Property="Text" Value="{Binding EntrustTarget, FallbackValue='None'}"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding EntrustTarget, FallbackValue=0}" Value="0">
+														<Setter Property="Text" Value="None"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</TextBlock.Style>
+									</TextBlock>
+								</StackPanel>
+							</StackPanel>
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 								<StackPanel.Style>
 									<Style TargetType="{x:Type StackPanel}">

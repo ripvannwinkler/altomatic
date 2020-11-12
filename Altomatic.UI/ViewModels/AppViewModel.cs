@@ -295,6 +295,24 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		public string EntrustTarget
+		{
+			get
+			{
+				var player = Players.FirstOrDefault(x => x.IsEntrustTarget);
+				return player?.Name ?? "None";
+			}
+		}
+
+		public string GeoTarget
+		{
+			get
+			{
+				var player = Players.FirstOrDefault(x => x.IsGeoTarget);
+				return player?.Name ?? "None";
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a new instance of <see cref="AppViewModel"/>
@@ -589,6 +607,14 @@ namespace Altomatic.UI.ViewModels
 					if (e.PropertyName == nameof(player.IsRequiredForRolls))
 					{
 						OnPropertyChanged(nameof(RollTargets));
+					}
+					else if (e.PropertyName == nameof(player.IsEntrustTarget))
+					{
+						OnPropertyChanged(nameof(EntrustTarget));
+					}
+					else if (e.PropertyName == nameof(player.IsGeoTarget))
+					{
+						OnPropertyChanged(nameof(GeoTarget));
 					}
 				};
 
