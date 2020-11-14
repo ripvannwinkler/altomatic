@@ -92,6 +92,9 @@ namespace Altomatic.UI.Game.Strategies
 			if (!string.IsNullOrWhiteSpace(roll?.Name) &&
 					!app.Healer.HasAnyBuff(roll.BuffId))
 			{
+				if (app.Options.Config.EnableCrookedCards)
+					await app.Actions.UseAbility("Crooked Cards");
+
 				app.LastKnownRoll = -1;
 				if (await app.Actions.UseAbility(roll?.Name))
 				{
