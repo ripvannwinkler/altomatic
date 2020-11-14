@@ -171,6 +171,13 @@
 													ItemsSource="{Binding Model.Config.BarStatusSpells, Mode=OneWay}" 
 													SelectedItem="{Binding Model.Config.SelfBarStatusSpellName}"/>
 											</StackPanel>
+											<StackPanel Margin="0 0 0 8">
+												<Label Padding="0 0 0 2">Gain / Boost</Label>
+												<ComboBox 
+													Width="160" 
+													ItemsSource="{Binding Model.Config.BoostSpells, Mode=OneWay}" 
+													SelectedItem="{Binding Model.Config.BoostSpellName}"/>
+											</StackPanel>
 										</StackPanel>
 										<StackPanel Margin="24 0 0 0" DockPanel.Dock="Right">
 											<StackPanel Margin="0 0 0 8">

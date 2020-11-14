@@ -22,6 +22,7 @@ namespace Altomatic.UI.Game.Strategies
 			var regenSpell = app.Spells.FirstAvailable("Regen V", "Regen IV", "Regen III", "Regen II", "Regen");
 			var protectSpell = app.Spells.FirstAvailable("Protectra V", "Protectra IV", "Protectra III", "Protectra II", "Protectra", "Protect V", "Protect IV", "Protect III", "Protect II", "Protect");
 			var shellSpell = app.Spells.FirstAvailable("Shellra V", "Shellra IV", "Shellra III", "Shellra II", "Shellra", "Shell V", "Shell IV", "Shell III", "Shell II", "Shell");
+			var boostSpell = app.Spells.FirstAvailable($"Boost-{app.Options.Config.BoostSpellName}", $"Gain-{app.Options.Config.BoostSpellName}");
 			var stormSpell = app.Spells.FirstAvailable(app.Options.Config.SelfStormSpellName + " II", app.Options.Config.SelfStormSpellName);
 			var spikesSpell = app.Spells.FirstAvailable(app.Options.Config.SelfSpikesSpellName);
 			var enspell = app.Spells.FirstAvailable(app.Options.Config.SelfEnspellName);
@@ -109,6 +110,8 @@ namespace Altomatic.UI.Game.Strategies
 			if (!app.Healer.HasAnyBuff(Buffs.BlazeSpikes, Buffs.IceSpikes, Buffs.ShockSpikes) &&
 					!string.IsNullOrWhiteSpace(app.Options.Config.SelfSpikesSpellName) &&
 					await app.Actions.CastSpell(spikesSpell)) return true;
+
+			if (await CastBoostSpell(app, boostSpell)) return true;
 
 			return false;
 		}
@@ -230,6 +233,29 @@ namespace Altomatic.UI.Game.Strategies
 					!app.Healer.HasAnyBuff(Buffs.Barparalyze) &&
 					(await app.Actions.CastSpell("Barsleepra") ||
 					 await app.Actions.CastSpell("Barsleep"))) return true;
+
+			return false;
+		}
+
+		private async Task<bool> CastBoostSpell(AppViewModel app, string boostSpell)
+		{
+			if (string.IsNullOrWhiteSpace(boostSpell)) return false;
+			var suffix = boostSpell.Substring(boostSpell.Length - 3);
+
+			short[] buffs = suffix switch
+			{
+				"AGI" => new[] { Buffs.AGIBoost, Buffs.AGIBoost2, Buffs.AGIBoost3 },
+				"CHR" => new[] { Buffs.CHRBoost, Buffs.CHRBoost2, Buffs.CHRBoost3 },
+				"DEX" => new[] { Buffs.DEXBoost, Buffs.DEXBoost2, Buffs.DEXBoost3 },
+				"INT" => new[] { Buffs.INTBoost, Buffs.INTBoost2, Buffs.INTBoost3 },
+				"MND" => new[] { Buffs.MNDBoost, Buffs.MNDBoost2, Buffs.MNDBoost3 },
+				"STR" => new[] { Buffs.STRBoost, Buffs.STRBoost2, Buffs.STRBoost3 },
+				"VIT" => new[] { Buffs.VITBoost, Buffs.VITBoost2, Buffs.VITBoost3 },
+				_ => new short[0],
+			};
+
+			if (buffs.Length > 0 && !app.Healer.HasAnyBuff(buffs) &&
+					await app.Actions.CastSpell(boostSpell)) return true;
 
 			return false;
 		}

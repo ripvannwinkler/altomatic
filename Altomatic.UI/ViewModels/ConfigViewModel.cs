@@ -274,6 +274,25 @@ namespace Altomatic.UI.ViewModels
 			set { selfBarStatusSpellName = value; OnPropertyChanged(); }
 		}
 
+		public string[] BoostSpells { get; } =
+		{
+			"",
+			"AGI",
+			"CHR",
+			"DEX",
+			"INT",
+			"MND",
+			"STR",
+			"VIT",
+		};
+
+		private string boostSpellName = "";
+		public string BoostSpellName
+		{
+			get => boostSpellName;
+			set { boostSpellName = value; OnPropertyChanged(); }
+		}
+
 		#endregion
 
 		#region Debuff Removal
