@@ -11,20 +11,29 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RaiseTheDeadStrategy : IGameStrategy
 	{
-		private readonly Dictionary<string, DateTime> raisedPlayers = new Dictionary<string, DateTime>();
+		/// <summary>
+    /// The blacklist holds a list of player names for whom raise should not be attempted
+    /// either because they have already been raisd and just not yet accepted, or because
+    /// our attempt to raise them failed. Names older than N seconds are pruned automatically.
+    /// </summary>
+		private readonly Dictionary<string, DateTime> blacklist = new Dictionary<string, DateTime>();
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
-			ClearAgedRaises();
+			PruneBlacklist();
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.TanksFirst))
 			{
 				if (player.CurrentHp > 0)
 				{
-					raisedPlayers.Remove(player.Name);
+					blacklist.Remove(player.Name);
 				}
-				else if (!raisedPlayers.ContainsKey(player.Name))
+				else if (!blacklist.ContainsKey(player.Name))
 				{
-					raisedPlayers.Add(player.Name, DateTime.Now);
+					// Add player to the blacklist regardless of whether the spell succeeds
+					// so that we don't try them again too soon in the event that someone
+					// else cast raise on them and we get a "cannot be cast on" message.
+					blacklist.Add(player.Name, DateTime.Now);
+
 					if (await RaisePlayer(player, app)) return true;
 				}
 			}
@@ -39,14 +48,14 @@ namespace Altomatic.UI.Game.Strategies
     /// If raise was last attempted on a player more than 30 seconds ago,
     /// clear the raise flag so that it can be attempted again.
     /// </remarks>
-		private void ClearAgedRaises()
+		private void PruneBlacklist()
 		{
 			var now = DateTime.Now;
-			foreach (var entry in raisedPlayers.ToArray())
+			foreach (var entry in blacklist.ToArray())
 			{
 				if (now.Subtract(entry.Value).TotalSeconds > 30)
 				{
-					raisedPlayers.Remove(entry.Key);
+					blacklist.Remove(entry.Key);
 				}
 			}
 		}
