@@ -24,11 +24,8 @@ namespace Altomatic.UI.Game.Strategies
 				}
 				else if (!raisedPlayers.ContainsKey(player.Name))
 				{
-					if (await RaisePlayer(player, app))
-					{
-						raisedPlayers.Add(player.Name, DateTime.Now);
-						return true;
-					}
+					raisedPlayers.Add(player.Name, DateTime.Now);
+					if (await RaisePlayer(player, app)) return true;
 				}
 			}
 
