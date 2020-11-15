@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Altomatic.UI.Game.Data;
 using Altomatic.UI.Utilities;
 using Altomatic.UI.ViewModels;
@@ -93,73 +94,70 @@ namespace Altomatic.UI.Game.Strategies
 			if (!string.IsNullOrWhiteSpace(app.Options.Config.SelfBarStatusSpellName) &&
 					await CastBarStatusSpell(app)) return true;
 
-			if (!app.Healer.HasAnyBuff(
-						Buffs.Firestorm2, Buffs.Firestorm, Buffs.Sandstorm2, Buffs.Sandstorm,
-						Buffs.Rainstorm2, Buffs.Rainstorm, Buffs.Windstorm2, Buffs.Windstorm,
-						Buffs.Thunderstorm2, Buffs.Thunderstorm, Buffs.Hailstorm2, Buffs.Hailstorm,
-						Buffs.Aurorastorm2, Buffs.Aurorastorm, Buffs.Voidstorm2, Buffs.Voidstorm) &&
-					!string.IsNullOrWhiteSpace(app.Options.Config.SelfStormSpellName) &&
-					await app.Actions.CastSpell(stormSpell)) return true;
-
-			if (!app.Healer.HasAnyBuff(
-					Buffs.Enfire, Buffs.Enstone, Buffs.Enwater, Buffs.Enaero, Buffs.Enthunder, Buffs.Enblizzard,
-					Buffs.EnfireII, Buffs.EnstoneII, Buffs.EnwaterII, Buffs.EnaeroII, Buffs.EnthunderII, Buffs.EnblizzardII) &&
-					!string.IsNullOrWhiteSpace(app.Options.Config.SelfEnspellName) &&
-					await app.Actions.CastSpell(enspell)) return true;
-
-			if (!app.Healer.HasAnyBuff(Buffs.BlazeSpikes, Buffs.IceSpikes, Buffs.ShockSpikes) &&
-					!string.IsNullOrWhiteSpace(app.Options.Config.SelfSpikesSpellName) &&
-					await app.Actions.CastSpell(spikesSpell)) return true;
-
+			if (await CastStormSpell(app)) return true;
+			if (await CastSpikesSpell(app)) return true;
+			if (await CastEnspell(app)) return true;
 			if (await CastBoostSpell(app, boostSpell)) return true;
 
 			return false;
 		}
 
-		private async Task<bool> BuffOthers(AppViewModel app)
+		private async Task<bool> CastEnspell(AppViewModel app)
 		{
-			var hasteSpell = app.Spells.FirstAvailable("Haste II", "Haste");
-			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
-			var regenSpell = app.Spells.FirstAvailable("Regen V", "Regen IV", "Regen III", "Regen II", "Regen");
-			var protectSpell = app.Spells.FirstAvailable("Protect V", "Protect IV", "Protect III", "Protect II", "Protect");
-			var shellSpell = app.Spells.FirstAvailable("Shell V", "Shell IV", "Shell III", "Shell II", "Shell");
-			var stormSpell = app.Spells.FirstAvailable(app.Options.Config.SelfStormSpellName + " II", app.Options.Config.SelfStormSpellName);
+			var configSpell = app.Options.Config.SelfEnspellName;
 
-			foreach (var player in app.ActivePlayers.SortByJob())
+			short[] buffs = configSpell switch
 			{
-				if (player.IsEnabled && player.Name != app.Healer.Player.Name)
-				{
-					if (player.AutoBuffs.Protect &&
-							player.GetBuffAgeSeconds(Buffs.Protect) > app.Options.Config.AutoProtectSeconds &&
-							await app.Actions.CastSpell(protectSpell, player.Name)) return true;
+				string s when s.StartsWith("Enfire") => new[] { Buffs.EnfireII, Buffs.Enfire },
+				string s when s.StartsWith("Enstone") => new[] { Buffs.EnstoneII, Buffs.Enstone },
+				string s when s.StartsWith("Enwater") => new[] { Buffs.EnwaterII, Buffs.Enwater },
+				string s when s.StartsWith("Enaero") => new[] { Buffs.EnaeroII, Buffs.Enaero },
+				string s when s.StartsWith("Enthunder") => new[] { Buffs.EnthunderII, Buffs.Enthunder },
+				string s when s.StartsWith("Enblizzard") => new[] { Buffs.EnblizzardII, Buffs.EnblizzardII },
+				_ => new short[0]
+			};
 
-					if (player.AutoBuffs.Shell &&
-							player.GetBuffAgeSeconds(Buffs.Shell) > app.Options.Config.AutoShellSeconds &&
-							await app.Actions.CastSpell(shellSpell, player.Name)) return true;
+			return
+				!app.Buffs.HasAny(app.Healer.Player.Name, buffs) &&
+				await app.Actions.CastSpell(configSpell);
+		}
 
-					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
-							player.GetBuffAgeSeconds(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
-							await app.Actions.CastSpell(refreshSpell, player.Name)) return true;
+		private async Task<bool> CastStormSpell(AppViewModel app)
+		{
+			var configSpell = app.Options.Config.SelfStormSpellName;
+			var actualSpell = app.Spells.FirstAvailable($"{configSpell} II", configSpell) ?? "";
 
-					if (player.AutoBuffs.Haste &&
-							player.GetBuffAgeSeconds(Buffs.Haste) > app.Options.Config.AutoHasteSeconds &&
-							await app.Actions.CastSpell(hasteSpell, player.Name)) return true;
+			short[] buffs = actualSpell switch
+			{
+				string s when s.StartsWith("Firestorm") => new[] { Buffs.Firestorm, Buffs.Firestorm2 },
+				string s when s.StartsWith("Sandstorm") => new[] { Buffs.Sandstorm, Buffs.Sandstorm2 },
+				string s when s.StartsWith("Rainstorm") => new[] { Buffs.Rainstorm, Buffs.Rainstorm2 },
+				string s when s.StartsWith("Windstorm") => new[] { Buffs.Windstorm, Buffs.Windstorm2 },
+				string s when s.StartsWith("Thunderstorm") => new[] { Buffs.Thunderstorm, Buffs.Thunderstorm2 },
+				string s when s.StartsWith("Hailstorm") => new[] { Buffs.Hailstorm, Buffs.Hailstorm2 },
+				string s when s.StartsWith("Aurorastorm") => new[] { Buffs.Aurorastorm, Buffs.Aurorastorm2 },
+				string s when s.StartsWith("Voidstorm") => new[] { Buffs.Voidstorm, Buffs.Voidstorm2 },
+				_ => new short[0]
+			};
 
-					if (player.AutoBuffs.Regen &&
-							player.GetBuffAgeSeconds(Buffs.Regen) > app.Options.Config.AutoRegenSeconds &&
-							await app.Actions.CastSpell(regenSpell, player.Name)) return true;
+			return
+				!app.Buffs.HasAny(app.Healer.Player.Name, buffs) &&
+				await app.Actions.CastSpell(actualSpell);
+		}
 
-					if (player.AutoBuffs.Phalanx && player.IsInHealerParty &&
-							player.GetBuffAgeSeconds(Buffs.Phalanx) > app.Options.Config.AutoPhalanxSeconds &&
-							await app.Actions.CastSpell("Phalanx II", player.Name)) return true;
+		private async Task<bool> CastSpikesSpell(AppViewModel app)
+		{
+			short buff = app.Options.Config.SelfEnspellName switch
+			{
+				"Ice Spikes" => Buffs.IceSpikes,
+				"Shock Spikes" => Buffs.ShockSpikes,
+				"Blaze Spikes" => Buffs.BlazeSpikes,
+				_ => -1
+			};
 
-					if (player.AutoBuffs.Firestorm && player.IsInHealerParty &&
-							player.GetBuffAgeSeconds(Buffs.Firestorm, Buffs.Firestorm2) > app.Options.Config.AutoStormSeconds &&
-							await app.Actions.CastSpell(app.Spells.FirstAvailable("Firestorm II", "Firestorm"), player.Name)) return true;
-				}
-			}
-
-			return false;
+			return
+				!app.Buffs.HasAny(app.Healer.Player.Name, buff) &&
+				await app.Actions.CastSpell(app.Options.Config.SelfEnspellName);
 		}
 
 		private async Task<bool> CastBarElementSpell(AppViewModel app)
@@ -261,6 +259,82 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (buffs.Length > 0 && !app.Healer.HasAnyBuff(buffs) &&
 					await app.Actions.CastSpell(boostSpell)) return true;
+
+			return false;
+		}
+
+		private async Task<bool> BuffOthers(AppViewModel app)
+		{
+			var hasteSpell = app.Spells.FirstAvailable("Haste II", "Haste");
+			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
+			var regenSpell = app.Spells.FirstAvailable("Regen V", "Regen IV", "Regen III", "Regen II", "Regen");
+			var protectSpell = app.Spells.FirstAvailable("Protect V", "Protect IV", "Protect III", "Protect II", "Protect");
+			var shellSpell = app.Spells.FirstAvailable("Shell V", "Shell IV", "Shell III", "Shell II", "Shell");
+
+			foreach (var player in app.ActivePlayers.SortByJob())
+			{
+				// skip primary player on this run
+				if (app.Healer.Player.Name == player.Name) continue;
+
+				if (player.IsEnabled && player.Name != app.Healer.Player.Name)
+				{
+					if (player.AutoBuffs.Protect &&
+							player.GetBuffAge(Buffs.Protect) > app.Options.Config.AutoProtectSeconds &&
+							await app.Actions.CastSpell(protectSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Shell &&
+							player.GetBuffAge(Buffs.Shell) > app.Options.Config.AutoShellSeconds &&
+							await app.Actions.CastSpell(shellSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
+							await app.Actions.CastSpell(refreshSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Haste &&
+							player.GetBuffAge(Buffs.Haste) > app.Options.Config.AutoHasteSeconds &&
+							await app.Actions.CastSpell(hasteSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Regen &&
+							player.GetBuffAge(Buffs.Regen) > app.Options.Config.AutoRegenSeconds &&
+							await app.Actions.CastSpell(regenSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Phalanx && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Phalanx) > app.Options.Config.AutoPhalanxSeconds &&
+							await app.Actions.CastSpell("Phalanx II", player.Name)) return true;
+
+					if (player.AutoBuffs.Firestorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Firestorm, Buffs.Firestorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Firestorm II", "Firestorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Sandstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Sandstorm, Buffs.Sandstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Sandstorm II", "Sandstorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Rainstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Rainstorm, Buffs.Rainstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Rainstorm II", "Rainstorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Windstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Windstorm, Buffs.Windstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Windstorm II", "Windstorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Thunderstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Thunderstorm, Buffs.Thunderstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Thunderstorm II", "Thunderstorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Hailstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Hailstorm, Buffs.Hailstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Hailstorm II", "Hailstorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Aurorastorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Aurorastorm, Buffs.Aurorastorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Aurorastorm II", "Aurorastorm"), player.Name)) return true;
+
+					if (player.AutoBuffs.Voidstorm && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Voidstorm, Buffs.Voidstorm2) > app.Options.Config.AutoStormSeconds &&
+							await app.Actions.CastSpell(app.Spells.FirstAvailable("Voidstorm II", "Voidstorm"), player.Name)) return true;
+				}
+			}
 
 			return false;
 		}

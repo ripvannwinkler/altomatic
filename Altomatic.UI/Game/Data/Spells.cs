@@ -62,7 +62,9 @@ namespace Altomatic.UI.Game.Data
 
 		public string FirstAvailable(params string[] spellNames)
 		{
-			return spellNames.FirstOrDefault(s => HasAccessTo(s));
+			return spellNames
+				.Where(s => !string.IsNullOrWhiteSpace(s))
+				.FirstOrDefault(s => HasAccessTo(s));
 		}
 
 		private bool IsCasterDisabled()

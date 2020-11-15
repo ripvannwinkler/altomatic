@@ -30,7 +30,12 @@ namespace Altomatic.UI.ViewModels
 		public bool IsEnabled
 		{
 			get { return isEnabled; }
-			set { isEnabled = value; OnPropertyChanged(); }
+			set
+			{
+				isEnabled = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsActive));
+			}
 		}
 
 		private double distanceFromHealer;
@@ -65,25 +70,9 @@ namespace Altomatic.UI.ViewModels
 			get
 			{
 				return
-					IsEnabled &&
-					AppData.IsGameReady && Member != null && member.Active > 0 &&
-					DistanceFromHealer < Constants.DefaultCastRange && AppData.IsGameReady;
+					IsEnabled && Member?.Active > 0 &&
+					DistanceFromHealer < Constants.DefaultCastRange;
 			}
-		}
-
-		public XiEntity Entity
-		{
-			get => AppData.Healer.Entity.GetEntity((int)member.TargetIndex);
-		}
-
-		public EntityStatus EntityStatus
-		{
-			get => (EntityStatus)Entity.Status;
-		}
-
-		public XiEntity TargetEntity
-		{
-			get { return AppData.Healer.Entity.GetEntity((int)Entity.TargetingIndex); }
 		}
 
 		public bool IsInHealerParty
@@ -93,43 +82,10 @@ namespace Altomatic.UI.ViewModels
 				.Select(m => m.Name).Contains(Name);
 		}
 
-		private AppViewModel appData;
-		public AppViewModel AppData
-		{
-			get { return appData; }
-			set
-			{
-				appData = value;
-				OnPropertyChanged();
-				OnPropertyChanged(nameof(IsActive));
-			}
-		}
-
-		private AutoBuffsViewModel autoBuffs;
-		public AutoBuffsViewModel AutoBuffs
-		{
-			get { return autoBuffs; }
-			set { autoBuffs = value; OnPropertyChanged(); }
-		}
-
-		private PartyMember member;
-		public PartyMember Member
-		{
-			get { return member; }
-			set
-			{
-				member = value;
-				OnPropertyChanged();
-				OnPropertyChanged(nameof(IsActive));
-				OnPropertyChanged(nameof(MainJob));
-				OnPropertyChanged(nameof(SubJob));
-			}
-		}
-
 		public string MainJob
-    {
+		{
 			get => AppData.Jobs.GetMainJob(Member);
-    }
+		}
 
 		public string SubJob
 		{
@@ -181,6 +137,54 @@ namespace Altomatic.UI.ViewModels
 			set { isRequiredForRolls = value; OnPropertyChanged(); }
 		}
 
+		public XiEntity Entity
+		{
+			get => AppData.Healer.Entity.GetEntity((int)member.TargetIndex);
+		}
+
+		public EntityStatus EntityStatus
+		{
+			get => (EntityStatus)Entity.Status;
+		}
+
+		public XiEntity TargetEntity
+		{
+			get { return AppData.Healer.Entity.GetEntity((int)Entity.TargetingIndex); }
+		}
+
+		private AppViewModel appData;
+		public AppViewModel AppData
+		{
+			get { return appData; }
+			set
+			{
+				appData = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsActive));
+			}
+		}
+
+		private AutoBuffsViewModel autoBuffs;
+		public AutoBuffsViewModel AutoBuffs
+		{
+			get { return autoBuffs; }
+			set { autoBuffs = value; OnPropertyChanged(); }
+		}
+
+		private PartyMember member;
+		public PartyMember Member
+		{
+			get { return member; }
+			set
+			{
+				member = value;
+				OnPropertyChanged();
+				OnPropertyChanged(nameof(IsActive));
+				OnPropertyChanged(nameof(MainJob));
+				OnPropertyChanged(nameof(SubJob));
+			}
+		}
+
 		public PlayerViewModel(AppViewModel appData)
 		{
 			AppData = appData;
@@ -214,7 +218,10 @@ namespace Altomatic.UI.ViewModels
 			AutoBuffs.Voidstorm = false;
 		}
 
-		public int GetBuffAgeSeconds(params short[] buffs)
+		/// <summary>
+    /// Gets the lowest age of any of the specified buffs (in seconds)
+    /// </summary>
+		public int GetBuffAge(params short[] buffs)
 		{
 			var age = int.MaxValue;
 			foreach (var buff in buffs)
@@ -226,11 +233,17 @@ namespace Altomatic.UI.ViewModels
 			return age;
 		}
 
+		/// <summary>
+    /// Does the player have any of the specified buffs?
+    /// </summary>
+    /// <param name="buffs"></param>
+    /// <returns></returns>
 		public bool HasAnyBuff(params short[] buffs)
 		{
 			return AppData.Buffs.HasAny(Name, buffs);
 		}
 
+		/// <inheritdoc/>
 		public override bool Equals(object obj)
 		{
 			if (obj is PlayerViewModel other)
@@ -245,6 +258,7 @@ namespace Altomatic.UI.ViewModels
 			return false;
 		}
 
+		/// <inheritdoc/>
 		public override int GetHashCode()
 		{
 			return (
