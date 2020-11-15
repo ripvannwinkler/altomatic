@@ -4,6 +4,7 @@
 	{
 		None,
 		TanksFirst,
-		HealersFirst
+		HealersFirst,
+		MeleeFirst
 	}
 }

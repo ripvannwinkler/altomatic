@@ -454,6 +454,7 @@ namespace Altomatic.UI.ViewModels
 			IsPaused = true;
 			Application.Current.Dispatcher.Invoke(() =>
 			{
+				LastKnownRoll = -1;
 				ActiveBuffs.Clear();
 			});
 		}

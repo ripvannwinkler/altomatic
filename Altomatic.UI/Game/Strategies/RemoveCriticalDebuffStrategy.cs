@@ -32,6 +32,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemoveSleepgaFromPlayers(app) ||
+						await RemoveVirunaFromPlayers(app) ||
 						await RemoveParalyzeFromHealer(app) ||
 						await RemoveSilenceFromPlayers(app) ||
 						await RemovePetrifyFromPlayers(app))
@@ -43,7 +44,25 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-		private async Task<bool> RemoveDoomFromPlayers(AppViewModel app, bool curseToo = false)
+    private async Task<bool> RemoveVirunaFromPlayers(AppViewModel app)
+    {
+			var buffsToCheck = new[] { Buffs.Disease, Buffs.Plague };
+
+			foreach (var player in app.ActivePlayers.SortByJob(JobSort.MeleeFirst))
+			{
+				if (player.HasAnyBuff(buffsToCheck))
+				{
+					if (await app.Actions.CastSpell("Viruna", player.Name))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+    private async Task<bool> RemoveDoomFromPlayers(AppViewModel app, bool curseToo = false)
 		{
 			var buffsToCheck = curseToo
 				? new[] { Buffs.Doom, Buffs.Curse }

@@ -78,6 +78,13 @@ namespace Altomatic.UI.Game.Data
 					new[] { "BRD", "BLM" }.Contains(main) ? 3 :
 					new[] { "NIN" }.Contains(sub) ? 4 : 5;
 			}
+			else if (sortStrategy == JobSort.MeleeFirst)
+			{
+				return
+					new[] { "MNK", "SAM", "WAR", "DRK", "DRG" }.Contains(main) ? 1 :
+					new[] { "BRD", "COR", "THF", "NIN" }.Contains(main) ? 2 :
+					new[] { "PLD", "RUN" }.Contains(main) ? 3 : 4;
+			}
 			else
 			{
 				return 1;
