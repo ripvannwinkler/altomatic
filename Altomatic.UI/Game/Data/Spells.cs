@@ -22,6 +22,7 @@ namespace Altomatic.UI.Game.Data
 		public async Task<bool> CanCast(string spellName)
 		{
 			if (IsCasterDisabled()) return false;
+			if (App.Healer.Menu.IsMenuOpen) return false;
 			if (string.IsNullOrWhiteSpace(spellName)) return false;
 			var spellInfo = App.Healer.Resources.GetSpell(spellName, 0);
 			if (spellInfo == null) return false;
