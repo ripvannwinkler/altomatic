@@ -182,6 +182,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.IsGeoTarget)
 				{
+					await Task.Delay(2000);
 					if (await app.Actions.CastSpell("Cure", player.Name))
 					{
 						lastGeoTargetId = target.TargetID;
