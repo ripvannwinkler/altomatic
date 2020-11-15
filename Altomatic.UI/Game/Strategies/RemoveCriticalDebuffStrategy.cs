@@ -22,13 +22,15 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
+			// always remove silence and doom regardless of player HPP
 			if (await RemoveSilenceFromHealer(app) ||
 					await RemoveDoomFromPlayers(app))
 			{
 				return true;
 			}
 
-			if (app.ActivePlayers.AreHealthy())
+			// remove other critical debuffs as long as all players above N HPP
+			if (app.ActivePlayers.Select(p => p.CurrentHpp).Min() >= 60)
 			{
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemoveParalyzeFromHealer(app) ||
@@ -58,7 +60,7 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemoveDoomFromPlayers(AppViewModel app, bool curseToo = false)
+		private async Task<bool> RemoveDoomFromPlayers(AppViewModel app, bool curseToo = false)
 		{
 			var buffsToCheck = curseToo
 				? new[] { Buffs.Doom, Buffs.Curse }
@@ -154,8 +156,8 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemovePlagueFromPlayers(AppViewModel app)
-    {
+		private async Task<bool> RemovePlagueFromPlayers(AppViewModel app)
+		{
 			var buffsToCheck = new[] { Buffs.Disease, Buffs.Plague };
 
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.MeleeFirst))
