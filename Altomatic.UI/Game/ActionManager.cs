@@ -41,6 +41,13 @@ namespace Altomatic.UI.Game
 			if (AppData.IsPlayerMoving) return false;
 			if (!AppData.Jobs.CanUseAbility(abilityName)) return false;
 
+			// skip ability attempt if target player is dead
+			var targetPlayer = AppData.Players.FirstOrDefault(x => x.Name == targetName);
+			if (targetPlayer != null)
+			{
+				if (targetPlayer.CurrentHp < 1) return false;
+			}
+
 			AppData.SetStatus($"Using ability {abilityName} on {targetName}");
 			await AppData.Healer.SendCommand($"/ja \"{abilityName}\" {targetName}", 2000);
 			return true;
@@ -52,11 +59,11 @@ namespace Altomatic.UI.Game
 			if (AppData.Healer.IsDead()) return false;
 			if (!await AppData.Spells.CanCast(spellName)) return false;
 
-			// skip spell cast attempt if player is dead and not a raise spell
-			var playerTarget = AppData.Players.FirstOrDefault(x => x.Name == targetName);
-			if (playerTarget != null)
+			// skip spell cast attempt if target player is dead and not a raise spell
+			var targetPlayer = AppData.Players.FirstOrDefault(x => x.Name == targetName);
+			if (targetPlayer != null)
 			{
-				if (playerTarget.CurrentHp < 1)
+				if (targetPlayer.CurrentHp < 1)
 				{
 					var raise = new[] { "Arise", "Raise III", "Raise II", "Raise" };
 					if (!raise.Contains(spellName)) return false;
