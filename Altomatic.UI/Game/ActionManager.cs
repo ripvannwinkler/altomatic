@@ -51,6 +51,18 @@ namespace Altomatic.UI.Game
 			if (AppData.IsPlayerMoving) return false;
 			if (AppData.Healer.IsDead()) return false;
 			if (!await AppData.Spells.CanCast(spellName)) return false;
+
+			// skip spell cast attempt if player is dead and not a raise spell
+			var playerTarget = AppData.Players.FirstOrDefault(x => x.Name == targetName);
+			if (playerTarget != null)
+			{
+				if (playerTarget.CurrentHp < 1)
+				{
+					var raise = new[] { "Arise", "Raise III", "Raise II", "Raise" };
+					if (!raise.Contains(spellName)) return false;
+				}
+			}
+
 			AppData.SetStatus($"Casting {spellName} on {targetName}");
 
 			var casting = false;

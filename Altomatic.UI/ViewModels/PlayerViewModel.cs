@@ -64,7 +64,6 @@ namespace Altomatic.UI.ViewModels
 			set { currentHpp = value; OnPropertyChanged(); }
 		}
 
-
 		public bool IsActive
 		{
 			get

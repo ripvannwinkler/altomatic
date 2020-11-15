@@ -11,6 +11,7 @@ namespace Altomatic.UI.Game.Strategies
 {
 	public class RemoveCriticalDebuffStrategy : IGameStrategy
 	{
+		private const int CRITICAL_REMOVAL_HPP_THRESHOLD = 60;
 		private static readonly string[] silenaJobs = new[] { "WHM", "RDM", "SCH", "PLD", "NIN", "RUN" };
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
@@ -30,7 +31,8 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			// remove other critical debuffs as long as all players above N HPP
-			if (app.ActivePlayers.Select(p => p.CurrentHpp).Min() >= 60)
+			var minHpp = app.ActivePlayers.Select(p => p.CurrentHpp).Min();
+			if (minHpp >= CRITICAL_REMOVAL_HPP_THRESHOLD)
 			{
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemoveParalyzeFromHealer(app) ||
