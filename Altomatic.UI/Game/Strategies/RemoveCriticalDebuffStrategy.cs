@@ -44,18 +44,14 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemovePlagueFromPlayers(AppViewModel app)
-    {
-			var buffsToCheck = new[] { Buffs.Disease, Buffs.Plague };
-
-			foreach (var player in app.ActivePlayers.SortByJob(JobSort.MeleeFirst))
+		private async Task<bool> RemoveSilenceFromHealer(AppViewModel app)
+		{
+			if (app.Healer.HasAnyBuff(Buffs.Silence))
 			{
-				if (player.HasAnyBuff(buffsToCheck))
+				if (await app.Actions.UseItem("Echo Drops") ||
+						await app.Actions.UseItem("Remedy"))
 				{
-					if (await app.Actions.CastSpell("Viruna", player.Name))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 
@@ -99,12 +95,17 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-		private async Task<bool> RemoveSilenceFromHealer(AppViewModel app)
+		private async Task<bool> RemoveParalyzeFromHealer(AppViewModel app)
 		{
-			if (app.Healer.HasAnyBuff(Buffs.Silence))
+			if (app.Healer.HasAnyBuff(Buffs.Paralysis))
 			{
-				if (await app.Actions.UseItem("Echo Drops") ||
+				if (app.Options.Config.PreferItemOverParalyna &&
 						await app.Actions.UseItem("Remedy"))
+				{
+					return true;
+				}
+
+				if (await app.Actions.CastSpell("Paralyna"))
 				{
 					return true;
 				}
@@ -153,19 +154,18 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-		private async Task<bool> RemoveParalyzeFromHealer(AppViewModel app)
-		{
-			if (app.Healer.HasAnyBuff(Buffs.Paralysis))
-			{
-				if (app.Options.Config.PreferItemOverParalyna &&
-						await app.Actions.UseItem("Remedy"))
-				{
-					return true;
-				}
+    private async Task<bool> RemovePlagueFromPlayers(AppViewModel app)
+    {
+			var buffsToCheck = new[] { Buffs.Disease, Buffs.Plague };
 
-				if (await app.Actions.CastSpell("Paralyna"))
+			foreach (var player in app.ActivePlayers.SortByJob(JobSort.MeleeFirst))
+			{
+				if (player.HasAnyBuff(buffsToCheck))
 				{
-					return true;
+					if (await app.Actions.CastSpell("Viruna", player.Name))
+					{
+						return true;
+					}
 				}
 			}
 
