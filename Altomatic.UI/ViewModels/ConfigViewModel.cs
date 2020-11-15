@@ -258,6 +258,7 @@ namespace Altomatic.UI.ViewModels
 		public string[] BarStatusSpells { get; } =
 		{
 			"",
+			"Silence",
 			"Amnesia",
 			"Virus",
 			"Paralyze",

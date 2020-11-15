@@ -199,6 +199,11 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> CastBarStatusSpell(AppViewModel app)
 		{
+			if (app.Options.Config.SelfBarStatusSpellName == "Silence" &&
+					!app.Healer.HasAnyBuff(Buffs.Barsilence) &&
+					(await app.Actions.CastSpell("Barsilencera") ||
+					 await app.Actions.CastSpell("Barsilence"))) return true;
+
 			if (app.Options.Config.SelfBarStatusSpellName == "Amnesia" &&
 					!app.Healer.HasAnyBuff(Buffs.Baramnesia) &&
 					(await app.Actions.CastSpell("Baramnesra") ||
