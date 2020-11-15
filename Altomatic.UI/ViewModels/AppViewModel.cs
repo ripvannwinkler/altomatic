@@ -605,7 +605,13 @@ namespace Altomatic.UI.ViewModels
 				var player = new PlayerViewModel(this);
 				player.PropertyChanged += (s, e) =>
 				{
-					if (e.PropertyName == nameof(player.IsRequiredForRolls))
+					if (e.PropertyName == nameof(player.Name))
+					{
+						OnPropertyChanged(nameof(player.IsRequiredForRolls));
+						OnPropertyChanged(nameof(player.IsEntrustTarget));
+						OnPropertyChanged(nameof(player.IsGeoTarget));
+					}
+					else if (e.PropertyName == nameof(player.IsRequiredForRolls))
 					{
 						OnPropertyChanged(nameof(RollTargets));
 					}
