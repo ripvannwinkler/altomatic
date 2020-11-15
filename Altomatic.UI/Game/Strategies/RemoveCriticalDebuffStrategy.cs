@@ -31,9 +31,9 @@ namespace Altomatic.UI.Game.Strategies
 			if (app.ActivePlayers.AreHealthy())
 			{
 				if (await RemoveDoomFromPlayers(app, true) ||
-						await RemoveSleepgaFromPlayers(app) ||
-						await RemoveVirunaFromPlayers(app) ||
 						await RemoveParalyzeFromHealer(app) ||
+						await RemoveSleepgaFromPlayers(app) ||
+						await RemovePlagueFromPlayers(app) ||
 						await RemoveSilenceFromPlayers(app) ||
 						await RemovePetrifyFromPlayers(app))
 				{
@@ -44,7 +44,7 @@ namespace Altomatic.UI.Game.Strategies
 			return false;
 		}
 
-    private async Task<bool> RemoveVirunaFromPlayers(AppViewModel app)
+    private async Task<bool> RemovePlagueFromPlayers(AppViewModel app)
     {
 			var buffsToCheck = new[] { Buffs.Disease, Buffs.Plague };
 
