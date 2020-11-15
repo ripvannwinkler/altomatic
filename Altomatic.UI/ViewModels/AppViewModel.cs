@@ -286,6 +286,9 @@ namespace Altomatic.UI.ViewModels
 			set { isPlayerMoving = value; OnPropertyChanged(); }
 		}
 
+		/// <summary>
+    /// List of users targeted for rolls
+    /// </summary>
 		public string RollTargets
 		{
 			get
@@ -295,6 +298,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Is this user the entrust/indi target?
+    /// </summary>
 		public string EntrustTarget
 		{
 			get
@@ -304,6 +310,9 @@ namespace Altomatic.UI.ViewModels
 			}
 		}
 
+		/// <summary>
+    /// Is this player the geo bubble target?
+    /// </summary>
 		public string GeoTarget
 		{
 			get
@@ -452,9 +461,9 @@ namespace Altomatic.UI.ViewModels
 		public void Pause()
 		{
 			IsPaused = true;
+			LastKnownRoll = -1;
 			Application.Current.Dispatcher.Invoke(() =>
 			{
-				LastKnownRoll = -1;
 				ActiveBuffs.Clear();
 			});
 		}
