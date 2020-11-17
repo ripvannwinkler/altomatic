@@ -287,8 +287,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// List of users targeted for rolls
-    /// </summary>
+		/// List of users targeted for rolls
+		/// </summary>
 		public string RollTargets
 		{
 			get
@@ -299,8 +299,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Is this user the entrust/indi target?
-    /// </summary>
+		/// Is this user the entrust/indi target?
+		/// </summary>
 		public string EntrustTarget
 		{
 			get
@@ -311,8 +311,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Is this player the geo bubble target?
-    /// </summary>
+		/// Is this player the geo bubble target?
+		/// </summary>
 		public string GeoTarget
 		{
 			get
@@ -398,7 +398,7 @@ namespace Altomatic.UI.ViewModels
 				{
 					PauseIfZoning();
 					DetectMovement();
-					await Task.Delay(200);
+					await Task.Delay(100);
 				}
 			})
 			{
@@ -566,15 +566,12 @@ namespace Altomatic.UI.ViewModels
 		{
 			if (!IsPaused && IsGameReady && CanExecuteActions())
 			{
-				await guard.Do(async () =>
+				LoopCount++;
+				foreach (var strategy in Strategies)
 				{
-					LoopCount++;
-					foreach (var strategy in Strategies)
-					{
-						if (IsPaused) break;
-						if (await strategy.ExecuteAsync(this)) return;
-					}
-				});
+					if (IsPaused) break;
+					if (await strategy.ExecuteAsync(this)) return;
+				}
 
 				SetStatus();
 			}

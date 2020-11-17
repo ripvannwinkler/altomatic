@@ -15,6 +15,8 @@ namespace Altomatic.UI.Game.Strategies
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
+			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
+
 			if (app.Options.Config.EnableDivineCaress &&
 					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false &&
 					await app.Actions.UseAbility("Divine Caress"))
@@ -40,6 +42,10 @@ namespace Altomatic.UI.Game.Strategies
 					return true;
 				}
 			}
+
+			if (app.Options.Config.SelfRefresh &&
+					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2) &&
+					await app.Actions.CastSpell(refreshSpell)) return true;
 
 			return false;
 		}
