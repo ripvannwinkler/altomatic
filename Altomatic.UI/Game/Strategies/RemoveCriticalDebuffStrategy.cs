@@ -23,6 +23,13 @@ namespace Altomatic.UI.Game.Strategies
 				if (await app.Actions.UseAbility("Divine Caress")) return true;
 			}
 
+			if (app.Options.Config.EnableComposure &&
+					app.Healer.HasAnyBuff(Buffs.Composure) == false &&
+					await app.Actions.UseAbility("Composure"))
+			{
+				return true;
+			}
+
 			if (await RemoveSilenceFromHealer(app)) return true;
 			if (await RemoveDoomFromPlayers(app)) return true;
 

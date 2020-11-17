@@ -38,6 +38,14 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
+			if (app.Options.Config.SelfHaste &&
+					!app.Healer.HasAnyBuff(Buffs.Haste, Buffs.Haste2) &&
+					await app.Actions.CastSpell(hasteSpell)) return true;
+
+			if (app.Options.Config.SelfRefresh &&
+					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2) &&
+					await app.Actions.CastSpell(refreshSpell)) return true;
+
 			if (app.Options.Config.SelfProtect &&
 					!app.Healer.HasAnyBuff(Buffs.Protect) &&
 					await app.Actions.CastSpell(protectSpell)) return true;
@@ -45,14 +53,6 @@ namespace Altomatic.UI.Game.Strategies
 			if (app.Options.Config.SelfShell &&
 					!app.Healer.HasAnyBuff(Buffs.Shell) &&
 					await app.Actions.CastSpell(shellSpell)) return true;
-
-			if (app.Options.Config.SelfRefresh &&
-					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2) &&
-					await app.Actions.CastSpell(refreshSpell)) return true;
-
-			if (app.Options.Config.SelfHaste &&
-					!app.Healer.HasAnyBuff(Buffs.Haste, Buffs.Haste2) &&
-					await app.Actions.CastSpell(hasteSpell)) return true;
 
 			if (app.Options.Config.SelfRegen &&
 					!app.Healer.HasAnyBuff(Buffs.Regen) &&
@@ -104,9 +104,10 @@ namespace Altomatic.UI.Game.Strategies
 
 		private async Task<bool> CastEnspell(AppViewModel app)
 		{
-			var configSpell = app.Options.Config.SelfEnspellName;
+			var spellName = app.Options.Config.SelfEnspellName;
+			if (string.IsNullOrWhiteSpace(spellName)) return false;
 
-			short[] buffs = configSpell switch
+			short[] buffs = spellName switch
 			{
 				string s when s.StartsWith("Enfire") => new[] { Buffs.EnfireII, Buffs.Enfire },
 				string s when s.StartsWith("Enstone") => new[] { Buffs.EnstoneII, Buffs.Enstone },
@@ -119,16 +120,16 @@ namespace Altomatic.UI.Game.Strategies
 
 			return
 				!app.Buffs.HasAny(app.Healer.Player.Name, buffs) &&
-				await app.Actions.CastSpell(configSpell);
+				await app.Actions.CastSpell(spellName);
 		}
 
 		private async Task<bool> CastStormSpell(AppViewModel app)
 		{
 			var configSpell = app.Options.Config.SelfStormSpellName;
-			var actualSpell = app.Spells.FirstAvailable($"{configSpell} II", configSpell) ?? "";
-			if (string.IsNullOrWhiteSpace(actualSpell)) return false;
+			var spellName = app.Spells.FirstAvailable($"{configSpell} II", configSpell) ?? "";
+			if (string.IsNullOrWhiteSpace(spellName)) return false;
 
-			short[] buffs = actualSpell switch
+			short[] buffs = spellName switch
 			{
 				string s when s.StartsWith("Firestorm") => new[] { Buffs.Firestorm, Buffs.Firestorm2 },
 				string s when s.StartsWith("Sandstorm") => new[] { Buffs.Sandstorm, Buffs.Sandstorm2 },
@@ -143,12 +144,15 @@ namespace Altomatic.UI.Game.Strategies
 
 			return
 				!app.Buffs.HasAny(app.Healer.Player.Name, buffs) &&
-				await app.Actions.CastSpell(actualSpell);
+				await app.Actions.CastSpell(spellName);
 		}
 
 		private async Task<bool> CastSpikesSpell(AppViewModel app)
 		{
-			short buff = app.Options.Config.SelfEnspellName switch
+			var spellName = app.Options.Config.SelfSpikesSpellName;
+			if (string.IsNullOrWhiteSpace(spellName)) return false;
+
+			short buff = spellName switch
 			{
 				"Ice Spikes" => Buffs.IceSpikes,
 				"Shock Spikes" => Buffs.ShockSpikes,
@@ -158,7 +162,7 @@ namespace Altomatic.UI.Game.Strategies
 
 			return
 				!app.Buffs.HasAny(app.Healer.Player.Name, buff) &&
-				await app.Actions.CastSpell(app.Options.Config.SelfEnspellName);
+				await app.Actions.CastSpell(spellName);
 		}
 
 		private async Task<bool> CastBarElementSpell(AppViewModel app)
@@ -279,6 +283,14 @@ namespace Altomatic.UI.Game.Strategies
 
 				if (player.IsEnabled && player.Name != app.Healer.Player.Name)
 				{
+					if (player.AutoBuffs.Haste &&
+							player.GetBuffAge(Buffs.Haste) > app.Options.Config.AutoHasteSeconds &&
+							await app.Actions.CastSpell(hasteSpell, player.Name)) return true;
+
+					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
+							player.GetBuffAge(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
+							await app.Actions.CastSpell(refreshSpell, player.Name)) return true;
+
 					if (player.AutoBuffs.Protect &&
 							player.GetBuffAge(Buffs.Protect) > app.Options.Config.AutoProtectSeconds &&
 							await app.Actions.CastSpell(protectSpell, player.Name)) return true;
@@ -286,14 +298,6 @@ namespace Altomatic.UI.Game.Strategies
 					if (player.AutoBuffs.Shell &&
 							player.GetBuffAge(Buffs.Shell) > app.Options.Config.AutoShellSeconds &&
 							await app.Actions.CastSpell(shellSpell, player.Name)) return true;
-
-					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
-							player.GetBuffAge(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
-							await app.Actions.CastSpell(refreshSpell, player.Name)) return true;
-
-					if (player.AutoBuffs.Haste &&
-							player.GetBuffAge(Buffs.Haste) > app.Options.Config.AutoHasteSeconds &&
-							await app.Actions.CastSpell(hasteSpell, player.Name)) return true;
 
 					if (player.AutoBuffs.Regen &&
 							player.GetBuffAge(Buffs.Regen) > app.Options.Config.AutoRegenSeconds &&

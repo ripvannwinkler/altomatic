@@ -67,7 +67,7 @@ namespace Altomatic.UI.Forms
 					try
 					{
 						if (Application.Current?.Dispatcher == null) continue;
-						await Application.Current.Dispatcher.Invoke<Task>(ExecuteActions);
+						await Application.Current.Dispatcher.InvokeAsync(ExecuteActions).Result;
 					}
 					catch (Exception ex)
 					{

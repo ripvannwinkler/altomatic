@@ -56,13 +56,6 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
-			if (app.Options.Config.EnableComposure &&
-					app.Healer.HasAnyBuff(Buffs.Composure) == false &&
-					await app.Actions.UseAbility("Composure"))
-			{
-				return true;
-			}
-
 			if (app.Options.Config.EnableLightArts &&
 					app.Healer.HasAnyBuff(Buffs.LightArts, Buffs.AddendumWhite) == false &&
 					await app.Actions.UseAbility("Light Arts"))
