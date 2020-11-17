@@ -661,9 +661,9 @@ namespace Altomatic.UI.ViewModels
 				}
 				else if (zoneId != lastZone)
 				{
-					Pause();
-					lastZone = zoneId;
 					SetStatus("Paused due to zoning...");
+					lastZone = zoneId;
+					Pause();
 				}
 			}
 		}
