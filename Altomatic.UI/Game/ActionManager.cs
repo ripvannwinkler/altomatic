@@ -55,22 +55,42 @@ namespace Altomatic.UI.Game
 
 		public async Task<bool> CastSpell(string spellName, string targetName = "<me>")
 		{
-			if (AppData.IsPlayerMoving) return false;
-			if (AppData.Healer.IsDead()) return false;
-			if (!await AppData.Spells.CanCast(spellName)) return false;
+			if (!await AppData.Spells.CanCast(spellName))
+			{
+				Debug.WriteLine($"Player cannot cast {spellName} at this time.");
+				return false;
+			}
 
-      // skip spell cast attempt if target player is dead and not a raise spell
-      var targetPlayer = AppData.Players.FirstOrDefault(x => x.Name == targetName);
-      if (targetPlayer != null)
-      {
-        if (targetPlayer.CurrentHp < 1)
-        {
-          var raise = new[] { "Arise", "Raise III", "Raise II", "Raise" };
-          if (!raise.Contains(spellName)) return false;
-        }
-      }
+			if (AppData.IsPlayerMoving)
+			{
+				Debug.WriteLine($"Player is moving. Cannot cast {spellName} at this time.");
+				return false;
+			}
 
-      AppData.SetStatus($"Casting {spellName} on {targetName}");
+			if (AppData.Healer.IsDead())
+			{
+				Debug.WriteLine($"Player is dead. Cannot cast {spellName} at this time.");
+				return false;
+			}
+
+			// skip spell cast attempt if target player is dead and not a raise spell
+			var targetPlayer = AppData.Players.FirstOrDefault(x => x.Name == targetName);
+			if (targetPlayer != null)
+			{
+				if (targetPlayer.CurrentHp < 1)
+				{
+					var raise = new[] { "Arise", "Raise III", "Raise II", "Raise" };
+					if (!raise.Contains(spellName))
+					{
+						Debug.WriteLine($"{targetName} is dead and {spellName} is not a raise spell.");
+						return false;
+					}
+				}
+			}
+
+			Debug.WriteLine($"Casting {spellName} on {targetName}...");
+			AppData.SetStatus($"Casting {spellName} on {targetName}...");
+			var cts = new CancellationTokenSource();
 
 			var casting = false;
 			var completed = false;
@@ -81,14 +101,18 @@ namespace Altomatic.UI.Game
 				switch (@event.Type)
 				{
 					case AddonEventType.CastingStarted:
+						Debug.WriteLine($"Casting {spellName} started...");
 						casting = true;
+						cts.Cancel();
 						break;
 
 					case AddonEventType.CastingInteruppted:
+						Debug.WriteLine($"Casting {spellName} interrupted...");
 						interrupted = true;
 						break;
 
 					case AddonEventType.CastingCompleted:
+						Debug.WriteLine($"Casting {spellName} completed...");
 						completed = true;
 						break;
 				}
@@ -96,27 +120,30 @@ namespace Altomatic.UI.Game
 
 			var timer = Stopwatch.StartNew();
 			var spellInfo = AppData.Healer.Resources.GetSpell(spellName, 0);
-			await AppData.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 750);
+			await AppData.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 500);
+
+			while (timer.ElapsedMilliseconds < 2000)
+      {
+				if (cts.IsCancellationRequested) break;
+      }
 
 			while (casting)
 			{
-				var castPercent = AppData.Healer.CastBar.Percent;
-				if (castPercent == 1) break;
-
 				if (interrupted)
 				{
-					await Task.Delay(3000);
+					Debug.WriteLine("Spell interrupted. Waiting and exiting loop...");
+					await Task.Delay(2500);
 					break;
 				}
 
 				if (completed)
 				{
-					await Task.Delay(3000);
+					Debug.WriteLine("Spell completed. Waiting and exiting loop...");
+					await Task.Delay(2500);
 					break;
 				}
 
 				await Task.Delay(200);
-				continue;
 			}
 
 			return true;

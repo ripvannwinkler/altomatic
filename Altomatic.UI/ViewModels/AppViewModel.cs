@@ -29,6 +29,7 @@ namespace Altomatic.UI.ViewModels
 		private OptionsViewModel options;
 		private ObservableCollection<Process> processes;
 		private ObservableCollection<PlayerViewModel> players = new ObservableCollection<PlayerViewModel>();
+		private RefreshPlayerInfoStrategy refreshPlayerInfo = new RefreshPlayerInfoStrategy();
 		private Process healerProcess;
 		private string statusMessage;
 		private short lastKnownRoll;
@@ -330,8 +331,6 @@ namespace Altomatic.UI.ViewModels
 		{
 			InitializePlayerData();
 
-			//Strategies.Add(new ValidateProcessStrategy());
-			Strategies.Add(new RefreshPlayerInfoStrategy());
 			Strategies.Add(new ReloadAddonStrategy());
 			Strategies.Add(new AcceptRaiseStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
@@ -391,19 +390,6 @@ namespace Altomatic.UI.ViewModels
 			{
 				await RefreshProcessList();
 			});
-
-			new Thread(async () =>
-			{
-				while (true)
-				{
-					PauseIfZoning();
-					DetectMovement();
-					await Task.Delay(100);
-				}
-			})
-			{
-				IsBackground = true
-			}.Start();
 		}
 
 		/// <summary>
@@ -461,11 +447,10 @@ namespace Altomatic.UI.ViewModels
 		public void Pause()
 		{
 			IsPaused = true;
-			LastKnownRoll = -1;
-			Application.Current.Dispatcher.Invoke(() =>
-			{
-				ActiveBuffs.Clear();
-			});
+			ActiveBuffs.Clear();
+
+			lastKnownRoll = -1;
+			lastPosition = new Point3D();
 		}
 
 		/// <summary>
@@ -536,30 +521,6 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-		/// Detect whether the healer is moving
-		/// </summary>
-		public void DetectMovement()
-		{
-			if (Healer == null) return;
-			if (Healer.Player.LoginStatus == (int)LoginStatus.LoginScreen ||
-					Healer.Player.LoginStatus == (int)LoginStatus.Loading)
-			{
-				return;
-			}
-
-			var position = new Point3D(Healer.Player.X, Healer.Player.Y, Healer.Player.Z);
-			if (position.X != lastPosition.X || position.Y != lastPosition.Y || position.Z != lastPosition.Z)
-			{
-				lastPosition = position;
-				IsPlayerMoving = true;
-			}
-			else
-			{
-				IsPlayerMoving = false;
-			}
-		}
-
-		/// <summary>
 		/// Execute the main action loop
 		/// </summary>
 		public async Task ExecuteActionsAsync()
@@ -567,6 +528,10 @@ namespace Altomatic.UI.ViewModels
 			if (!IsPaused && IsGameReady && CanExecuteActions())
 			{
 				LoopCount++;
+				PauseIfZoning();
+				DetectMovement();
+				await refreshPlayerInfo.ExecuteAsync(this);
+
 				foreach (var strategy in Strategies)
 				{
 					if (IsPaused) break;
@@ -661,11 +626,39 @@ namespace Altomatic.UI.ViewModels
 				}
 				else if (zoneId != lastZone)
 				{
+					Pause();
 					SetStatus("Paused due to zoning...");
 					lastZone = zoneId;
-					Pause();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Detect whether the healer is moving
+		/// </summary>
+		public void DetectMovement()
+		{
+			if (Healer == null) return;
+			if (Healer.Player.LoginStatus == (int)LoginStatus.LoginScreen ||
+					Healer.Player.LoginStatus == (int)LoginStatus.Loading)
+			{
+				return;
+			}
+
+			var currentPosition = new Point3D(
+				Healer.Player.X, 
+				Healer.Player.Y, 
+				Healer.Player.Z);
+
+			if (currentPosition.X != lastPosition.X || 
+					currentPosition.Y != lastPosition.Y || 
+					currentPosition.Z != lastPosition.Z)
+			{
+				lastPosition = currentPosition;
+				IsPlayerMoving = true;
+			}
+
+			IsPlayerMoving = false;
 		}
 	}
 }

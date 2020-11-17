@@ -126,6 +126,7 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			var configSpell = app.Options.Config.SelfStormSpellName;
 			var actualSpell = app.Spells.FirstAvailable($"{configSpell} II", configSpell) ?? "";
+			if (string.IsNullOrWhiteSpace(actualSpell)) return false;
 
 			short[] buffs = actualSpell switch
 			{

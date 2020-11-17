@@ -18,34 +18,29 @@ namespace Altomatic.UI.Game.Strategies
 			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
 
 			if (app.Options.Config.EnableDivineCaress &&
-					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false &&
-					await app.Actions.UseAbility("Divine Caress"))
+					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false)
 			{
-				return true;
+				if (await app.Actions.UseAbility("Divine Caress")) return true;
 			}
 
-			if (await RemoveSilenceFromHealer(app) ||
-					await RemoveDoomFromPlayers(app))
-			{
-				return true;
-			}
+			if (await RemoveSilenceFromHealer(app)) return true;
+			if (await RemoveDoomFromPlayers(app)) return true;
 
 			if (!app.ActivePlayers.NeedCures())
 			{
-				if (await RemoveDoomFromPlayers(app, true) ||
-						await RemoveParalyzeFromHealer(app) ||
-						await RemoveSleepgaFromPlayers(app) ||
-						await RemovePlagueFromPlayers(app) ||
-						await RemoveSilenceFromPlayers(app) ||
-						await RemovePetrifyFromPlayers(app))
-				{
-					return true;
-				}
+				if (await RemoveDoomFromPlayers(app, true)) return true;
+				if (await RemoveParalyzeFromHealer(app)) return true;
+				if (await RemoveSleepgaFromPlayers(app)) return true;
+				if (await RemovePlagueFromPlayers(app)) return true;
+				if (await RemoveSilenceFromPlayers(app)) return true;
+				if (await RemovePetrifyFromPlayers(app)) return true;
 			}
 
 			if (app.Options.Config.SelfRefresh &&
-					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2) &&
-					await app.Actions.CastSpell(refreshSpell)) return true;
+					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2))
+			{
+				if (await app.Actions.CastSpell(refreshSpell)) return true;
+			}
 
 			return false;
 		}
@@ -54,11 +49,8 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			if (app.Healer.HasAnyBuff(Buffs.Silence))
 			{
-				if (await app.Actions.UseItem("Echo Drops") ||
-						await app.Actions.UseItem("Remedy"))
-				{
-					return true;
-				}
+				if (await app.Actions.UseItem("Echo Drops")) return true;
+				if (await app.Actions.UseItem("Remedy")) return true;
 			}
 
 			return false;

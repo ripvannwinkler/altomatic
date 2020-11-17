@@ -57,30 +57,38 @@ namespace Altomatic.UI.Forms
 			}
 
 			started = true;
+			var semaphore = new SemaphoreSlim(1);
 			new Thread(async () =>
 			{
 				while (true)
 				{
+					semaphore.Wait();
+
 					try
 					{
-						await Task.Delay(500);
-						if (Application.Current?.Dispatcher != null)
-						{
-							await Application.Current.Dispatcher.InvokeAsync(async () =>
-							{
-								await Model.ExecuteActionsAsync();
-							});
-						}
+						if (Application.Current?.Dispatcher == null) continue;
+						await Application.Current.Dispatcher.Invoke<Task>(ExecuteActions);
 					}
 					catch (Exception ex)
 					{
 						MessageBox.Show(ex.ToString());
+					}
+					finally
+					{
+						semaphore.Release();
 					}
 				}
 			})
 			{
 				IsBackground = true
 			}.Start();
+		}
+
+		private async Task ExecuteActions()
+		{
+			Debug.WriteLine("Executing main action loop...");
+			await Model.ExecuteActionsAsync();
+			await Task.Delay(200);
 		}
 
 		private async void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
