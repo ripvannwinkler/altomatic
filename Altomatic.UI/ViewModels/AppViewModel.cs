@@ -525,20 +525,24 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task ExecuteActionsAsync()
 		{
-			if (!IsPaused && IsGameReady && CanExecuteActions())
+			if (IsGameReady)
 			{
-				LoopCount++;
-				PauseIfZoning();
 				DetectMovement();
+				PauseIfZoning();
 				await refreshPlayerInfo.ExecuteAsync(this);
 
-				foreach (var strategy in Strategies)
+				if (!IsPaused && CanExecuteActions())
 				{
-					if (IsPaused) break;
-					if (await strategy.ExecuteAsync(this)) return;
-				}
+					LoopCount++;
 
-				SetStatus();
+					foreach (var strategy in Strategies)
+					{
+						if (IsPaused) break;
+						if (await strategy.ExecuteAsync(this)) return;
+					}
+
+					SetStatus();
+				}
 			}
 		}
 
@@ -646,19 +650,24 @@ namespace Altomatic.UI.ViewModels
 			}
 
 			var currentPosition = new Point3D(
-				Healer.Player.X, 
-				Healer.Player.Y, 
+				Healer.Player.X,
+				Healer.Player.Y,
 				Healer.Player.Z);
 
-			if (currentPosition.X != lastPosition.X || 
-					currentPosition.Y != lastPosition.Y || 
+			Debug.WriteLine(currentPosition);
+			Debug.WriteLine(lastPosition);
+
+			if (currentPosition.X != lastPosition.X ||
+					currentPosition.Y != lastPosition.Y ||
 					currentPosition.Z != lastPosition.Z)
 			{
 				lastPosition = currentPosition;
 				IsPlayerMoving = true;
 			}
-
-			IsPlayerMoving = false;
+			else
+			{
+				IsPlayerMoving = false;
+			}
 		}
 	}
 }
