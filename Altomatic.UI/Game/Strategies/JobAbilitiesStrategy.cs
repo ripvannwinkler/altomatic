@@ -70,31 +70,28 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
-			if (app.ActivePlayers.AreHealthy())
+			if (app.Options.Config.EnableConvert &&
+					(app.Healer.Player.MP < 100 || app.Healer.Player.MPP < 15) &&
+					await app.Actions.UseAbility("Convert"))
 			{
-				if (app.Options.Config.EnableConvert &&
-						(app.Healer.Player.MP < 100 || app.Healer.Player.MPP < 15) &&
-						await app.Actions.UseAbility("Convert"))
+				return true;
+			}
+
+			if (app.Options.Config.EnableDevotion)
+			{
+				var devotionTarget = GetDevotionTargetAsync(app);
+				if (devotionTarget != null && await app.Actions.UseAbility("Devotion", devotionTarget))
 				{
 					return true;
-				}
-
-				if (app.Options.Config.EnableDevotion)
-				{
-					var devotionTarget = GetDevotionTargetAsync(app);
-					if (devotionTarget != null && await app.Actions.UseAbility("Devotion", devotionTarget))
-					{
-						return true;
-					}
 				}
 			}
 
 			if (app.Options.Config.EnableDivineSeal &&
 					(app.Healer.Player.MPP < 20 || app.Healer.Player.MP < 200) &&
 					await app.Actions.UseAbility("Divine Seal"))
-      {
+			{
 				return true;
-      }
+			}
 
 			return false;
 		}

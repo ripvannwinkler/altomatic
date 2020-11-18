@@ -109,11 +109,13 @@ namespace Altomatic.UI.Game
 					case AddonEventType.CastingInteruppted:
 						Debug.WriteLine($"Casting {spellName} interrupted...");
 						interrupted = true;
+						cts.Cancel();
 						break;
 
 					case AddonEventType.CastingCompleted:
 						Debug.WriteLine($"Casting {spellName} completed...");
 						completed = true;
+						cts.Cancel();
 						break;
 				}
 			});
@@ -122,12 +124,12 @@ namespace Altomatic.UI.Game
 			var spellInfo = AppData.Healer.Resources.GetSpell(spellName, 0);
 			await AppData.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 500);
 
-			while (timer.ElapsedMilliseconds < 2000)
-      {
+			while (timer.ElapsedMilliseconds < 5000)
+			{
 				if (cts.IsCancellationRequested) break;
-      }
+			}
 
-			while (casting)
+			while (casting && timer.ElapsedMilliseconds < 20000)
 			{
 				if (interrupted)
 				{
