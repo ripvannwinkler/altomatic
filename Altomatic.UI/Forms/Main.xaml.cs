@@ -88,7 +88,7 @@ namespace Altomatic.UI.Forms
 		{
 			Debug.WriteLine("Executing main action loop...");
 			await Model.ExecuteActionsAsync();
-			await Task.Delay(200);
+			await Task.Delay(500);
 		}
 
 		private async void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)
