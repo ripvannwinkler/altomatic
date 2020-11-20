@@ -100,6 +100,8 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
+				if (player.Name == app.Healer.Player.Name) continue;
+
 				if (player.IsInHealerParty)
 				{
 					if (player.Member.CurrentMPP < 50)
