@@ -71,6 +71,7 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			if (app.Options.Config.EnableConvert &&
+					!app.Healer.HasAnyBuff(Buffs.Weakness) &&
 					(app.Healer.Player.MP < 100 || app.Healer.Player.MPP < 15) &&
 					await app.Actions.UseAbility("Convert"))
 			{
