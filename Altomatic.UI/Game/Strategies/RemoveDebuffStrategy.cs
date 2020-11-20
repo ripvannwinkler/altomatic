@@ -28,9 +28,27 @@ namespace Altomatic.UI.Game.Strategies
 					await RemoveGravityBindFromPlayers(app) ||
 					await RemoveBlindPoisonFromPlayers(app) ||
 					await RemoveHelixBioDiaFromPlayers(app) ||
-					await RemoveAmnesiaFromPlayers(app))
+					await RemoveAmnesiaFromPlayers(app) ||
+					await RemoveStatDownFromPlayers(app))
 			{
 				return true;
+			}
+
+			return false;
+		}
+
+		private async Task<bool> RemoveStatDownFromPlayers(AppViewModel app)
+		{
+			foreach (var player in app.ActivePlayers.SortByJob())
+			{
+				if (player.IsInHealerParty)
+				{
+					if (player.HasAnyBuff(Buffs.STRDown, Buffs.DEXDown, Buffs.AGIDown) &&
+							await app.Actions.CastSpell("Erase", player.Name))
+					{
+						return true;
+					}
+				}
 			}
 
 			return false;
