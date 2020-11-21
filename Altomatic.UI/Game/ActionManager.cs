@@ -120,28 +120,39 @@ namespace Altomatic.UI.Game
 				}
 			});
 
+			// send cast command
 			var timer = Stopwatch.StartNew();
 			var spellInfo = AppData.Healer.Resources.GetSpell(spellName, 0);
 			await AppData.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 500);
 
-			while (timer.ElapsedMilliseconds < 5000)
+			// wait for casting to start
+			while (timer.ElapsedMilliseconds < 4000)
 			{
 				if (cts.IsCancellationRequested) break;
 			}
 
+			// account for quick magic (instacast)
+			if (AppData.Healer.CastBar.Percent == 1)
+      {
+				casting = false;
+			}
+
+			// if still casting, wait for interrupt / completion
 			while (casting && timer.ElapsedMilliseconds < 20000)
 			{
 				if (interrupted)
 				{
+					// player moved, paralyzed, etc.
 					Debug.WriteLine("Spell interrupted. Waiting and exiting loop...");
-					await Task.Delay(2500);
+					await Task.Delay(2600);
 					break;
 				}
 
 				if (completed)
 				{
+					// spell finished - may occur earlier than 100% cast bar
 					Debug.WriteLine("Spell completed. Waiting and exiting loop...");
-					await Task.Delay(2500);
+					await Task.Delay(2600);
 					break;
 				}
 
