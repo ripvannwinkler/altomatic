@@ -397,9 +397,13 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task RefreshProcessList()
 		{
-			await guard.Do(async () =>
+			await Application.Current.Dispatcher?.Invoke<Task>(async () =>
 			{
 				await UnloadAddon();
+
+				Pause();
+				LastKnownRoll = -1;
+				ActiveBuffs.Clear();
 				Options.SettingsFile = null;
 				Processes = new ObservableCollection<Process>(ProcessUtilities.GetProcesses());
 				ResetPlayerData();

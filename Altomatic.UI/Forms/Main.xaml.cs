@@ -137,10 +137,9 @@ namespace Altomatic.UI.Forms
 			if (!Model.IsBusy)
 			{
 				Model.SetStatus("Refreshing processes...");
-				Model.Pause();
+
 				Model.IsBusy = true;
 				await Model.RefreshProcessList();
-				await Task.Delay(1000);
 				Model.IsBusy = false;
 				Model.SetStatus();
 			}
@@ -150,12 +149,12 @@ namespace Altomatic.UI.Forms
 		{
 			if (!Model.IsBusy)
 			{
-				Model.IsBusy = true;
 				Model.SetStatus("Reloading addon...");
+
+				Model.IsBusy = true;
 				await Model.ReloadAddon();
-				await Task.Delay(1000);
-				Model.SetStatus();
 				Model.IsBusy = false;
+				Model.SetStatus();
 			}
 		}
 
