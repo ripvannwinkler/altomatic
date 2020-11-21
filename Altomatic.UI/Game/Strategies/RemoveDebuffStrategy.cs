@@ -182,7 +182,7 @@ namespace Altomatic.UI.Game.Strategies
 			foreach (var player in app.ActivePlayers.SortByJob())
 			{
 				if (player.IsInHealerParty &&
-						app.Buffs.HasAny(player.Name, Buffs.Helix, Buffs.Bio, Buffs.Dia) &&
+						app.Buffs.HasAny(player.Name, Buffs.Helix, Buffs.Bio, Buffs.Dia, Buffs.Requiem) &&
 						await app.Actions.CastSpell("Erase", player.Name))
 				{
 					return true;

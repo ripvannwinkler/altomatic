@@ -61,6 +61,7 @@ namespace Altomatic.UI.ViewModels
 				OnPropertyChanged();
 				OnPropertyChanged(nameof(AppTitle));
 				OnPropertyChanged(nameof(IsGameReady));
+				OnPropertyChanged(nameof(IsHealerSet));
 				OnPropertyChanged(nameof(HealerMainJob));
 				OnPropertyChanged(nameof(HealerSubJob));
 			}
@@ -285,6 +286,11 @@ namespace Altomatic.UI.ViewModels
 		{
 			get => isPlayerMoving;
 			set { isPlayerMoving = value; OnPropertyChanged(); }
+		}
+
+		public bool IsHealerSet
+    {
+			get => !string.IsNullOrWhiteSpace(Healer?.Player?.Name);
 		}
 
 		/// <summary>
