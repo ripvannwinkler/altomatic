@@ -162,12 +162,12 @@ namespace Altomatic.UI.Forms
 		{
 			if (!Model.IsBusy)
 			{
-				Model.IsBusy = true;
 				Model.SetStatus("Refreshing players...");
+
+				Model.IsBusy = true;
 				await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
-				await Task.Delay(1000);
-				Model.SetStatus();
 				Model.IsBusy = false;
+				Model.SetStatus();
 			}
 		}
 	}
