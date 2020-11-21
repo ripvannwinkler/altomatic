@@ -415,6 +415,11 @@ namespace Altomatic.UI.ViewModels
 		/// </summary>
 		public async Task SetHealer(Process process)
 		{
+			LoopCount = 0;
+			LastKnownRoll = -1;
+			ActiveBuffs.Clear();
+			Options.SettingsFile = null;
+
 			healerProcess = process;
 			Healer = new EliteAPI(process.Id);
 			await ReloadAddon();

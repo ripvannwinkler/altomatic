@@ -111,61 +111,51 @@ namespace Altomatic.UI.Forms
 
 		private void PauseButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (Model.IsPaused)
-			{
-				Model.Unpause();
-			}
-			else
-			{
-				Model.Pause();
-			}
+			if (Model.IsPaused) Model.Unpause();
+			else Model.Pause();
 		}
 
 		private void OptionsButton_Click(object sender, RoutedEventArgs e)
 		{
-			var window = new Options(Model.Options)
+			new Options(Model.Options)
 			{
 				Owner = this,
 				WindowStartupLocation = WindowStartupLocation.CenterOwner
-			};
-
-			window.ShowDialog();
+			}.ShowDialog();
 		}
 
 		private async void RefreshProcessesButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!Model.IsBusy)
+			await DoTask("Refreshing processes...", async () =>
 			{
-				Model.SetStatus("Refreshing processes...");
-
-				Model.IsBusy = true;
 				await Model.RefreshProcessList();
-				Model.IsBusy = false;
-				Model.SetStatus();
-			}
+			});
 		}
 
 		private async void ReloadAddonButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!Model.IsBusy)
+			await DoTask("Reloading addon...", async () =>
 			{
-				Model.SetStatus("Reloading addon...");
-
-				Model.IsBusy = true;
 				await Model.ReloadAddon();
-				Model.IsBusy = false;
-				Model.SetStatus();
-			}
+			});
 		}
 
 		private async void RefreshPlayersButton_Click(object sender, RoutedEventArgs e)
+		{
+			await DoTask("Refreshing players...", async () =>
+			{
+				await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
+			});
+		}
+
+		private async Task DoTask(string status, Func<Task> action)
 		{
 			if (!Model.IsBusy)
 			{
 				Model.SetStatus("Refreshing players...");
 
 				Model.IsBusy = true;
-				await new RefreshPlayerInfoStrategy().ExecuteAsync(Model);
+				await action.Invoke();
 				Model.IsBusy = false;
 				Model.SetStatus();
 			}
