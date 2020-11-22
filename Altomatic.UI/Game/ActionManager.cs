@@ -129,6 +129,7 @@ namespace Altomatic.UI.Game
 			while (timer.ElapsedMilliseconds < 4000)
 			{
 				if (cts.IsCancellationRequested) break;
+				await Task.Delay(500);
 			}
 
 			// account for quick magic (instacast)
@@ -156,7 +157,7 @@ namespace Altomatic.UI.Game
 					break;
 				}
 
-				await Task.Delay(200);
+				await Task.Delay(500);
 			}
 
 			return true;
