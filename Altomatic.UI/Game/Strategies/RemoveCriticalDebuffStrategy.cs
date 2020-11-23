@@ -30,23 +30,21 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
-			if (await RemoveSilenceFromHealer(app)) return true;
-			if (await RemoveDoomFromPlayers(app)) return true;
-
-			if (!app.ActivePlayers.NeedCures())
-			{
-				if (await RemoveDoomFromPlayers(app, true)) return true;
-				if (await RemoveParalyzeFromHealer(app)) return true;
-				if (await RemoveSleepgaFromPlayers(app)) return true;
-				if (await RemovePlagueFromPlayers(app)) return true;
-				if (await RemoveSilenceFromPlayers(app)) return true;
-				if (await RemovePetrifyFromPlayers(app)) return true;
-			}
-
 			if (app.Options.Config.SelfRefresh &&
 					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2))
 			{
 				if (await app.Actions.CastSpell(refreshSpell)) return true;
+			}
+
+			if (app.ActivePlayers.Min(x => x.CurrentHpp) > 50)
+			{
+				if (await RemoveSilenceFromHealer(app)) return true;
+				if (await RemoveDoomFromPlayers(app, true)) return true;
+				if (await RemovePlagueFromPlayers(app)) return true;
+				if (await RemoveSleepgaFromPlayers(app)) return true;
+				if (await RemoveSilenceFromPlayers(app)) return true;
+				if (await RemovePetrifyFromPlayers(app)) return true;
+				if (await RemoveParalyzeFromHealer(app)) return true;
 			}
 
 			return false;
