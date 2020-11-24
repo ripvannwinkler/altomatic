@@ -32,7 +32,16 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			// sort HPP (low to high)
-			candidates.Sort((a, b) => a.CurrentHPP.CompareTo(b.CurrentHPP));
+			candidates.Sort((a, b) =>
+			{
+				// always put tanks and white mages at the top of the list
+				if (new[] { "PLD", "RUN", "WHM" }.Contains(app.Jobs.GetMainJob(a)))
+				{
+					return -1;
+				}
+
+				return a.CurrentHPP.CompareTo(b.CurrentHPP);
+			});
 
 			if (candidates.Count() >= required)
 			{
