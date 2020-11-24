@@ -147,6 +147,9 @@
 									VerticalAlignment="Center" 
 									VerticalContentAlignment="Stretch" />
 							</DockPanel>
+							<StackPanel Margin="4 8 0 8">
+								<CheckBox IsChecked="{Binding Model.Config.PrioritizeTanks}">Prioritize cures on tank jobs i.e., PLD, RUN</CheckBox>
+							</StackPanel>
 						</StackPanel>
 					</Border>
 				</TabItem>

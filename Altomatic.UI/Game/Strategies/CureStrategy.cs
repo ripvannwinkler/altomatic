@@ -33,17 +33,20 @@ namespace Altomatic.UI.Game.Strategies
 				return a.CurrentHPP.CompareTo(b.CurrentHPP);
 			});
 
-			// bump tanks to top of the list
-			foreach (var c in candidates.ToArray())
-      {
-				var job = app.Jobs.GetMainJob(c);
-				if (job == "PLD" || job == "RUN")
-        {
-					candidates.Remove(c);
-					candidates.Insert(0, c);
-					break;
-        }
-      }
+			if (app.Options.Config.PrioritizeTanks)
+			{
+				// bump tanks to top of the list
+				foreach (var c in candidates.ToArray())
+				{
+					var job = app.Jobs.GetMainJob(c);
+					if (job == "PLD" || job == "RUN")
+					{
+						candidates.Remove(c);
+						candidates.Insert(0, c);
+						break;
+					}
+				}
+			}
 
 			foreach (var target in candidates)
 			{

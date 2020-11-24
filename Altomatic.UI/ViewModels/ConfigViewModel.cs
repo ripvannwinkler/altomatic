@@ -34,6 +34,13 @@ namespace Altomatic.UI.ViewModels
 			get { return curagaRequiredTargets; }
 			set { curagaRequiredTargets = value; OnPropertyChanged(); }
 		}
+
+		private bool prioritizeTanks = false;
+		public bool PrioritizeTanks
+		{
+			get => prioritizeTanks;
+			set { prioritizeTanks = value; OnPropertyChanged(); }
+		}
 		#endregion
 
 		#region Enhancing Magic
