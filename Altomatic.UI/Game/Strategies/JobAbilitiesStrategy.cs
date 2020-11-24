@@ -87,13 +87,6 @@ namespace Altomatic.UI.Game.Strategies
 				}
 			}
 
-			if (app.Options.Config.EnableDivineSeal &&
-					(app.Healer.Player.MPP < 20 || app.Healer.Player.MP < 200) &&
-					await app.Actions.UseAbility("Divine Seal"))
-			{
-				return true;
-			}
-
 			return false;
 		}
 

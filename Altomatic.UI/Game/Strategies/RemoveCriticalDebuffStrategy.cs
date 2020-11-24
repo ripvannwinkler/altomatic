@@ -38,9 +38,9 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (await RemoveDoomFromPlayers(app) ||
 					await RemoveSleepgaFromPlayers(app))
-      {
+			{
 				return true;
-      }
+			}
 
 			if (app.ActivePlayers.AreHealthy())
 			{
@@ -56,6 +56,15 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			return false;
+		}
+
+		private static async Task PutUpDivineSeal(AppViewModel app)
+		{
+			if (app.Options.Config.EnableDivineSeal &&
+					!app.Healer.HasAnyBuff(Buffs.DivineSeal))
+			{
+				await app.Actions.UseAbility("Divine Seal");
+			}
 		}
 
 		private async Task<bool> RemoveSilenceFromHealer(AppViewModel app)
@@ -96,6 +105,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.HasAnyBuff(buffsToCheck))
 				{
+					await PutUpDivineSeal(app);
 					if (await app.Actions.CastSpell("Cursna", player.Name))
 					{
 						return true;
@@ -116,6 +126,7 @@ namespace Altomatic.UI.Game.Strategies
 					return true;
 				}
 
+				await PutUpDivineSeal(app);
 				if (await app.Actions.CastSpell("Paralyna"))
 				{
 					return true;
@@ -173,6 +184,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.HasAnyBuff(buffsToCheck))
 				{
+					await PutUpDivineSeal(app);
 					if (await app.Actions.CastSpell("Viruna", player.Name))
 					{
 						return true;
@@ -188,10 +200,13 @@ namespace Altomatic.UI.Game.Strategies
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.HealersFirst))
 			{
 				if (app.Buffs.HasAny(player.Name, Buffs.Silence) &&
-						silenaJobs.Contains(app.Jobs.GetMainJob(player.Member)) &&
-						await app.Actions.CastSpell("Silena", player.Name))
+						silenaJobs.Contains(app.Jobs.GetMainJob(player.Member)))
 				{
-					return true;
+					await PutUpDivineSeal(app);
+					if (await app.Actions.CastSpell("Silena", player.Name))
+          {
+						return true;
+					}
 				}
 			}
 
@@ -202,10 +217,12 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			foreach (var player in app.ActivePlayers.SortByJob(JobSort.HealersFirst))
 			{
-				if (app.Buffs.HasAny(player.Name, Buffs.Petrification) &&
-						await app.Actions.CastSpell("Stona", player.Name))
+				if (app.Buffs.HasAny(player.Name, Buffs.Petrification))
 				{
-					return true;
+					await PutUpDivineSeal(app);
+					if (await app.Actions.CastSpell("Stona", player.Name)) {
+						return true;
+					}
 				}
 			}
 
