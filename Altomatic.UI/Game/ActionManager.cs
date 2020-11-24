@@ -129,7 +129,7 @@ namespace Altomatic.UI.Game
 			while (timer.ElapsedMilliseconds < 4000)
 			{
 				if (cts.IsCancellationRequested) break;
-				await Task.Delay(500);
+				await Task.Delay(200);
 			}
 
 			// account for quick magic (instacast)
@@ -145,7 +145,7 @@ namespace Altomatic.UI.Game
 				{
 					// player moved, paralyzed, etc.
 					Debug.WriteLine("Spell interrupted. Waiting and exiting loop...");
-					await Task.Delay(2600);
+					await Task.Delay(2500);
 					break;
 				}
 
@@ -153,11 +153,11 @@ namespace Altomatic.UI.Game
 				{
 					// spell finished - may occur earlier than 100% cast bar
 					Debug.WriteLine("Spell completed. Waiting and exiting loop...");
-					await Task.Delay(2600);
+					await Task.Delay(2500);
 					break;
 				}
 
-				await Task.Delay(500);
+				await Task.Delay(250);
 			}
 
 			return true;
