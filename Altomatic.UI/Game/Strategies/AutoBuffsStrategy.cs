@@ -285,7 +285,11 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					if (player.AutoBuffs.Haste &&
 							player.GetBuffAge(Buffs.Haste) > app.Options.Config.AutoHasteSeconds &&
-							await app.Actions.CastSpell(hasteSpell, player.Name)) return true;
+							await app.Actions.CastSpell(hasteSpell, player.Name))
+          {
+						player.ResetBuffTimer(Buffs.Haste);
+						return true;
+					}
 
 					if (player.AutoBuffs.Refresh && player.IsInHealerParty &&
 							player.GetBuffAge(Buffs.Refresh) > app.Options.Config.AutoRefreshSeconds &&
@@ -293,15 +297,27 @@ namespace Altomatic.UI.Game.Strategies
 
 					if (player.AutoBuffs.Protect &&
 							player.GetBuffAge(Buffs.Protect) > app.Options.Config.AutoProtectSeconds &&
-							await app.Actions.CastSpell(protectSpell, player.Name)) return true;
+							await app.Actions.CastSpell(protectSpell, player.Name))
+          {
+						player.ResetBuffTimer(Buffs.Protect);
+						return true;
+					}
 
 					if (player.AutoBuffs.Shell &&
 							player.GetBuffAge(Buffs.Shell) > app.Options.Config.AutoShellSeconds &&
-							await app.Actions.CastSpell(shellSpell, player.Name)) return true;
+							await app.Actions.CastSpell(shellSpell, player.Name))
+          {
+						player.ResetBuffTimer(Buffs.Shell);
+						return true;
+					}
 
 					if (player.AutoBuffs.Regen &&
 							player.GetBuffAge(Buffs.Regen) > app.Options.Config.AutoRegenSeconds &&
-							await app.Actions.CastSpell(regenSpell, player.Name)) return true;
+							await app.Actions.CastSpell(regenSpell, player.Name))
+          {
+						player.ResetBuffTimer(Buffs.Regen);
+						return true;
+					}
 
 					if (player.AutoBuffs.Phalanx && player.IsInHealerParty &&
 							player.GetBuffAge(Buffs.Phalanx) > app.Options.Config.AutoPhalanxSeconds &&

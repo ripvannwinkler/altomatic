@@ -76,9 +76,24 @@ namespace Altomatic.UI.ViewModels
 
 		public bool IsInHealerParty
 		{
-			get => AppData.Healer.Party
-				.GetPartyMembers().Where(m => m.MemberNumber < 6)
-				.Select(m => m.Name).Contains(Name);
+			get
+			{
+				var isSameParty = false;
+				var members = AppData.Monitored.Party.GetPartyMembers();
+
+				// does monitored player's alliance contain the healer?
+				if (members.Where(x => x.Name == AppData.Healer.Player.Name).Any())
+				{
+					// is the healer in the same party as the target player?
+					var targetMemberNumber = members.FirstOrDefault(x => x.Name == Name)?.MemberNumber;
+					var healerMemberNumber = members.FirstOrDefault(x => x.Name == AppData.Healer.Player.Name)?.MemberNumber;
+					var n1 = targetMemberNumber < 6 ? 1 : targetMemberNumber < 12 ? 2 : 3;
+					var n2 = healerMemberNumber < 6 ? 1 : healerMemberNumber < 12 ? 2 : 3;
+					isSameParty = n1 == n2;
+				}
+
+				return isSameParty;
+			}
 		}
 
 		public string MainJob
@@ -218,8 +233,8 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		/// <summary>
-    /// Gets the lowest age of any of the specified buffs (in seconds)
-    /// </summary>
+		/// Gets the lowest age of any of the specified buffs (in seconds)
+		/// </summary>
 		public int GetBuffAge(params short[] buffs)
 		{
 			var age = int.MaxValue;
@@ -232,11 +247,16 @@ namespace Altomatic.UI.ViewModels
 			return age;
 		}
 
+		public void ResetBuffTimer(short buff)
+		{
+			AppData.Buffs.Add(Name, buff);
+		}
+
 		/// <summary>
-    /// Does the player have any of the specified buffs?
-    /// </summary>
-    /// <param name="buffs"></param>
-    /// <returns></returns>
+		/// Does the player have any of the specified buffs?
+		/// </summary>
+		/// <param name="buffs"></param>
+		/// <returns></returns>
 		public bool HasAnyBuff(params short[] buffs)
 		{
 			return AppData.Buffs.HasAny(Name, buffs);

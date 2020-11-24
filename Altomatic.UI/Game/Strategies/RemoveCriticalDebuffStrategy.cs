@@ -36,15 +36,23 @@ namespace Altomatic.UI.Game.Strategies
 				if (await app.Actions.CastSpell(refreshSpell)) return true;
 			}
 
-			if (app.ActivePlayers.Min(x => x.CurrentHpp) > 50)
+			if (await RemoveDoomFromPlayers(app) ||
+					await RemoveSleepgaFromPlayers(app))
+      {
+				return true;
+      }
+
+			if (app.ActivePlayers.AreHealthy())
 			{
-				if (await RemoveSilenceFromHealer(app)) return true;
-				if (await RemoveDoomFromPlayers(app, true)) return true;
-				if (await RemovePlagueFromPlayers(app)) return true;
-				if (await RemoveSleepgaFromPlayers(app)) return true;
-				if (await RemoveSilenceFromPlayers(app)) return true;
-				if (await RemovePetrifyFromPlayers(app)) return true;
-				if (await RemoveParalyzeFromHealer(app)) return true;
+				if (await RemoveSilenceFromHealer(app) ||
+						await RemovePlagueFromPlayers(app) ||
+						await RemoveDoomFromPlayers(app, true) ||
+						await RemoveSilenceFromPlayers(app) ||
+						await RemovePetrifyFromPlayers(app) ||
+						await RemoveParalyzeFromHealer(app))
+				{
+					return true;
+				}
 			}
 
 			return false;
