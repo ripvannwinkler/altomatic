@@ -238,7 +238,7 @@ namespace Altomatic.UI.Game.Strategies
 					 await app.Actions.CastSpell("Barblind"))) return true;
 
 			if (app.Options.Config.SelfBarStatusSpellName == "Sleep" &&
-					!app.Healer.HasAnyBuff(Buffs.Barparalyze) &&
+					!app.Healer.HasAnyBuff(Buffs.Barsleep) &&
 					(await app.Actions.CastSpell("Barsleepra") ||
 					 await app.Actions.CastSpell("Barsleep"))) return true;
 
