@@ -114,7 +114,7 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (player.IsRequiredForRolls)
 				{
-					if (player.DistanceFromHealer > 8 || player.CurrentHp < 1)
+					if (player.DistanceFromHealer > 14 || player.CurrentHp < 1)
 					{
 						outOfRange++;
 					}
