@@ -460,7 +460,7 @@
 									TextAlignment="Right" 
 									DockPanel.Dock="Right" 
 									VerticalAlignment="Center" 
-									Text="{Binding Model.Config.GlobalCastDelay}">0</TextBlock>
+									Text="{Binding Model.Config.GlobalCastDelay}"/>
 								<Slider 
 									VerticalAlignment="Center" 
 									Minimum="0" Maximum="10000" 
