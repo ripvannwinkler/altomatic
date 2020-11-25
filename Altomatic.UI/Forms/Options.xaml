@@ -451,6 +451,16 @@
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.SleepCharmedPlayers}">Sleep charmed players</CheckBox>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.RaiseTheDead}">Raise dead players</CheckBox>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.AcceptRaise}">Accept raise</CheckBox>
+							<DockPanel Margin="4 8 4 0">
+								<Label Width="200" DockPanel.Dock="Left" ToolTip="Minimum delay between spell casts. Adjust if you experience too much wait between spells, or if you get a lot of 'unable to cast at this time' errors.">Global Cast Delay</Label>
+								<TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">ms</TextBlock>
+								<TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" Width="40" TextAlignment="Right" Margin="0 0 4 0">0</TextBlock>
+								<Slider 
+									VerticalAlignment="Center" 
+									Minimum="0" Maximum="10000" 
+									Value="{Binding Model.Config.GlobalCastDelay}"
+									SmallChange="50" LargeChange="100"/>
+							</DockPanel>
 						</StackPanel>
 					</Border>
 				</TabItem>

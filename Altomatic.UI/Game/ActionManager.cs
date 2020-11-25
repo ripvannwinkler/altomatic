@@ -126,7 +126,7 @@ namespace Altomatic.UI.Game
 			await AppData.Healer.SendCommand($"/ma \"{spellName}\" {targetName}", 500);
 
 			// wait for casting to start
-			while (timer.ElapsedMilliseconds < 4000)
+			while (timer.ElapsedMilliseconds < 2000)
 			{
 				if (cts.IsCancellationRequested) break;
 				await Task.Delay(200);
@@ -145,7 +145,7 @@ namespace Altomatic.UI.Game
 				{
 					// player moved, paralyzed, etc.
 					Debug.WriteLine("Spell interrupted. Waiting and exiting loop...");
-					await Task.Delay(2500);
+					await Task.Delay(AppData.Options.Config.GlobalCastDelay);
 					break;
 				}
 
@@ -153,7 +153,7 @@ namespace Altomatic.UI.Game
 				{
 					// spell finished - may occur earlier than 100% cast bar
 					Debug.WriteLine("Spell completed. Waiting and exiting loop...");
-					await Task.Delay(2500);
+					await Task.Delay(AppData.Options.Config.GlobalCastDelay);
 					break;
 				}
 

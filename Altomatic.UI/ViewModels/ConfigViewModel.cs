@@ -641,6 +641,13 @@ namespace Altomatic.UI.ViewModels
 			get => acceptRaise;
 			set { acceptRaise = value; OnPropertyChanged(); }
 		}
+
+		private int globalCastDelay = 2500;
+		public int GlobalCastDelay
+		{
+			get => globalCastDelay;
+			set { globalCastDelay = value; OnPropertyChanged(); }
+		}
 		#endregion
 
 		#region INotifyPropertyChanged
