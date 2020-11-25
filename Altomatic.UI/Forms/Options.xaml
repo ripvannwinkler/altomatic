@@ -454,7 +454,13 @@
 							<DockPanel Margin="4 8 4 0">
 								<Label Width="200" DockPanel.Dock="Left" ToolTip="Minimum delay between spell casts. Adjust if you experience too much wait between spells, or if you get a lot of 'unable to cast at this time' errors.">Global Cast Delay</Label>
 								<TextBlock VerticalAlignment="Center" DockPanel.Dock="Right">ms</TextBlock>
-								<TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" Width="40" TextAlignment="Right" Margin="0 0 4 0">0</TextBlock>
+								<TextBlock 
+									Width="40" 
+									Margin="0 0 4 0"
+									TextAlignment="Right" 
+									DockPanel.Dock="Right" 
+									VerticalAlignment="Center" 
+									Text="{Binding Model.Config.GlobalCastDelay}">0</TextBlock>
 								<Slider 
 									VerticalAlignment="Center" 
 									Minimum="0" Maximum="10000" 
