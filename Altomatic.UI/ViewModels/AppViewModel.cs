@@ -289,7 +289,7 @@ namespace Altomatic.UI.ViewModels
 		}
 
 		public bool IsHealerSet
-    {
+		{
 			get => !string.IsNullOrWhiteSpace(Healer?.Player?.Name);
 		}
 
@@ -337,7 +337,6 @@ namespace Altomatic.UI.ViewModels
 		{
 			InitializePlayerData();
 
-			Strategies.Add(new ReloadAddonStrategy());
 			Strategies.Add(new AcceptRaiseStrategy());
 			Strategies.Add(new RemoveCriticalDebuffStrategy());
 			Strategies.Add(new CureWarningStrategy());
@@ -516,6 +515,10 @@ namespace Altomatic.UI.ViewModels
 			var mode = ProcessUtilities.GetHookMode(healerProcess);
 			var ip = Addon.Endpoint.Address;
 			var port = Addon.Endpoint.Port;
+
+			Buffs.Clear();
+			LastKnownRoll = -1;
+			
 
 			if (mode == HookMode.Ashita)
 			{

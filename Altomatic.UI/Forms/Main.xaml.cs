@@ -71,7 +71,11 @@ namespace Altomatic.UI.Forms
 					}
 					catch (Exception ex)
 					{
-						MessageBox.Show(ex.ToString());
+						Directory.CreateDirectory(@".\logs");
+						File.WriteAllText(@$".\logs\Error_{DateTime.UtcNow.ToString("yyyyMMddHHmmss")}.txt", ex.ToString());
+						Model.SetStatus(ex.Message);
+						await Model.ReloadAddon();
+						await Task.Delay(500);
 					}
 					finally
 					{
@@ -88,7 +92,7 @@ namespace Altomatic.UI.Forms
 		{
 			Debug.WriteLine("Executing main action loop...");
 			await Model.ExecuteActionsAsync();
-			await Task.Delay(500);
+			await Task.Delay(250);
 		}
 
 		private async void HealerInstance_SelectionChanged(object sender, SelectionChangedEventArgs e)

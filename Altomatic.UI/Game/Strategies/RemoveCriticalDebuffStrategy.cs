@@ -12,16 +12,11 @@ namespace Altomatic.UI.Game.Strategies
 	public class RemoveCriticalDebuffStrategy : IGameStrategy
 	{
 		private static readonly string[] silenaJobs = new[] { "WHM", "RDM", "SCH", "PLD", "NIN", "RUN" };
+		private DateTimeOffset lastWarned = DateTime.MinValue;
 
 		public async Task<bool> ExecuteAsync(AppViewModel app)
 		{
 			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
-
-			if (app.Options.Config.EnableDivineCaress &&
-					app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false)
-			{
-				if (await app.Actions.UseAbility("Divine Caress")) return true;
-			}
 
 			if (await RemoveSilenceFromHealer(app))
 			{
@@ -49,6 +44,12 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (app.ActivePlayers.AreHealthy())
 			{
+				if (app.Options.Config.EnableDivineCaress &&
+						app.Healer.HasAnyBuff(Buffs.DivineCaress, Buffs.DivineCaress2) == false)
+				{
+					if (await app.Actions.UseAbility("Divine Caress")) return true;
+				}
+
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemovePlagueFromPlayers(app) ||
 						await RemoveSilenceFromPlayers(app) ||
@@ -78,6 +79,12 @@ namespace Altomatic.UI.Game.Strategies
 			{
 				if (await app.Actions.UseItem("Echo Drops")) return true;
 				if (await app.Actions.UseItem("Remedy")) return true;
+
+				if (DateTimeOffset.UtcNow.Subtract(lastWarned).TotalSeconds > 15)
+				{
+					await app.Monitored.SendCommand($"/echo \x1e\x5{app.Healer.Player.Name} is silenced and has no removal tools.\x1f\x5", 100);
+					lastWarned = DateTimeOffset.UtcNow;
+				}
 			}
 
 			return false;
