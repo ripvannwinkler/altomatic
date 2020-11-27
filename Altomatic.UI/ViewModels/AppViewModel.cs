@@ -518,21 +518,16 @@ namespace Altomatic.UI.ViewModels
 
 			Buffs.Clear();
 			LastKnownRoll = -1;
-			
 
 			if (mode == HookMode.Ashita)
 			{
 				await UnloadAddon();
-				Buffs.Clear();
-
 				await Healer.SendCommand($"/addon load altomatic", 300);
 				await Healer.SendCommand($"/alto config {ip} {port}", 100);
 			}
 			else if (mode == HookMode.Windower)
 			{
 				await UnloadAddon();
-				Buffs.Clear();
-
 				await Healer.SendCommand($"//lua load altomatic", 300);
 				await Healer.SendCommand($"//alto config {ip} {port}", 100);
 			}
@@ -545,14 +540,14 @@ namespace Altomatic.UI.ViewModels
 		{
 			if (IsGameReady)
 			{
-				DetectMovement();
 				PauseIfZoning();
+				DetectMovement();
 				await refreshPlayerInfo.ExecuteAsync(this);
 
-				if (!IsPaused && CanExecuteActions())
+				if (IsPaused) return;
+				if (CanExecuteActions())
 				{
 					LoopCount++;
-
 					foreach (var strategy in Strategies)
 					{
 						if (IsPaused) break;

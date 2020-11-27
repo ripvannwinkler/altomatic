@@ -173,13 +173,13 @@
 								<TextBlock>Options...</TextBlock>
 							</Button.Content>
 						</Button>
-						<Button Name="RefreshProcessesButton" Margin="4" Click="RefreshProcessesButton_Click" ToolTip="Click this to basically reset the program to the initial state.">
+						<Button Name="RefreshProcessesButton" Margin="4" Click="RefreshProcessesButton_Click" ToolTip="Refresh the list of game instances.">
 							<TextBlock>Refresh Processes</TextBlock>
 						</Button>
-						<Button Name="RefreshPlayersButton" Margin="4" Click="RefreshPlayersButton_Click" ToolTip="Normally, player info is only refreshed while the bot is running. Click this button to manually refresh even while paused.">
+						<Button Name="RefreshPlayersButton" Margin="4" Click="RefreshPlayersButton_Click" ToolTip="Manually refresh player info boxes below.">
 							<TextBlock>Refresh Players</TextBlock>
 						</Button>
-						<Button Name="ReloadAddonButton" Margin="4" Click="ReloadAddonButton_Click" ToolTip="If you think the addon might have glitched or is otherwise not loaded, click this button.">
+						<Button Name="ReloadAddonButton" Margin="4" Click="ReloadAddonButton_Click" ToolTip="Reset the bot context and reload the addon. Try this if your bot gets hung.">
 							<TextBlock>Reload Addon</TextBlock>
 						</Button>
 					</StackPanel>
