@@ -363,29 +363,35 @@ namespace Altomatic.UI.ViewModels
 				switch (@event.Type)
 				{
 					case AddonEventType.BuffAdded:
-						data = @event.Data.Split('_');
-						if (data.Length == 3)
+						if (Options.Config.EnableChatLogMonitor)
 						{
-							var delims = new[] { ',' };
-							var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
-							var buffs = buffCodes.Select(b => short.Parse(b));
-							foreach (var buff in buffs)
-              {
-								Buffs.Add(data[1], buff);
-              }
+							data = @event.Data.Split('_');
+							if (data.Length == 3)
+							{
+								var delims = new[] { ',' };
+								var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+								var buffs = buffCodes.Select(b => short.Parse(b));
+								foreach (var buff in buffs)
+								{
+									Buffs.Add(data[1], buff);
+								}
+							}
 						}
 						break;
 
 					case AddonEventType.BuffRemoved:
-						data = @event.Data.Split('_');
-						if (data.Length == 3)
+						if (Options.Config.EnableChatLogMonitor)
 						{
-							var delims = new[] { ',' };
-							var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
-							var buffs = buffCodes.Select(b => short.Parse(b));
-							foreach (var buff in buffs)
+							data = @event.Data.Split('_');
+							if (data.Length == 3)
 							{
-								Buffs.Remove(data[1], buff);
+								var delims = new[] { ',' };
+								var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+								var buffs = buffCodes.Select(b => short.Parse(b));
+								foreach (var buff in buffs)
+								{
+									Buffs.Remove(data[1], buff);
+								}
 							}
 						}
 						break;

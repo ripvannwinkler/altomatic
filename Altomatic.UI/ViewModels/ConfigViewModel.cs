@@ -642,6 +642,13 @@ namespace Altomatic.UI.ViewModels
 			set { acceptRaise = value; OnPropertyChanged(); }
 		}
 
+		private bool enableChatLogMonitor;
+		public bool EnableChatLogMonitor
+    {
+			get => enableChatLogMonitor;
+      set { enableChatLogMonitor = value; OnPropertyChanged(); }
+    }
+
 		private int globalCastDelay = 2500;
 		public int GlobalCastDelay
 		{
