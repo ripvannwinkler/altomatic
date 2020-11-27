@@ -16,23 +16,41 @@ local socket = require("socket")
 local ip = "127.0.0.1"
 local port = 19769
 
+-- The chat log is only used to track critical debuffs on potential
+-- alliance members, since they are not sent via packet like party
+-- member debuffs are. Do not add anything here that cannot be removed
+-- on alliance members (e.g., anything via Erase).
 local chatBuffPatterns = {
   -- doom
   {'(%w+) is doomed.', 'add', 15},
   {'(%w+) is no longer doomed.', 'remove', 15},
   {'removes (%w+)\'s doom.', 'remove', 15},
+  {'Cursna has no effect on (%w+).', 'remove', 15},
+  -- curse
+  {'(%w+) is cursed.', 'add', 9},
+  {'(%w+) is no longer cursed.', 'remove', 9},
+  {'removes (%w+)\'s curse.', 'remove', 9},
+  {'Cursna has no effect on (%w+).', 'remove', 9},
+  -- petrification
+  {'(%w+) is petrified.', 'add', 7},
+  {'(%w+) is no longer petrified.', 'remove', 7},
+  {'removes (%w+)\'s petrification.', 'remove', 7},
+  {'Stona has no effect on (%w+).', 'remove', 7},
   -- paralysis
   {'(%w+) is paralyzed.', 'add', 4},
   {'(%w+) is no longer paralyzed.', 'remove', 4},
   {'removes (%w+)\'s paralysis.', 'remove', 4},
+  {'Paralyna has no effect on (%w+).', 'remove', 4},
   -- plague
   {'(%w+) is plagued.', 'add', 31},
   {'(%w+) is no longer plagued.', 'remove', 31},
   {'removes (%w+)\'s plague.', 'remove', 31},
+  {'Viruna has no effect on (%w+).', 'remove', 31},
   -- disease
   {'(%w+) is diseased.', 'add', 8},
   {'(%w+) is no longer diseased.', 'remove', 8},
   {'removes (%w+)\'s disease.', 'remove', 8},  
+  {'Viruna has no effect on (%w+).', 'remove', 8},
   -- sleep
   {'(%w+) is asleep.', 'add', 2},
   {'(%w+) is no longer asleep.', 'remove', 2},
@@ -40,7 +58,8 @@ local chatBuffPatterns = {
   -- silence
   {'(%w+) is silenced.', 'add', 6},
   {'(%w+) is no longer silenced.', 'remove', 6},
-  {'removes (%w+)\'s silence.', 'remove', 6}
+  {'removes (%w+)\'s silence.', 'remove', 6},
+  {'Silena has no effect on (%w+).', 'remove', 6}
 }
 
 function CleanString(str)
@@ -140,11 +159,6 @@ function HandleIncomingPacket(id, size, data)
 
   return false
 end
-
--- ashita.register_event('incoming_text', function(mode, chat)
---   SendToAltomatic("heartbeat");
---   return false;
--- end);
 
 function HandleAddonCommand(command, ntype)
   local args = command:args();
