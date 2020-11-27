@@ -23,6 +23,11 @@ namespace Altomatic.UI.Game.Strategies
 				if (await app.Actions.UseAbility("Divine Caress")) return true;
 			}
 
+			if (await RemoveSilenceFromHealer(app))
+			{
+				return true;
+			}
+
 			if (app.Options.Config.EnableComposure &&
 					app.Healer.HasAnyBuff(Buffs.Composure) == false &&
 					await app.Actions.UseAbility("Composure"))
@@ -44,12 +49,12 @@ namespace Altomatic.UI.Game.Strategies
 
 			if (app.ActivePlayers.AreHealthy())
 			{
-				if (await RemoveSilenceFromHealer(app) ||
+				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemovePlagueFromPlayers(app) ||
-						await RemoveDoomFromPlayers(app, true) ||
 						await RemoveSilenceFromPlayers(app) ||
 						await RemovePetrifyFromPlayers(app) ||
-						await RemoveParalyzeFromHealer(app))
+						await RemoveParalyzeFromHealer(app) ||
+						await RemoveSlowFromPlayers(app))
 				{
 					return true;
 				}
@@ -204,7 +209,7 @@ namespace Altomatic.UI.Game.Strategies
 				{
 					await PutUpDivineSeal(app);
 					if (await app.Actions.CastSpell("Silena", player.Name))
-          {
+					{
 						return true;
 					}
 				}
@@ -220,7 +225,25 @@ namespace Altomatic.UI.Game.Strategies
 				if (app.Buffs.HasAny(player.Name, Buffs.Petrification))
 				{
 					await PutUpDivineSeal(app);
-					if (await app.Actions.CastSpell("Stona", player.Name)) {
+					if (await app.Actions.CastSpell("Stona", player.Name))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private async Task<bool> RemoveSlowFromPlayers(AppViewModel app)
+		{
+			foreach (var player in app.ActivePlayers.SortByJob())
+			{
+				if (player.HasAnyBuff(Buffs.Slow))
+				{
+					await PutUpDivineSeal(app);
+					if (await app.Actions.CastSpell("Erase", player.Name))
+					{
 						return true;
 					}
 				}
