@@ -16,6 +16,43 @@ local socket = require("socket")
 local ip = "127.0.0.1"
 local port = 19769
 
+local chatBuffPatterns = {
+  -- doom
+  {'(%w+) is doomed.', 'add', 15},
+  {'(%w+) is no longer doomed.', 'remove', 15},
+  {'removes (%w+)\'s doom.', 'remove', 15},
+  -- paralysis
+  {'(%w+) is paralyzed.', 'add', 4},
+  {'(%w+) is no longer paralyzed.', 'remove', 4},
+  {'removes (%w+)\'s paralysis.', 'remove', 4},
+  -- plague
+  {'(%w+) is plagued.', 'add', 31},
+  {'(%w+) is no longer plagued.', 'remove', 31},
+  {'removes (%w+)\'s plague.', 'remove', 31},
+  -- disease
+  {'(%w+) is diseased.', 'add', 8},
+  {'(%w+) is no longer diseased.', 'remove', 8},
+  {'removes (%w+)\'s disease.', 'remove', 8},  
+  -- sleep
+  {'(%w+) is asleep.', 'add', 2},
+  {'(%w+) is no longer asleep.', 'remove', 2},
+  {'(%w+) recovers %d+ HP.', 'remove', 2},  
+  -- silence
+  {'(%w+) is silenced.', 'add', 6},
+  {'(%w+) is no longer silenced.', 'remove', 6},
+  {'removes (%w+)\'s silence.', 'remove', 6}
+}
+
+function CleanString(str)
+  str = ParseAutoTranslate(str, true);
+  str = str:gsub('[\r\n]+$','') -- trim end of string line breaks
+  str = str:gsub('[' .. string.char(0x1E, 0x1F, 0x7F) .. '].', ''); -- strip color codes
+  str = str:gsub(string.char(0xEF) .. '[' .. string.char(0x27) .. ']', '{'); -- strip auto tranlate begin
+  str = str:gsub(string.char(0xEF) .. '[' .. string.char(0x28) .. ']', '}'); -- strip auto translate end
+  str = str:gsub(string.char(0x07), '\n'); -- convert mid line breaks to real line breaks  
+  return str;
+end
+
 function GetPlayerName()
   local player = GetPlayerEntity()
   if player ~= nil then
@@ -127,5 +164,33 @@ function HandleAddonCommand(command, ntype)
   return true;
 end
 
+function DetectBuffsFromChat(message)
+  for _, p in pairs(chatBuffPatterns) do
+    local player = string.match(message, p[1]);
+    if player ~= nil then
+      local add = p[2] == 'add';
+      local buff = p[3];
+      if add then
+        print('buff add ' .. player .. ' ' .. buff)
+        SendToAltomatic('buffAdd_'..player..'_'..buff)
+      else
+        print('buff remove ' .. player .. ' ' .. buff)
+        SendToAltomatic('buffRemove_'..player..'_'..buff)
+      end
+    end
+end
+end
+
+function HandleIncomingText(mode, message, modifiedmode, modifiedmessage, blocked)
+  if message ~= nil then
+      local cleanStr = CleanString(message);
+      if cleanStr ~= nil and string.len(cleanStr)>0 then
+        DetectBuffsFromChat(cleanStr);
+      end
+  end
+  return false
+end
+
+ashita.register_event('incoming_text', HandleIncomingText);
 ashita.register_event('incoming_packet', HandleIncomingPacket)
 ashita.register_event('command', HandleAddonCommand)

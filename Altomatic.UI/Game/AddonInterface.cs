@@ -37,12 +37,12 @@ namespace Altomatic.UI.Game
 
 		private void StartListening()
 		{
-      var listener = new Thread(ListenForData)
-      {
-        IsBackground = true
-      };
+			var listener = new Thread(ListenForData)
+			{
+				IsBackground = true
+			};
 
-      listener.Start();
+			listener.Start();
 		}
 
 		private void ListenForData()
@@ -94,10 +94,18 @@ namespace Altomatic.UI.Game
 			{
 				Events.OnNext(new AddonEvent(AddonEventType.BuffsUpdated, data));
 			}
+			else if (data.StartsWith("buffAdd_"))
+			{
+				Events.OnNext(new AddonEvent(AddonEventType.BuffAdded, data));
+			}
+			else if (data.StartsWith("buffRemove_"))
+			{
+				Events.OnNext(new AddonEvent(AddonEventType.BuffRemoved, data));
+			}
 			else if (data.StartsWith("roll_"))
-      {
+			{
 				Events.OnNext(new AddonEvent(AddonEventType.CorsairRoll, data));
-      }
+			}
 			else
 			{
 				Events.OnNext(new AddonEvent(AddonEventType.Unknown, data));
@@ -113,9 +121,11 @@ namespace Altomatic.UI.Game
 		CastingStarted,
 		CastingCompleted,
 		CastingInteruppted,
+		CorsairRoll,
+		BuffAdded,
+		BuffRemoved,
 		BuffsUpdated,
-    CorsairRoll,
-  }
+	}
 
 	public class AddonEvent
 	{

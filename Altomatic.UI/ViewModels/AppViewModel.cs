@@ -362,6 +362,34 @@ namespace Altomatic.UI.ViewModels
 				string[] data;
 				switch (@event.Type)
 				{
+					case AddonEventType.BuffAdded:
+						data = @event.Data.Split('_');
+						if (data.Length == 3)
+						{
+							var delims = new[] { ',' };
+							var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+							var buffs = buffCodes.Select(b => short.Parse(b));
+							foreach (var buff in buffs)
+              {
+								Buffs.Add(data[1], buff);
+              }
+						}
+						break;
+
+					case AddonEventType.BuffRemoved:
+						data = @event.Data.Split('_');
+						if (data.Length == 3)
+						{
+							var delims = new[] { ',' };
+							var buffCodes = data[2].Split(delims, StringSplitOptions.RemoveEmptyEntries);
+							var buffs = buffCodes.Select(b => short.Parse(b));
+							foreach (var buff in buffs)
+							{
+								Buffs.Remove(data[1], buff);
+							}
+						}
+						break;
+
 					case AddonEventType.BuffsUpdated:
 						data = @event.Data.Split('_');
 						if (data.Length == 3)
