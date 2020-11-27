@@ -300,7 +300,7 @@
 				<TabItem Header="Debuff Removal">
 					<Border Padding="8">
 						<StackPanel>
-							<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableChatLogMonitor}">Monitor chat log for debuff messages.</CheckBox>
+							<CheckBox Margin="8" IsChecked="{Binding Model.Config.EnableChatLogMonitor}">Monitor chat log for certain status effects.</CheckBox>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer holy / hallowed water over Cursna on healer</CheckBox>
 							<CheckBox Margin="8" IsChecked="{Binding Model.Config.PreferItemOverCursna}">Prefer remedy over Paralyna on healer</CheckBox>
 						</StackPanel>
