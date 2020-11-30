@@ -185,10 +185,10 @@ function DetectBuffsFromChat(message)
       local add = p[2] == 'add';
       local buff = p[3];
       if add then
-        print('buff add ' .. player .. ' ' .. buff)
+        --print('buff add ' .. player .. ' ' .. buff)
         SendToAltomatic('buffAdd_'..player..'_'..buff)
       else
-        print('buff remove ' .. player .. ' ' .. buff)
+        --print('buff remove ' .. player .. ' ' .. buff)
         SendToAltomatic('buffRemove_'..player..'_'..buff)
       end
     end
