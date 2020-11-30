@@ -179,7 +179,8 @@ namespace Altomatic.UI.Game.Strategies
 
 			await Task.Delay(1500);
 			app.Healer.Target.SetTarget((int)target.TargetID);
-			if (await app.Actions.CastSpell("Dia", "<t>") ||
+			if (await app.Actions.CastSpell("Distract", "<t>") || 
+					await app.Actions.CastSpell("Dia", "<t>") ||
 					await app.Actions.CastSpell("Bio", "<t>"))
 			{
 				lastGeoTargetId = target.TargetID;
