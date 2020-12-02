@@ -177,39 +177,33 @@ namespace Altomatic.UI.Game.Strategies
 			if (target == null) return false;
 			if (target.TargetID == lastGeoTargetId) return false;
 
-			await Task.Delay(1500);
-			app.Healer.Target.SetTarget((int)target.TargetID);
-			if (await app.Actions.CastSpell("Distract", "<t>") || 
-					await app.Actions.CastSpell("Dia", "<t>") ||
-					await app.Actions.CastSpell("Bio", "<t>"))
-			{
-				lastGeoTargetId = target.TargetID;
-				return true;
-			}
+      foreach (var player in app.ActivePlayers)
+      {
+        if (player.IsGeoTarget)
+        {
+					if (player.Name == app.Healer.Player.Name)
+					{
+						await Task.Delay(1000);
+						app.Healer.Target.SetTarget((int)target.TargetID);
+						if (await app.Actions.CastSpell("Dia", "<t>"))
+						{
+							lastGeoTargetId = target.TargetID;
+							return true;
+						}
+					}
+					else
+					{
+						await Task.Delay(500);
+						if (await app.Actions.CastSpell("Cure", player.Name))
+						{
+							lastGeoTargetId = target.TargetID;
+							return true;
+						}
+					}
+        }
+      }
 
-			//// use cure for hate if geo target set
-			//foreach (var player in app.ActivePlayers)
-			//{
-			//	if (player.IsGeoTarget)
-			//	{
-			//		await Task.Delay(1000);
-			//		if (await app.Actions.CastSpell("Cure", player.Name))
-			//		{
-			//			lastGeoTargetId = target.TargetID;
-			//			return true;
-			//		}
-			//	}
-			//}
-
-			//// otherwise use dia on mob for hate
-			//app.Healer.Target.SetTarget((int)target.TargetID);
-			//if (await app.Actions.CastSpell("Dia", "<t>"))
-			//{
-			//	lastGeoTargetId = target.TargetID;
-			//	return true;
-			//}
-
-			return false;
+      return false;
 		}
 
 		private XiEntity GetGeoSpellTarget(AppViewModel app)
