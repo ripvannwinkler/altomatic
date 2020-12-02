@@ -181,6 +181,7 @@ namespace Altomatic.UI.Game.Strategies
       {
         if (player.IsGeoTarget)
         {
+					// self geo target, dia the mob
 					if (player.Name == app.Healer.Player.Name)
 					{
 						await Task.Delay(1000);
@@ -193,6 +194,7 @@ namespace Altomatic.UI.Game.Strategies
 					}
 					else
 					{
+						// cure the player
 						await Task.Delay(500);
 						if (await app.Actions.CastSpell("Cure", player.Name))
 						{
