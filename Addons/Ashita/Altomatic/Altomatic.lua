@@ -59,7 +59,10 @@ local chatBuffPatterns = {
   {'(%w+) is silenced.', 'add', 6},
   {'(%w+) is no longer silenced.', 'remove', 6},
   {'removes (%w+)\'s silence.', 'remove', 6},
-  {'Silena has no effect on (%w+).', 'remove', 6}
+  {'Silena has no effect on (%w+).', 'remove', 6},
+  -- haste
+  {'(%w+) gains the effect of Haste.', 'add', 33},
+  {'(%w+)\'s Haste effect wears off.', 'remove', 33},  
 }
 
 function CleanString(str)
