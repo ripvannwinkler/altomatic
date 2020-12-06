@@ -634,7 +634,8 @@ namespace Altomatic.UI.Game.Data
 		/// </summary>
 		public void Update(string playerName, short[] buffs)
 		{
-			partyBuffs[playerName] = buffs.Select(b => new BuffStatus(playerName, b)).ToList();
+			var newBuffs = buffs.Select(b => new BuffStatus(playerName, b)).ToList();
+			partyBuffs.AddOrUpdate(playerName, newBuffs, (key, oldBuffs) => newBuffs);
 		}
 
 		/// <summary>
