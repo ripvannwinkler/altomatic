@@ -634,8 +634,10 @@ namespace Altomatic.UI.Game.Data
 		/// </summary>
 		public void Update(string playerName, short[] buffs)
 		{
-			var newBuffs = buffs.Select(b => new BuffStatus(playerName, b)).ToList();
-			partyBuffs.AddOrUpdate(playerName, newBuffs, (key, oldBuffs) => newBuffs);
+			foreach (var buff in buffs)
+			{
+				Add(playerName, buff);
+			}
 		}
 
 		/// <summary>
@@ -643,13 +645,13 @@ namespace Altomatic.UI.Game.Data
 		/// </summary>
 		public void Add(string playerName, short buff)
 		{
-			if (!partyBuffs.TryGetValue(playerName, out var buffs))
+			var newBuffs = new List<BuffStatus> { new BuffStatus(playerName, buff) };
+			partyBuffs.AddOrUpdate(playerName, new List<BuffStatus>(), (key, oldBuffs) =>
 			{
-				partyBuffs[playerName] = buffs = new List<BuffStatus>();
-			}
-
-			Remove(playerName, buff);
-			buffs.Add(new BuffStatus(playerName, buff));
+				oldBuffs.RemoveAll(x => x.Id == buff);
+				oldBuffs.Add(new BuffStatus(playerName, buff));
+				return oldBuffs;
+			});
 		}
 
 		/// <summary>
@@ -659,10 +661,11 @@ namespace Altomatic.UI.Game.Data
 		/// <param name="buff"></param>
 		public void Remove(string playerName, short buff)
 		{
-			if (partyBuffs.TryGetValue(playerName, out var buffs))
+			partyBuffs.AddOrUpdate(playerName, new List<BuffStatus>(), (key, oldBuffs) =>
 			{
-				buffs.RemoveAll(b => b.Id == buff);
-			}
+				oldBuffs.RemoveAll(x => x.Id == buff);
+				return oldBuffs;
+			});
 		}
 
 		/// <summary>
