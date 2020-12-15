@@ -37,6 +37,7 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			if (await RemoveDoomFromPlayers(app) ||
+					await RemoveParalyzeFromHealer(app) ||
 					await RemoveSleepgaFromPlayers(app))
 			{
 				return true;
@@ -53,8 +54,7 @@ namespace Altomatic.UI.Game.Strategies
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemovePlagueFromPlayers(app) ||
 						await RemoveSilenceFromPlayers(app) ||
-						await RemovePetrifyFromPlayers(app) ||
-						await RemoveParalyzeFromHealer(app) ||
+						await RemovePetrifyFromPlayers(app) ||						
 						await RemoveSlowFromPlayers(app))
 				{
 					return true;
