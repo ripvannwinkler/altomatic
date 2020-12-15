@@ -31,6 +31,14 @@ namespace Altomatic.UI.Game.Strategies
 				return true;
 			}
 
+			if (app.Options.Config.EnableConvert &&
+					!app.Healer.HasAnyBuff(Buffs.Weakness) &&
+					(app.Healer.Player.MP < 100 || app.Healer.Player.MPP < 15) &&
+					await app.Actions.UseAbility("Convert"))
+			{
+				return true;
+			}
+
 			if (app.Options.Config.SelfRefresh &&
 					!app.Healer.HasAnyBuff(Buffs.Refresh, Buffs.Refresh2))
 			{
