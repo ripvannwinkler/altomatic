@@ -18,7 +18,8 @@ namespace Altomatic.UI.Game.Strategies
 		{
 			var refreshSpell = app.Spells.FirstAvailable("Refresh III", "Refresh II", "Refresh");
 
-			if (await RemoveSilenceFromHealer(app))
+			if (await RemoveSilenceFromHealer(app) ||
+					await RemoveParalyzeFromHealer(app))
 			{
 				return true;
 			}
@@ -37,7 +38,6 @@ namespace Altomatic.UI.Game.Strategies
 			}
 
 			if (await RemoveDoomFromPlayers(app) ||
-					await RemoveParalyzeFromHealer(app) ||
 					await RemoveSleepgaFromPlayers(app))
 			{
 				return true;
@@ -54,7 +54,7 @@ namespace Altomatic.UI.Game.Strategies
 				if (await RemoveDoomFromPlayers(app, true) ||
 						await RemovePlagueFromPlayers(app) ||
 						await RemoveSilenceFromPlayers(app) ||
-						await RemovePetrifyFromPlayers(app) ||						
+						await RemovePetrifyFromPlayers(app) ||
 						await RemoveSlowFromPlayers(app))
 				{
 					return true;

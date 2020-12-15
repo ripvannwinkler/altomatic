@@ -25,8 +25,8 @@ namespace Altomatic.UI.Game.Strategies
 					await RemoveSlowFromPlayers(app) ||
 					await RemovePlagueFromPlayers(app) ||
 					await RemoveParalysisFromPlayers(app) ||
-					await RemoveGravityBindFromPlayers(app) ||
 					await RemoveBlindPoisonFromPlayers(app) ||
+					await RemoveGravityBindFromPlayers(app) ||
 					await RemoveHelixBioDiaFromPlayers(app) ||
 					await RemoveAmnesiaFromPlayers(app) ||
 					await RemoveStatDownFromPlayers(app))
